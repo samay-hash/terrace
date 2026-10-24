@@ -103,7 +103,8 @@ export function Footer() {
       <div className={`container ${styles.bottom}`}>
         <p>© {new Date().getFullYear()} Terrace Goods.</p>
         <p className={styles.demo}>
-          Demo store built for a hiring assignment. Product data and photos from DummyJSON (open source); nothing is shipped or charged.
+          Demo store built for a hiring assignment; nothing is shipped or charged. Product data from DummyJSON.{" "}
+          <Link to="/help#credits">Photo credits</Link>
         </p>
       </div>
     </footer>

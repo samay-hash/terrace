@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useDocumentTitle } from "../hooks/useDocumentTitle.js";
 import { SizeTable } from "../components/product/SizeTable.jsx";
 import { Button } from "../components/ui/Button.jsx";
+import { PHOTOS } from "../lib/photos.js";
 import styles from "./Help.module.css";
 
 const SECTIONS = [
@@ -10,6 +11,7 @@ const SECTIONS = [
   { id: "sizing", title: "Size guide" },
   { id: "care", title: "Product care" },
   { id: "contact", title: "Contact us" },
+  { id: "credits", title: "Photo credits" },
 ];
 
 export default function Help() {
@@ -92,6 +94,26 @@ export default function Help() {
             <Button variant="dark" onClick={() => window.dispatchEvent(new CustomEvent("chotu:open"))}>
               Ask Chotu now
             </Button>
+          </section>
+
+          <section id="credits" aria-labelledby="credits-h">
+            <h2 id="credits-h">Photo credits</h2>
+            <p>
+              Product photos and seed data come from <a href="https://dummyjson.com" target="_blank" rel="noreferrer">DummyJSON</a>, an
+              open-source mock-data project. Editorial photos are from Wikimedia Commons:
+            </p>
+            <ul className={styles.credits}>
+              {Object.entries(PHOTOS).map(([key, photo]) => (
+                <li key={key}>
+                  <a href={photo.credit.source} target="_blank" rel="noreferrer">
+                    {photo.alt}
+                  </a>
+                  <span>
+                    {photo.credit.author}, {photo.credit.license}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </section>
         </div>
       </div>

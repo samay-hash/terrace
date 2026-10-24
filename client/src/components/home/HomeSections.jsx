@@ -1,9 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, BadgeCheck, RotateCcw, Truck, Banknote, ShieldCheck } from "lucide-react";
 import { useCategories, useProducts, useReviewHighlights } from "../../hooks/queries.js";
 import { assetUrl } from "../../lib/api.js";
 import { pluralize } from "../../lib/format.js";
+import { photoProps } from "../../lib/photos.js";
+import { useScrollProgress } from "../../hooks/useScrollProgress.js";
 import { ProductRail } from "../product/ProductRail.jsx";
 import { Button } from "../ui/Button.jsx";
 import { Rating } from "../ui/Controls.jsx";
@@ -14,12 +16,12 @@ import styles from "./HomeSections.module.css";
 // Lifestyle photography (CC0) for categories that have it; the rest use the
 // category's bestselling product on a tinted stage.
 const CATEGORY_ART = {
-  footwear: { photo: "/images/court-sneakers.webp", tint: "var(--tint-mist)" },
-  watches: { photo: "/images/wrist-watch.webp", tint: "var(--tint-sand)" },
-  eyewear: { photo: "/images/sunglasses-hand.webp", tint: "var(--tint-blush)" },
-  bags: { tint: "var(--tint-sand)" },
-  clothing: { tint: "var(--tint-sage)" },
-  sports: { tint: "var(--tint-mist)" },
+  footwear: { photo: "sneakers-steps", tint: "var(--tint-mist)" },
+  watches: { photo: "wrist-chrono", tint: "var(--tint-sand)" },
+  eyewear: { photo: "sunglasses", tint: "var(--tint-blush)" },
+  bags: { photo: "duffel", tint: "var(--tint-sand)" },
+  clothing: { photo: "street-walk", tint: "var(--tint-sage)" },
+  sports: { photo: "track", tint: "var(--tint-mist)" },
 };
 
 function SectionHead({ title, children, link, id }) {
@@ -96,7 +98,7 @@ export function CategoryExplorer() {
               return (
                 <div key={c.id} className={styles.explorerPanel} data-active={active.slug === c.slug ? "" : undefined} style={{ "--tint": tint }}>
                   {photo ? (
-                    <img className={styles.explorerPhoto} src={photo} alt="" loading="lazy" />
+                    <img className={styles.explorerPhoto} {...photoProps(photo, "(max-width: 860px) 100vw, 50vw")} alt="" loading="lazy" />
                   ) : (
                     cover && <img className={`${styles.explorerProduct} product-photo`} src={assetUrl(cover.images[0]?.url)} alt="" loading="lazy" />
                   )}
@@ -166,31 +168,104 @@ export function ProductTabs() {
   );
 }
 
-export function EditorialDuo() {
+// Full-width photograph with copy on top. The image zooms gently and the
+// copy drifts as the band passes through the viewport.
+export function ParallaxBand({ photo, kicker, title, text, cta, align = "left", id }) {
+  const ref = useRef(null);
+  useScrollProgress(ref);
   return (
-    <section className={`container ${styles.section}`} aria-label="Edits">
-      <div className={styles.duo}>
-        <Link to="/shop?category=footwear" className={styles.edit}>
-          <img src="/images/court-sneakers.webp" alt="White-soled black trainers on a polished indoor court" loading="lazy" />
-          <div className={styles.editText}>
-            <p>The trainer edit</p>
-            <h3 className="display">Court classics and everyday runners</h3>
-            <span className={styles.editLink}>
-              Shop footwear <ArrowUpRight size={16} aria-hidden />
-            </span>
-          </div>
-        </Link>
-        <Link to="/shop?category=watches" className={styles.edit}>
-          <img src="/images/wood-watch.webp" alt="A wooden-cased watch on a wrist" loading="lazy" />
-          <div className={styles.editText}>
-            <p>Time, well kept</p>
-            <h3 className="display">Watches for every wrist and budget</h3>
-            <span className={styles.editLink}>
-              Shop watches <ArrowUpRight size={16} aria-hidden />
-            </span>
-          </div>
-        </Link>
+    <section ref={ref} className={styles.band} data-align={align} aria-labelledby={id}>
+      <div className={styles.bandMedia} aria-hidden>
+        <img {...photoProps(photo)} alt="" loading="lazy" />
       </div>
+      <div className={`container ${styles.bandInner}`}>
+        <div className={styles.bandCopy}>
+          <p className={styles.bandKicker}>{kicker}</p>
+          <h2 id={id} className={`display ${styles.bandTitle}`}>
+            {title}
+          </h2>
+          <p className={styles.bandText}>{text}</p>
+          <Button to={cta.to} variant="light" size="lg">
+            {cta.label}
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const STORY = [
+  {
+    photo: "basketball",
+    kicker: "On the court",
+    title: "Built for the game, not the shelf.",
+    text: "Match balls, rims, rackets and bats from Wilson, SG, Titleist and our own Fieldcraft label. Tested on weekend courts before they reach ours.",
+    to: "/shop?category=sports",
+    label: "Shop sports gear",
+  },
+  {
+    photo: "sneakers-steps",
+    kicker: "On the street",
+    title: "Trainers that go from steps to stands.",
+    text: "Everyday runners and court classics in UK sizes, with free exchanges if the fit isn't right the first time.",
+    to: "/shop?category=footwear",
+    label: "Shop footwear",
+  },
+  {
+    photo: "duffel",
+    kicker: "On the move",
+    title: "Carry the day with you.",
+    text: "Leather totes, satchels and backpacks with proper linings, zip pockets and handles that hold up to a full day.",
+    to: "/shop?category=bags",
+    label: "Shop bags",
+  },
+];
+
+// Scroll-driven story: the picture on the left stays put and changes as each
+// chapter on the right reaches the middle of the screen.
+export function ScrollStory() {
+  const [active, setActive] = useState(0);
+  const stepRefs = useRef([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) if (entry.isIntersecting) setActive(Number(entry.target.dataset.index));
+      },
+      { rootMargin: "-45% 0px -45% 0px" },
+    );
+    stepRefs.current.forEach((el) => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section className={`container ${styles.story}`} aria-labelledby="story-title">
+      <h2 id="story-title" className="visually-hidden">
+        Where our gear goes
+      </h2>
+      <div className={styles.storyMedia} aria-hidden>
+        {STORY.map((step, i) => (
+          <img key={step.photo} {...photoProps(step.photo, "(max-width: 860px) 100vw, 55vw")} alt="" loading="lazy" data-active={i === active ? "" : undefined} />
+        ))}
+        <div className={styles.storyDots}>
+          {STORY.map((step, i) => (
+            <span key={step.photo} data-active={i === active ? "" : undefined} />
+          ))}
+        </div>
+      </div>
+      <ul className={styles.storySteps}>
+        {STORY.map((step, i) => (
+          <li key={step.photo} ref={(el) => (stepRefs.current[i] = el)} data-index={i} data-active={i === active ? "" : undefined} className={styles.storyStep}>
+            <img className={styles.storyInlinePhoto} {...photoProps(step.photo, "100vw")} alt="" loading="lazy" />
+            <p className={styles.bandKickerDark}>{step.kicker}</p>
+            <h3 className={`display ${styles.storyTitle}`}>{step.title}</h3>
+            <p className={styles.sub}>{step.text}</p>
+            <Link to={step.to} className={styles.headLink}>
+              {step.label} <ArrowUpRight size={16} aria-hidden />
+            </Link>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

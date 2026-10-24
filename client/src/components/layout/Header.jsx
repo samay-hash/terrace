@@ -217,13 +217,17 @@ export function Header() {
           Free shipping over ₹2,999 and free 30-day returns. <Link to="/help#shipping">Delivery details</Link>
         </p>
       </div>
-      <header className={styles.header} data-scrolled={scrolled ? "" : undefined}>
+      <header
+        className={styles.header}
+        data-scrolled={scrolled ? "" : undefined}
+        data-transparent={location.pathname === "/" && !scrolled ? "" : undefined}
+      >
         <div className={`container ${styles.bar}`}>
           <div className={styles.left}>
             <button type="button" className={`${styles.iconButton} ${styles.burger}`} onClick={() => setMenuOpen(true)} aria-label="Open menu">
               <Menu size={22} strokeWidth={1.8} />
             </button>
-            <Logo />
+            <Logo tone={location.pathname === "/" && !scrolled ? "light" : "ink"} />
           </div>
 
           <nav className={styles.nav} aria-label="Main">

@@ -1,13 +1,14 @@
 import { Logo } from "../layout/Logo.jsx";
 import { Chotu } from "../chat/Chotu.jsx";
 import { RotateCcw, Banknote, MessageCircle } from "lucide-react";
+import { photoProps } from "../../lib/photos.js";
 import styles from "./AuthLayout.module.css";
 
 export function AuthLayout({ heading, subheading, quote, children }) {
   return (
     <div className={styles.page}>
       <aside className={styles.panel}>
-        <img className={styles.photo} src="/images/court-sneakers.webp" alt="" width="1024" height="683" />
+        <img className={styles.photo} {...photoProps("watch-drive", "55vw")} alt="" />
         <div className={styles.panelInner}>
           <Logo tone="light" />
           <h2 className={`display ${styles.heading}`}>{heading}</h2>

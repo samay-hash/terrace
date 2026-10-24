@@ -46,8 +46,10 @@ Terrace is an independent sport and street store from Bengaluru. The design is d
 
 Product photos are shot on white, so every image is multiplied onto the same soft grey "well". That removes the white boxes and makes shoes, watches and cricket bats sit on one consistent surface, like a well-lit shop shelf.
 
+The home page opens like an editorial: a **full-screen photograph** with the headline revealed line by line, then alternates product-led sections with **full-width photo bands** (the photo zooms and the copy drifts as you scroll) and a **scroll story** where a sticky photo changes as each chapter reaches the middle of the screen. Scroll effects write a single CSS variable (`hooks/useScrollProgress.js`), so scrolling never re-renders React.
+
 Interaction is used where it helps someone decide, not for decoration:
-- the hero is a **product stage**: four featured products switched by tabs (nothing auto-rotates);
+- **Picked this week** is a product stage driven by a hover list (nothing auto-rotates);
 - the **category explorer** swaps a large picture as you hover each department;
 - product cards show the **second photo on hover** and offer **quick add** without leaving the grid;
 - the **mega menu** and **search overlay** (press `/`) get people to the right shelf fast;
