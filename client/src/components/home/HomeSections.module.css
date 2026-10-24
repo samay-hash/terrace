@@ -877,3 +877,11 @@
     transform: translateY(10px);
   }
 }
+
+/* Where the product grid drops to three columns, show two full rows of
+   three instead of leaving the third row with two cards. */
+@media (min-width: 761px) and (max-width: 1080px) {
+  .tabPanel > div > :nth-child(n + 7) {
+    display: none;
+  }
+}

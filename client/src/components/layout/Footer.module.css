@@ -183,15 +183,17 @@
   color: var(--on-dark);
 }
 
+/* The name set large and quiet as a sign-off: normal letter spacing so
+   no letters touch, fully visible, a soft fade towards the bottom. */
 .wordmark {
-  margin: var(--space-4) 0 -0.2em;
+  padding: var(--space-6) var(--gutter) var(--space-5);
   font-family: var(--font-display);
-  font-size: clamp(5rem, 24vw, 24rem);
-  font-weight: 600;
-  line-height: 0.8;
-  letter-spacing: -0.07em;
+  font-size: clamp(4rem, 17vw, 17rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
   text-align: center;
-  background: linear-gradient(180deg, rgba(246, 241, 232, 0.14) 0%, rgba(246, 241, 232, 0.02) 85%);
+  background: linear-gradient(180deg, rgba(246, 241, 232, 0.12) 0%, rgba(246, 241, 232, 0.03) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
