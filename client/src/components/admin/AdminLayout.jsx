@@ -1,10 +1,9 @@
 import { Suspense, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { LayoutGrid, Package, Tags, ReceiptText, Store, LogOut, Menu, X, MessageSquareText, Moon, Sun } from "lucide-react";
+import { LayoutGrid, Package, Tags, ReceiptText, Store, LogOut, Menu, X, MessageSquareText } from "lucide-react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { Logo } from "../layout/Logo.jsx";
 import { PageLoader } from "../ui/Feedback.jsx";
-import { useTheme } from "../../hooks/useTheme.js";
 import styles from "./Admin.module.css";
 
 const NAV = [
@@ -18,7 +17,6 @@ const NAV = [
 export default function AdminLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const { theme, toggle } = useTheme();
   const [open, setOpen] = useState(false);
 
   return (
@@ -42,9 +40,6 @@ export default function AdminLayout() {
           <NavLink to="/" className={styles.navLink}>
             <Store size={18} aria-hidden /> View store
           </NavLink>
-          <button type="button" className={styles.navLink} onClick={toggle} aria-pressed={theme === "dark"}>
-            {theme === "dark" ? <Sun size={18} aria-hidden /> : <Moon size={18} aria-hidden />} {theme === "dark" ? "Light mode" : "Dark mode"}
-          </button>
           <div className={styles.who}>
             <span className={styles.avatar}>{user.name.charAt(0)}</span>
             <span className={styles.whoText}>

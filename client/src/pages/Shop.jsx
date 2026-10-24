@@ -333,7 +333,7 @@ export default function Shop() {
                 </Button>
               }
             >
-              Try a different size, price or brand, or ask Chotu to find something similar.
+              Try a different size, price or brand, or ask the assistant to find something similar.
             </EmptyState>
           ) : (
             <div className={styles.grid} data-fetching={isFetching && !isLoading ? "" : undefined}>

@@ -213,15 +213,120 @@
   position: absolute;
   inset: -12% 0;
   z-index: -2;
-  transform: translateY(calc((var(--progress) - 0.5) * -14%));
+  transform: translateY(calc((var(--progress) - 0.5) * -14%)) scale(calc(1.12 - var(--progress) * 0.1));
 }
 
-.bandMedia img {
+/* Slides cross-fade. The incoming photo zooms in slowly; the outgoing one
+   holds its zoom while it fades, and only resets once it's hidden. */
+.bandSlide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1800ms ease;
+}
+
+.bandSlide[data-active] {
+  opacity: 1;
+}
+
+.bandSlide img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(calc(1.18 - var(--progress) * 0.16));
-  will-change: transform;
+  transform: scale(1);
+  transition: transform 0s linear 1900ms;
+}
+
+.bandSlide[data-active] img {
+  transform: scale(1.09);
+  transition: transform 9000ms cubic-bezier(0.25, 0.1, 0.35, 1);
+}
+
+/* A soft sweep of warm light across each new photo. */
+.bandLight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 32%, rgba(255, 232, 196, 0.26) 47%, rgba(255, 255, 255, 0.12) 51%, transparent 66%);
+  background-size: 260% 100%;
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: sweep 5200ms ease-in-out 300ms both;
+}
+
+@keyframes sweep {
+  0% {
+    background-position: 115% 0;
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    background-position: -15% 0;
+    opacity: 0;
+  }
+}
+
+.bandProgress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(20px, 4vh, 40px);
+  display: flex;
+  gap: 6px;
+}
+
+.band[data-align="right"] .bandProgress {
+  justify-content: flex-end;
+}
+
+.band[data-align="center"] .bandProgress {
+  justify-content: center;
+}
+
+.bandProgress button {
+  position: relative;
+  width: 44px;
+  height: 20px;
+}
+
+.bandProgress button::before,
+.bandProgress span {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  height: 2px;
+  border-radius: 2px;
+}
+
+.bandProgress button::before {
+  right: 0;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.bandProgress span {
+  width: 0;
+  background: #fff;
+}
+
+.bandProgress button[aria-current] span {
+  animation: fill 6500ms linear both;
+  animation-play-state: paused;
+}
+
+.band[data-playing] .bandProgress button[aria-current] span {
+  animation-play-state: running;
+}
+
+@keyframes fill {
+  to {
+    width: 100%;
+  }
 }
 
 .band::after {
@@ -238,6 +343,20 @@
 
 .band[data-align="right"] .bandInner {
   justify-content: flex-end;
+}
+
+.band[data-align="center"]::after {
+  background: radial-gradient(70% 70% at 50% 50%, rgba(10, 10, 10, 0.62) 0%, rgba(10, 10, 10, 0.3) 70%, rgba(10, 10, 10, 0.2) 100%);
+}
+
+.band[data-align="center"] .bandInner {
+  justify-content: center;
+}
+
+.band[data-align="center"] .bandCopy {
+  justify-items: center;
+  text-align: center;
+  max-width: 760px;
 }
 
 .bandInner {
@@ -490,18 +609,15 @@
 }
 
 /* ---------- closing ---------- */
-.closing {
-  display: grid;
-  justify-items: center;
-  gap: var(--space-6);
-  padding-top: var(--space-9);
-  text-align: center;
+.closingBand {
+  min-height: clamp(520px, 78vh, 760px);
 }
 
 .closingTitle {
   font-size: clamp(2.6rem, 1.6rem + 4vw, 5rem);
   letter-spacing: -0.045em;
   max-width: 14ch;
+  color: #fff;
 }
 
 .closingActions {
@@ -509,6 +625,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: var(--space-3);
+  margin-top: var(--space-3);
 }
 
 .services {

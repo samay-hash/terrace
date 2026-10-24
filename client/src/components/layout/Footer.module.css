@@ -1,8 +1,42 @@
 .footer {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   margin-top: var(--space-9);
-  background: var(--dark);
+  background: radial-gradient(120% 80% at 50% 0%, #161616 0%, var(--dark) 60%);
   color: var(--on-dark-2);
   font-size: var(--text-sm);
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.stars span {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0.12;
+  animation: twinkle 5s ease-in-out infinite;
+}
+
+.stars span[data-bright] {
+  box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.55);
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.08;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
 }
 
 .top {

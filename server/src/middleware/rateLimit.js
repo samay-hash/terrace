@@ -35,7 +35,7 @@ export const chatLimiter = rateLimit({
   ...shared,
   windowMs: 60 * 1000,
   limit: 15,
-  message: "Chotu needs a breather. Try again in a minute.",
+  message: "The assistant needs a breather. Try again in a minute.",
 });
 
 // Reviews and newsletter sign-ups: generous for people, tight for scripts.

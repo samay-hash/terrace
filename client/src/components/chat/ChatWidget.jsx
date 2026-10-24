@@ -15,7 +15,7 @@ const MAX_LENGTH = 1200;
 const WELCOME = {
   role: "assistant",
   local: true,
-  content: "Hi, I'm Chotu. I know everything on these shelves: what's in stock, sizes, delivery, returns and your orders. What are you looking for?",
+  content: "Hi, I'm the Terrace assistant. I know everything on these shelves: what's in stock, sizes, delivery, returns and your orders. What are you looking for?",
   suggestions: ["Trainers under ₹10,000", "What's on sale?", "Gift ideas for her"],
 };
 
@@ -72,7 +72,7 @@ export function ChatWidget() {
 
   useEffect(() => writeJSON(HISTORY_KEY, messages.slice(-30), window.sessionStorage), [messages]);
 
-  // Other parts of the page (e.g. "Ask Chotu" buttons) open the chat this way.
+  // Other parts of the page (e.g. "Ask the assistant" buttons) open the chat this way.
   useEffect(() => {
     const openChat = () => setOpen(true);
     window.addEventListener("chotu:open", openChat);
@@ -147,16 +147,16 @@ export function ChatWidget() {
   return (
     <div className={styles.root}>
       {open && (
-        <section className={styles.panel} role="dialog" aria-label="Chat with Chotu" aria-modal="false">
+        <section className={styles.panel} role="dialog" aria-label="Chat with the Terrace assistant" aria-modal="false">
           <header className={styles.head}>
             <span className={styles.headTeddy}>
               <Teddy size={60} mood={mood} />
             </span>
             <div className={styles.headText}>
-              <h2>Chotu</h2>
+              <h2>Terrace assistant</h2>
               <p>
                 <span className={styles.online} aria-hidden />
-                {pending ? "Looking it up…" : "Your shop assistant"}
+                {pending ? "Looking it up…" : "Here to help"}
               </p>
             </div>
             <button
@@ -203,7 +203,7 @@ export function ChatWidget() {
             {pending && (
               <div className={styles.message} data-role="assistant">
                 <TeddyAvatar size={28} className={styles.mini} />
-                <p className={`${styles.bubble} ${styles.typing}`} aria-label="Chotu is typing">
+                <p className={`${styles.bubble} ${styles.typing}`} aria-label="The assistant is typing">
                   <span />
                   <span />
                   <span />
@@ -220,7 +220,7 @@ export function ChatWidget() {
             }}
           >
             <label htmlFor="chotu-input" className="visually-hidden">
-              Message Chotu
+              Message the assistant
             </label>
             <textarea
               id="chotu-input"
@@ -265,9 +265,9 @@ export function ChatWidget() {
         className={styles.launcher}
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        aria-label={open ? "Close chat with Chotu" : "Chat with Chotu, the shopping assistant"}
+        aria-label={open ? "Close chat" : "Chat with the Terrace assistant"}
       >
-        {open ? <X size={24} /> : <Teddy size={64} mood={nudge ? "happy" : "idle"} />}
+        {open ? <X size={24} /> : <Teddy size={96} framing="full" mood={nudge ? "happy" : "idle"} />}
       </button>
     </div>
   );

@@ -1,74 +1,63 @@
-.announce {
-  background: var(--dark);
-  color: var(--on-dark-2);
-  font-size: var(--text-xs);
-  letter-spacing: 0.01em;
-}
-
-.announce p {
-  padding-block: 9px;
-  text-align: center;
-}
-
-.announce a {
-  color: var(--on-dark);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: rgba(245, 244, 240, 0.4);
-}
-
 .header {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: saturate(1.5) blur(14px);
-  -webkit-backdrop-filter: saturate(1.5) blur(14px);
+  isolation: isolate;
+  background-color: var(--bg);
   border-bottom: 1px solid transparent;
-  transition: border-color 200ms ease;
+  transition:
+    background-color 320ms ease,
+    border-color 320ms ease,
+    box-shadow 320ms ease,
+    backdrop-filter 320ms ease;
 }
 
+/* Once the page moves, the bar turns to frosted glass: a strong blur with
+   lifted colour, a bright top edge and a slow sheen drifting across, so
+   whatever scrolls beneath shows through like light through water. */
 .header[data-scrolled] {
-  border-bottom-color: var(--line);
+  background-color: rgba(250, 246, 238, 0.5);
+  border-bottom-color: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(22px) saturate(1.9) brightness(1.04);
+  -webkit-backdrop-filter: blur(22px) saturate(1.9) brightness(1.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(120, 96, 64, 0.1),
+    0 14px 34px -22px rgba(40, 28, 14, 0.4);
 }
 
-
-/* On the home page the header floats over the hero photo until the
-   visitor scrolls (or opens the mega menu). */
-.header[data-transparent]:not(:has([aria-expanded="true"])) {
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  color: #fff;
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0) 60%),
+    linear-gradient(100deg, transparent 25%, rgba(255, 255, 255, 0.4) 45%, rgba(255, 255, 255, 0.1) 52%, transparent 65%);
+  background-size:
+    100% 100%,
+    300% 100%;
+  opacity: 0;
+  transition: opacity 320ms ease;
 }
 
-.header[data-transparent]:not(:has([aria-expanded="true"])) .navLink,
-.header[data-transparent]:not(:has([aria-expanded="true"])) .iconButton,
-.header[data-transparent]:not(:has([aria-expanded="true"])) .searchButton {
-  color: #fff;
+.header[data-scrolled]::before {
+  opacity: 1;
+  animation: sheen 9s ease-in-out infinite alternate;
 }
 
-.header[data-transparent]:not(:has([aria-expanded="true"])) .sale {
-  color: #ffb4a8;
-}
-
-.header[data-transparent]:not(:has([aria-expanded="true"])) .iconButton:hover {
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.header[data-transparent]:not(:has([aria-expanded="true"])) .avatar {
-  background: #fff;
-  color: var(--ink);
-}
-
-.header[data-transparent]:not(:has([aria-expanded="true"])) .count {
-  background: #fff;
-  color: var(--ink);
-  border-color: transparent;
-}
-
-.header[data-transparent]:has([aria-expanded="true"]) [data-tone="light"] {
-  color: var(--ink);
+@keyframes sheen {
+  from {
+    background-position:
+      0 0,
+      110% 0;
+  }
+  to {
+    background-position:
+      0 0,
+      -10% 0;
+  }
 }
 
 .bar {
@@ -434,16 +423,6 @@
   color: var(--ink-2);
 }
 
-.mobileTheme {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-top: var(--space-2);
-  padding: 8px 14px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-pill);
-  color: var(--ink);
-}
 
 @media (max-width: 1240px) {
   .searchButton span {

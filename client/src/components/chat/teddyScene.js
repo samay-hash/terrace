@@ -1,4 +1,4 @@
-// Builds Chotu, the 3D teddy, from simple shapes. Kept separate from the
+// Builds the assistant's 3D teddy from simple shapes. Kept separate from the
 // React component so three.js is only downloaded when a teddy is shown.
 import {
   CapsuleGeometry,
@@ -108,7 +108,7 @@ export function createTeddy({ framing = "head" } = {}) {
   }
   head.add(eyes);
 
-  // Little angled brows keep Chotu's famously grumpy face.
+  // Little angled brows keep the teddy's grumpy little face.
   const brows = new Group();
   for (const side of [-1, 1]) {
     const brow = new Mesh(new CapsuleGeometry(0.035, 0.2, 6, 12), furDark);

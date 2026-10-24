@@ -1,6 +1,6 @@
 # Terrace — sport and street goods
 
-Terrace is a full-stack e-commerce store built for the Web Developer hiring assignment: trainers, watches, eyewear, bags, clothing and sports gear, with real product photography. It has a custom storefront, email/password accounts, a server-priced bag and checkout, reviews, a wishlist, an admin dashboard with Cloudinary image uploads, and **Chotu**, a small, permanently grumpy shopping assistant who knows the live catalogue.
+Terrace is a full-stack e-commerce store built for the Web Developer hiring assignment: trainers, watches, eyewear, bags, clothing and sports gear, with real product photography. It has a custom storefront, email/password accounts, a server-priced bag and checkout, reviews, a wishlist, an admin dashboard with Cloudinary image uploads, and a shopping assistant (a small 3D teddy) who knows the live catalogue.
 
 | | |
 |---|---|
@@ -13,9 +13,8 @@ Terrace is a full-stack e-commerce store built for the Web Developer hiring assi
 ## What's inside
 
 **Storefront**
-- **Home:** a full-screen editorial hero (an evening study with dotted pointers to the watch on the desk and the wardrobe behind it, each with an "Order now" link: one-size pieces go straight to checkout), a two-row "This week at Terrace" grid with New in / Bestsellers / Top rated / On sale tabs and a See more link, a category explorer (hover a department to swap the photo), a scroll story where a sticky photo changes chapter by chapter, a halftone sale panel with live counts, two full-width parallax photo bands, and a short closing section with store services.
-- **Light and dark themes:** a soft cream light theme and a warm charcoal dark theme, switched from the header, the mobile menu or the admin sidebar. The choice is saved per browser; until then the site follows the system setting, and `public/theme.js` applies it before the first paint so there is no flash.
-- **Header:** Shop mega menu (categories, brands, collections, editor's pick), category links, full-width search overlay with live results (press `/` anywhere), wishlist and bag counts, account menu.
+- **Home:** a full-screen editorial hero (a sunlit study: a short headline and a single "Shop the edit" button on the curtain, with dotted "Order now" pointers to the watch on the desk and the wardrobe; one-size pieces go straight to checkout), a two-row "This week at Terrace" grid with New in / Bestsellers / Top rated / On sale tabs and a See more link, a category explorer, a scroll story where a sticky photo changes chapter by chapter, a halftone sale panel with live counts, two full-width photo bands and a closing band whose photos cross-fade slowly under a soft sweep of light, and a black footer with a field of twinkling dots.
+- **Header:** sticky, turning to frosted glass once the page scrolls; Shop mega menu (categories, brands, collections, editor's pick), category links, full-width search overlay with live results (press `/` anywhere), wishlist and bag counts, account menu.
 - **Shop:** search by name, brand or SKU; filter by category, men/women, size in stock, brand, price band, rating, sale and stock; sort by featured, newest, bestselling, top rated and price; category chips; 2- or 3-column grid; numbered pagination. All state lives in the URL.
 - **Product cards:** hover shows a second photo; quick add (one tap for one-size items, a size row otherwise); wishlist heart; rating; sale and new badges.
 - **Product page:** gallery with hover zoom (swipe and dots on phones), brand, rating, price and saving, sizes in the product's own run (UK shoe sizes, XS–XXL, One size) with sold-out sizes crossed out, size guide modal, live stock message, delivery-date estimate with same-day dispatch countdown, details, reviews with star breakdown, sorting and a write-a-review form, related products and recently viewed.
@@ -30,9 +29,9 @@ Terrace is a full-stack e-commerce store built for the Web Developer hiring assi
 - Orders: search by number, filter by status, move through placed → packed → shipped → delivered, or cancel (stock is returned).
 - Reviews: search and filter by rating, remove reviews (the product rating is recalculated).
 
-**Chotu, the assistant**
-- A small 3D teddy (three.js, loaded only when shown) floating on every store page. He follows the cursor, blinks, thinks while a reply loads and talks when it lands; reduced-motion users get a still pose and browsers without WebGL a flat illustration.
-- Answers questions about products, stock by size, sizing, delivery, returns, payment and, when signed in, the shopper's bag and latest order. He also knows which page you're on and what's in your wishlist. Recommends products as tappable cards and offers follow-up chips. Replies in Hinglish if you write in Hinglish.
+**The Terrace assistant**
+- A small 3D teddy (three.js, loaded only when shown) floating on every store page with no frame around it. It follows the cursor, blinks, thinks while a reply loads and talks when it lands; reduced-motion users get a still pose and browsers without WebGL a flat illustration.
+- Answers questions about products, stock by size, sizing, delivery, returns, payment and, when signed in, the shopper's bag and latest order. It also knows which page you're on and what's in your wishlist. Recommends products as tappable cards and offers follow-up chips. Replies in Hinglish if you write in Hinglish.
 - With `ANTHROPIC_API_KEY` set, replies come from Claude (model set by `CHAT_MODEL`) using the live catalogue and store policies as context, with structured JSON output. Without a key, or if the call fails, a rule-based engine answers from the same live data, so the assistant always works.
 
 ## Project structure
@@ -129,6 +128,7 @@ The storefront runs on **Vercel**, the API on **Render**, data on **MongoDB Atla
 
 ## Documentation
 
+- [docs/EVALUATION.md](docs/EVALUATION.md): the brief's evaluation criteria, what is complete for each and how to check it
 - [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md): every requirement in the brief and where it is implemented
 - [docs/DATABASE.md](docs/DATABASE.md): collections, fields, indexes and relationships
 - [docs/API.md](docs/API.md): every endpoint with auth requirements
@@ -138,6 +138,6 @@ The storefront runs on **Vercel**, the API on **Render**, data on **MongoDB Atla
 ## Data and image credits
 
 - **Products, photos and seed reviews:** [DummyJSON](https://dummyjson.com), an open-source mock-data API. Placeholder brand names were mapped to a few house labels (Terrace Studio, Fieldcraft, Vera Nolan, Haldane & Co., Solstice Optics, Arlo & Pine); prices were converted to rupees.
-- **Editorial photos** (hero, parallax bands, scroll story, category explorer, sign-in): Wikimedia Commons, all CC0 (Unsplash uploads). The hero image (the evening study) was supplied by the project owner. Each is credited on the Help page (`/help#credits`) and listed in `client/src/lib/photos.js`.
-- **Fonts:** Bricolage Grotesque and Instrument Sans (SIL Open Font License), served by Google Fonts.
+- **Editorial photos** (photo bands, scroll story, category explorer): Wikimedia Commons, all CC0 (Unsplash uploads). The hero image and the sign-in photo were supplied by the project owner. Each is credited on the Help page (`/help#credits`) and listed in `client/src/lib/photos.js`.
+- **Font:** Inter Tight (SIL Open Font License), served by Google Fonts.
 - This is a demo store: nothing is shipped or charged.

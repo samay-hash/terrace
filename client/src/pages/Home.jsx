@@ -11,7 +11,7 @@ export default function Home() {
       <CategoryExplorer />
       <ParallaxBand
         id="band-watches"
-        photo="watch-drive"
+        photos={["watch-drive", "watch-classic", "watch-cuff", "watch-ridge"]}
         kicker="The watch room"
         title="Time, well kept."
         text="Steel divers and leather-strap chronographs from Rolex, Longines and IWC, sized for free and delivered in a presentation box."
@@ -21,7 +21,7 @@ export default function Home() {
       <SaleBanner />
       <ParallaxBand
         id="band-eyewear"
-        photo="sunglasses"
+        photos={["sunglasses", "shades-beach", "shades-pool", "shades-drive"]}
         kicker="Eyewear"
         title="Bright days, handled."
         text="UV400 aviators, clubmasters and shields, with a hard case in every box."

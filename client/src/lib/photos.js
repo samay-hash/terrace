@@ -39,6 +39,30 @@ export const PHOTOS = {
     alt: "Lane numbers on a red running track",
     credit: { author: "Kolleen Gladden", license: "CC0", source: "https://commons.wikimedia.org/wiki/File:Starting_line_(Unsplash).jpg" },
   },
+  "watch-classic": {
+    alt: "A white-dial watch on a black leather strap, worn with a dark sleeve",
+    credit: { author: "Devon Janse van Rensburg", license: "CC0", source: "https://commons.wikimedia.org/wiki/File:Daniel_Wellington_(Unsplash).jpg" },
+  },
+  "watch-cuff": {
+    alt: "A gold watch at the cuff of a crisp white shirt",
+    credit: { author: "Jonna Fransa", license: "CC0", source: "https://commons.wikimedia.org/wiki/File:White_shirt_and_gold_watch_(Unsplash).jpg" },
+  },
+  "watch-ridge": {
+    alt: "A black watch with a tan strap resting on a rock above a green valley",
+    credit: { author: "Bradley Ziffer", license: "CC0", source: "https://commons.wikimedia.org/wiki/File:Watch_in_the_mountains_(Unsplash).jpg" },
+  },
+  "shades-beach": {
+    alt: "Black sunglasses standing in the sand by the sea",
+    credit: { author: "Ethan Robertson", license: "CC0", source: "https://commons.wikimedia.org/wiki/File:RayBan_sunglasses_(Unsplash).jpg" },
+  },
+  "shades-pool": {
+    alt: "Mirrored aviators on the edge of a swimming pool",
+    credit: { author: "David Lezcano", license: "CC0", source: "https://commons.wikimedia.org/wiki/File:Reflective_sunglasses_(Unsplash).jpg" },
+  },
+  "shades-drive": {
+    alt: "A man in sunglasses in a car at sunset",
+    credit: { author: "Avel Chuklanov", license: "CC0", source: "https://commons.wikimedia.org/wiki/File:Man_in_car_sunset_(Unsplash).jpg" },
+  },
 };
 
 export function photoSrc(name, width = 1920) {

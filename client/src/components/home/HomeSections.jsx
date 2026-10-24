@@ -166,27 +166,76 @@ export function ProductTabs() {
 
 // Full-width photograph with copy on top. The image zooms gently and the
 // copy drifts as the band passes through the viewport.
-export function ParallaxBand({ photo, kicker, title, text, cta, align = "left", id }) {
+const SLIDE_MS = 6500;
+
+// Advances through `count` slides while the section is on screen. Reduced
+// motion keeps the first photo still.
+function useSlideshow(ref, count) {
+  const [index, setIndex] = useState(0);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || count < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    const observer = new IntersectionObserver(([entry]) => setPlaying(entry.isIntersecting), { threshold: 0.25 });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref, count]);
+
+  useEffect(() => {
+    if (!playing) return undefined;
+    const timer = setTimeout(() => setIndex((i) => (i + 1) % count), SLIDE_MS);
+    return () => clearTimeout(timer);
+  }, [playing, index, count]);
+
+  return { index, setIndex, playing };
+}
+
+// Full-width photo band: the photos cross-fade slowly with a gentle zoom and
+// a soft sweep of warm light, under scroll parallax.
+function PhotoBand({ photos, align = "left", labelledBy, children, className = "" }) {
   const ref = useRef(null);
   useScrollProgress(ref);
+  const { index, setIndex, playing } = useSlideshow(ref, photos.length);
+
   return (
-    <section ref={ref} className={styles.band} data-align={align} aria-labelledby={id}>
+    <section ref={ref} className={`${styles.band} ${className}`} data-align={align} data-playing={playing ? "" : undefined} aria-labelledby={labelledBy}>
       <div className={styles.bandMedia} aria-hidden>
-        <img {...photoProps(photo)} alt="" loading="lazy" />
+        {photos.map((name, i) => (
+          <div key={name} className={styles.bandSlide} data-active={i === index ? "" : undefined}>
+            <img {...photoProps(name)} alt="" loading="lazy" />
+          </div>
+        ))}
+        <span key={index} className={styles.bandLight} />
       </div>
       <div className={`container ${styles.bandInner}`}>
-        <div className={styles.bandCopy}>
-          <p className={styles.bandKicker}>{kicker}</p>
-          <h2 id={id} className={`display ${styles.bandTitle}`}>
-            {title}
-          </h2>
-          <p className={styles.bandText}>{text}</p>
-          <Button to={cta.to} variant="light" size="lg">
-            {cta.label}
-          </Button>
-        </div>
+        <div className={styles.bandCopy}>{children}</div>
       </div>
+      {photos.length > 1 && (
+        <div className={`container ${styles.bandProgress}`}>
+          {photos.map((name, i) => (
+            <button key={name} type="button" onClick={() => setIndex(i)} aria-label={`Show photo ${i + 1} of ${photos.length}`} aria-current={i === index ? "true" : undefined}>
+              <span key={i === index ? index : undefined} />
+            </button>
+          ))}
+        </div>
+      )}
     </section>
+  );
+}
+
+export function ParallaxBand({ photos, kicker, title, text, cta, align = "left", id }) {
+  return (
+    <PhotoBand photos={photos} align={align} labelledBy={id}>
+      <p className={styles.bandKicker}>{kicker}</p>
+      <h2 id={id} className={`display ${styles.bandTitle}`}>
+        {title}
+      </h2>
+      <p className={styles.bandText}>{text}</p>
+      <Button to={cta.to} variant="light" size="lg">
+        {cta.label}
+      </Button>
+    </PhotoBand>
   );
 }
 
@@ -308,32 +357,37 @@ const SERVICES = [
   { icon: ShieldCheck, title: "Checked at checkout", text: "The price you see is final" },
 ];
 
-// Calm closing section: one line, two actions, and the store's promises.
+// Closing: one line and two actions over a slow photo band, then the
+// store's promises.
 export function Closing() {
   return (
-    <section className={`container ${styles.closing}`} aria-labelledby="closing-title">
-      <h2 id="closing-title" className={`display ${styles.closingTitle}`}>
-        Find something you'll keep.
-      </h2>
-      <div className={styles.closingActions}>
-        <Button to="/shop" size="lg">
-          Shop everything
-        </Button>
-        <Button size="lg" variant="secondary" onClick={() => window.dispatchEvent(new CustomEvent("chotu:open"))}>
-          Ask Chotu
-        </Button>
+    <>
+      <PhotoBand photos={["street-walk", "duffel", "wrist-chrono", "sneakers-steps"]} align="center" labelledBy="closing-title" className={styles.closingBand}>
+        <h2 id="closing-title" className={`display ${styles.closingTitle}`}>
+          Find something you'll keep.
+        </h2>
+        <div className={styles.closingActions}>
+          <Button to="/shop" size="lg" variant="light">
+            Shop everything
+          </Button>
+          <Button size="lg" variant="glass" onClick={() => window.dispatchEvent(new CustomEvent("chotu:open"))}>
+            Ask the assistant
+          </Button>
+        </div>
+      </PhotoBand>
+      <div className="container">
+        <ul className={styles.services}>
+          {SERVICES.map(({ icon: Icon, title, text }) => (
+            <li key={title}>
+              <Icon size={20} strokeWidth={1.5} aria-hidden />
+              <p>
+                <strong>{title}</strong>
+                <span>{text}</span>
+              </p>
+            </li>
+          ))}
+        </ul>
       </div>
-      <ul className={styles.services}>
-        {SERVICES.map(({ icon: Icon, title, text }) => (
-          <li key={title}>
-            <Icon size={20} strokeWidth={1.5} aria-hidden />
-            <p>
-              <strong>{title}</strong>
-              <span>{text}</span>
-            </p>
-          </li>
-        ))}
-      </ul>
-    </section>
+    </>
   );
 }

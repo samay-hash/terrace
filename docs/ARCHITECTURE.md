@@ -42,14 +42,14 @@ The client is a single-page React app; all data comes from the API. The API is s
 
 ## Design notes
 
-Terrace is an independent sport and street store from Bengaluru. The design is deliberately quiet so the products carry the colour: warm-white pages, white surfaces, black type and black primary buttons, with deep green and brass used only for small moments (a status dot, a verified badge, the sale kicker). Headlines use Bricolage Grotesque in sentence case with tight tracking; body text is Instrument Sans.
+Terrace is an independent sport and street store from Bengaluru. The design is deliberately quiet so the products carry the colour: soft cream pages, warm white surfaces, near-black type and primary buttons, with deep green and brass used only for small moments (a status dot, a verified badge, the sale kicker). One typeface, Inter Tight, runs through the site: tight and medium weight for headlines in sentence case, a touch wider for body text.
 
 Product photos are shot on white, so every image is multiplied onto the same soft grey "well". That removes the white boxes and makes shoes, watches and cricket bats sit on one consistent surface, like a well-lit shop shelf.
 
-The home page opens like an editorial: a **full-screen photograph** with the headline revealed line by line, then alternates product-led sections with **full-width photo bands** (the photo zooms and the copy drifts as you scroll) and a **scroll story** where a sticky photo changes as each chapter reaches the middle of the screen. Scroll effects write a single CSS variable (`hooks/useScrollProgress.js`), so scrolling never re-renders React.
+The home page opens like an editorial: a **full-screen photograph** with a short headline revealed line by line and one call to action, then alternates product-led sections with **full-width photo bands** whose photos cross-fade slowly, with a gentle zoom and a sweep of warm light, while the band drifts with the scroll and a **scroll story** where a sticky photo changes as each chapter reaches the middle of the screen. Scroll effects write a single CSS variable (`hooks/useScrollProgress.js`), so scrolling never re-renders React.
 
 Interaction is used where it helps someone decide, not for decoration:
-- **Picked this week** is a product stage driven by a hover list (nothing auto-rotates);
+- the hero's **dotted pointers** lead from the watch and the wardrobe to an "Order now" link;
 - the **category explorer** swaps a large picture as you hover each department;
 - product cards show the **second photo on hover** and offer **quick add** without leaving the grid;
 - the **mega menu** and **search overlay** (press `/`) get people to the right shelf fast;
@@ -61,7 +61,7 @@ Accessibility: semantic landmarks, skip link, visible focus rings, labelled cont
 
 ## AI tools disclosure
 
-This project was built with Claude (Anthropic) via Claude Code as a coding assistant: scaffolding, writing components and API code, the catalogue import script, documentation and tests, under my direction and review. The assistant also powers Chotu at runtime when an `ANTHROPIC_API_KEY` is configured.
+This project was built with Claude (Anthropic) via Claude Code as a coding assistant: scaffolding, writing components and API code, the catalogue import script, documentation and tests, under my direction and review. Claude also powers the store assistant at runtime when an `ANTHROPIC_API_KEY` is configured.
 
 ## What was tested
 

@@ -17,6 +17,7 @@ body {
   font-family: var(--font-body);
   font-size: var(--text-md);
   line-height: 1.55;
+  letter-spacing: 0.006em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -86,11 +87,10 @@ button:disabled {
   color: var(--bg);
 }
 
-/* Display type: sentence case, tight, optical size from the variable font. */
+/* Display type: sentence case and tight, at a medium weight. */
 .display {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-optical-sizing: auto;
+  font-weight: 560;
   line-height: 1;
   letter-spacing: -0.035em;
 }

@@ -4,7 +4,7 @@ import { Order } from "../../models/Order.js";
 import { Cart } from "../../models/Cart.js";
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_FEE, priceLines } from "../pricing.js";
 
-// Everything Chotu is allowed to state as fact about the store. The model is
+// Everything the assistant is allowed to state as fact about the store. The model is
 // told to answer only from this and the live catalogue below.
 export const STORE_POLICIES = {
   about:

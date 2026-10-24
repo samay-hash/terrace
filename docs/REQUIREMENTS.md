@@ -6,14 +6,14 @@ Every requirement from the assignment brief, and where it is implemented. Paths 
 
 | Requirement | Where |
 |---|---|
-| Custom brand identity, logo, colours, typography | Terrace brand: stepped "terrace" logomark (`client/src/components/layout/Logo.jsx`), tokens in `client/src/styles/tokens.css`, Bricolage Grotesque + Instrument Sans |
-| Header with navigation, search, login/signup and cart icons | `components/layout/Header.jsx`: mega menu, category links, search overlay, wishlist, account (sign in / sign up), bag with count |
-| Hero with custom headline, imagery and call to action | `components/home/Hero.jsx`: editorial photo, headline, two CTAs, dotted "Order now" pointers on the watch and wardrobe |
+| Custom brand identity, logo, colours, typography | Terrace brand: stepped "terrace" logomark (`client/src/components/layout/Logo.jsx`), tokens in `client/src/styles/tokens.css`, Inter Tight throughout |
+| Header with navigation, search, login/signup and cart icons | `components/layout/Header.jsx`: mega menu, category links, search overlay, wishlist, account (sign in / sign up), bag with count; frosted glass on scroll |
+| Hero with custom headline, imagery and call to action | `components/home/Hero.jsx`: editorial photo, short headline, one "Shop the edit" call to action, dotted "Order now" pointers on the watch and wardrobe |
 | Featured products and categories | Hero "Order now" pointers, "This week at Terrace" grid, `CategoryExplorer` in `components/home/HomeSections.jsx` |
 | New arrivals, trending or recommended | `ProductTabs`: two-row grid with New in, Bestsellers, Top rated, On sale tabs and See more |
-| Promotional banners or offers | `SaleBanner` (live count of reduced items), parallax photo bands, announcement bar |
+| Promotional banners or offers | `SaleBanner` (live count of reduced items), cross-fading photo bands for watches and eyewear |
 | Footer with useful links and contact information | `components/layout/Footer.jsx`: shop, help and contact columns, address, email, phone, working newsletter form |
-| Custom layout, consistent spacing/type/colour, quality imagery, meaningful hover states, responsive | Hand-written CSS Modules on shared tokens, with light and dark themes; real product photography; hover photo swap, quick add, category explorer; tested at 1440 px and 390 px |
+| Custom layout, consistent spacing/type/colour, quality imagery, meaningful hover states, responsive | Hand-written CSS Modules on shared tokens; real product photography; hover photo swap, quick add, category explorer; tested at 1920, 1440, 1200 and 390 px |
 
 ## 2. Customer authentication
 

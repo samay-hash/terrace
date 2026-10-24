@@ -1,6 +1,6 @@
 import { STORE_POLICIES, sizesInStock } from "./knowledge.js";
 
-// Rule-based Chotu, used when no ANTHROPIC_API_KEY is configured or the model
+// Rule-based assistant, used when no ANTHROPIC_API_KEY is configured or the model
 // call fails. It understands the common shopper questions (in English and
 // everyday Hinglish) and searches the live catalogue, so the assistant is
 // always useful even without the language model.
@@ -181,7 +181,7 @@ export function fallbackReply({ messages, catalog, shopper, product, saved = [] 
   if (intent === "greeting") {
     const name = shopper ? ` ${shopper.firstName}` : "";
     return {
-      reply: `${h} Hi${name}. I'm Chotu. I know everything on these shelves: stock, sizes, delivery and returns. What are you after?`,
+      reply: `${h} Hi${name}. I'm the Terrace assistant. I know everything on these shelves: stock, sizes, delivery and returns. What are you after?`,
       productSlugs: [],
       suggestions: ["Trainers under ₹10,000", "What's on sale?", "Gift ideas for him"],
     };

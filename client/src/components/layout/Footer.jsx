@@ -53,11 +53,47 @@ function Newsletter() {
   );
 }
 
+// A fixed field of small white dots that slowly twinkle, like a night sky.
+// Positions come from a seeded generator so they're identical on every visit.
+const STARS = (() => {
+  let seed = 7;
+  const rand = () => {
+    seed = (seed * 16807) % 2147483647;
+    return seed / 2147483647;
+  };
+  return Array.from({ length: 110 }, () => {
+    const bright = rand() > 0.9;
+    return {
+      left: `${(rand() * 100).toFixed(2)}%`,
+      top: `${(rand() * 100).toFixed(2)}%`,
+      size: bright ? 2.4 : 1 + rand() * 1.2,
+      bright,
+      duration: `${(2.8 + rand() * 4.5).toFixed(2)}s`,
+      delay: `${(-rand() * 7).toFixed(2)}s`,
+    };
+  });
+})();
+
+function Stars() {
+  return (
+    <div className={styles.stars} aria-hidden>
+      {STARS.map((star, i) => (
+        <span
+          key={i}
+          data-bright={star.bright ? "" : undefined}
+          style={{ left: star.left, top: star.top, width: star.size, height: star.size, animationDuration: star.duration, animationDelay: star.delay }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function Footer() {
   const { data: categories = [] } = useCategories();
 
   return (
     <footer className={styles.footer}>
+      <Stars />
       <div className={`container ${styles.top}`}>
         <div className={styles.brand}>
           <Logo tone="light" />

@@ -1,16 +1,14 @@
 /* ---------- campaign hero ---------- */
 .cinema {
-  --progress: 0;
   position: relative;
   container-type: size;
   display: grid;
-  align-items: center;
-  height: clamp(640px, calc(100svh - 34px), 980px);
-  margin-top: calc(var(--header-h) * -1);
+  place-items: center;
+  height: clamp(600px, calc(100svh - var(--header-h)), 940px);
   overflow: hidden;
-  color: #fff;
+  color: var(--ink);
   isolation: isolate;
-  background: #0b0b0c;
+  background: #e9dcc8;
 }
 
 .frame {
@@ -20,52 +18,44 @@
   overflow: hidden;
 }
 
-/* The photo box keeps the image's aspect ratio and always covers the hero,
-   positioned so the model stays in frame. Hotspots are placed in % of this
-   box, so they stay on the watch and trainers at any screen size. */
+/* The photo box keeps the image's aspect ratio and always covers the hero.
+   --fx is the point of the photo kept at the centre of the screen, so the
+   words land on the curtain. Pointers are placed in % of this box, so they
+   stay on the watch and the wardrobe at any size. */
 .photo {
   --bw: max(100cqw, calc(100cqh * 1.7768));
-  --fx: 0.72;
+  --fx: 0.6;
   position: absolute;
   top: 50%;
   left: clamp(calc(100cqw - var(--bw)), calc(50cqw - var(--bw) * var(--fx)), 0px);
   width: var(--bw);
   aspect-ratio: 1672 / 941;
-  transform: translateY(-50%) scale(calc(1 + var(--progress) * 0.08));
-  transform-origin: 68% 60%;
+  transform: translateY(-50%);
 }
 
 .photo img {
   width: 100%;
   height: 100%;
-  animation: settle 2000ms var(--ease-out);
+  animation: settle 2400ms var(--ease-out);
 }
 
+/* A soft lift of light behind the words, nothing more. */
 .cinema::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(8, 7, 6, 0.55) 0%, rgba(8, 7, 6, 0) 20%),
-    linear-gradient(90deg, rgba(8, 7, 6, 0.6) 0%, rgba(8, 7, 6, 0.25) 36%, rgba(8, 7, 6, 0) 54%),
-    linear-gradient(0deg, rgba(8, 7, 6, 0.45) 0%, rgba(8, 7, 6, 0) 26%);
-}
-
-.inner {
-  padding-top: var(--header-h);
-  transform: translateY(calc(var(--progress) * -110px));
-  opacity: calc(1 - var(--progress) * 1.8);
-  pointer-events: none;
+  background: radial-gradient(42% 46% at 50% 46%, rgba(255, 249, 238, 0.42), rgba(255, 249, 238, 0) 70%);
 }
 
 .copy {
   display: grid;
-  justify-items: start;
+  justify-items: center;
   gap: var(--space-5);
-  max-width: 560px;
-  pointer-events: auto;
+  padding: 0 var(--gutter);
+  margin-top: -4cqh;
+  text-align: center;
 }
 
 .kicker {
@@ -73,84 +63,56 @@
   align-items: center;
   gap: var(--space-3);
   font-size: var(--text-sm);
-  letter-spacing: 0.02em;
-  color: #e9c98f;
-  animation: rise 900ms var(--ease-out) 150ms both;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #4f3b24;
+  animation: rise 900ms var(--ease-out) 200ms both;
 }
 
-.kicker::before {
+.kicker::before,
+.kicker::after {
   content: "";
-  width: 32px;
+  width: 28px;
   height: 1px;
   background: currentColor;
+  opacity: 0.6;
 }
 
 .title {
-  font-size: clamp(3rem, 1.6rem + 4.6vw, 6rem);
-  line-height: 0.95;
-  letter-spacing: -0.048em;
-  color: #fff;
+  font-size: clamp(2.9rem, 1.6rem + 5vw, 6.5rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+  color: #1b1712;
 }
 
 .line {
   display: block;
   overflow: hidden;
-  padding-bottom: 0.07em;
+  padding-bottom: 0.08em;
 }
 
 .line > span {
   display: block;
-  animation: reveal 1100ms var(--ease-out) both;
+  animation: reveal 1200ms var(--ease-out) both;
 }
 
 .line:nth-child(1) > span {
-  animation-delay: 250ms;
+  animation-delay: 300ms;
 }
 
 .line:nth-child(2) > span {
-  animation-delay: 380ms;
+  animation-delay: 440ms;
 }
 
-.lede {
-  max-width: 40ch;
-  font-size: var(--text-lg);
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.76);
-  animation: rise 900ms var(--ease-out) 600ms both;
-}
-
-.ctas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-top: var(--space-2);
-  animation: rise 900ms var(--ease-out) 720ms both;
-}
-
-.facts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-5);
-  margin-top: var(--space-4);
-  padding-top: var(--space-4);
-  border-top: 1px solid rgba(255, 255, 255, 0.16);
-  font-size: var(--text-sm);
-  color: rgba(255, 255, 255, 0.62);
-  animation: rise 900ms var(--ease-out) 840ms both;
-}
-
-.facts li {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.facts li::before {
-  content: "";
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #e9c98f;
+.cta {
+  margin-top: var(--space-3);
+  min-width: 200px;
+  height: 56px;
+  font-size: 0.9375rem;
+  letter-spacing: 0.02em;
+  box-shadow: 0 18px 40px -22px rgba(27, 23, 18, 0.7);
+  animation: rise 900ms var(--ease-out) 760ms both;
 }
 
 /* ---------- dotted pointers ---------- */
@@ -192,6 +154,7 @@
 
 .arrow {
   position: absolute;
+  top: -6px;
   max-width: none;
   overflow: visible;
   fill: none;
@@ -211,44 +174,39 @@
   stroke-width: 1.5;
 }
 
-.spot[data-dir="up"] .arrow {
-  left: -6px;
-  bottom: 14px;
+.spot[data-dir="left"] .arrow {
+  right: 14px;
 }
 
-.spot[data-dir="left"] .arrow {
-  top: -6px;
-  right: 14px;
+.spot[data-dir="right"] .arrow {
+  left: 14px;
 }
 
 .label {
   position: absolute;
+  top: 0;
   display: grid;
   gap: 2px;
   white-space: nowrap;
+  transform: translateY(-50%);
   text-shadow: 0 1px 14px rgba(0, 0, 0, 0.7);
 }
 
-.spot[data-dir="up"] .label {
-  left: 0;
-  bottom: calc(var(--len) + 22px);
-  justify-items: center;
-  transform: translateX(-50%);
-  text-align: center;
-}
-
 .spot[data-dir="left"] .label {
-  top: 0;
   right: calc(var(--len) + 24px);
   justify-items: end;
-  transform: translateY(-50%);
   text-align: right;
+}
+
+.spot[data-dir="right"] .label {
+  left: calc(var(--len) + 24px);
+  justify-items: start;
 }
 
 .meta {
   font-size: var(--text-xs);
   letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.75);
   transition: color 160ms ease;
 }
 
@@ -259,7 +217,7 @@ a.meta:hover {
 .order {
   font-family: var(--font-display);
   font-size: 1.125rem;
-  font-weight: 600;
+  font-weight: 560;
   letter-spacing: -0.015em;
   color: #fff;
   text-decoration: underline;
@@ -295,8 +253,8 @@ a.meta:hover {
 
 @keyframes settle {
   from {
-    transform: scale(1.06);
-    filter: brightness(0.6);
+    transform: scale(1.05);
+    filter: brightness(0.85);
   }
 }
 
@@ -323,8 +281,8 @@ a.meta:hover {
   }
 }
 
-/* Below this width the pointers would meet the headline, so the same two
-   links move into a row of chips. */
+/* Below this width the pointers would crowd the frame, so the same two
+   links sit in a row of chips over the desk. */
 @media (max-width: 1240px) {
   .spot {
     display: none;
@@ -336,13 +294,14 @@ a.meta:hover {
     display: flex;
     gap: var(--space-2);
     overflow-x: auto;
+    color: #fff;
   }
   .mobileLook a {
     display: grid;
     padding: 8px 14px;
     border-radius: var(--radius-sm);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px dashed rgba(255, 255, 255, 0.35);
+    background: rgba(20, 16, 12, 0.35);
+    border: 1px dashed rgba(255, 255, 255, 0.45);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     font-size: var(--text-sm);
@@ -352,23 +311,19 @@ a.meta:hover {
   .mobileLook span {
     font-size: 11px;
     font-weight: 400;
-    color: #e9c98f;
+    color: #f0d7a8;
   }
 }
 
 @media (max-width: 860px) {
   .photo {
-    --fx: 0.66;
+    --fx: 0.42;
   }
   .cinema {
-    align-items: end;
-    height: clamp(600px, 94svh, 820px);
+    height: clamp(560px, 86svh, 760px);
   }
-  .cinema::after {
-    background: linear-gradient(0deg, rgba(8, 7, 6, 0.92) 0%, rgba(8, 7, 6, 0.55) 45%, rgba(8, 7, 6, 0.15) 75%);
-  }
-  .inner {
-    padding-bottom: 96px;
+  .copy {
+    margin-top: -14cqh;
   }
   .mobileLook {
     left: var(--gutter);

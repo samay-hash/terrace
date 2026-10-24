@@ -188,7 +188,7 @@ export default function ProductPage() {
             </div>
             <DeliveryEstimate freeShipping={product.price >= 2999} />
             <button type="button" className={styles.askChotu} onClick={() => window.dispatchEvent(new CustomEvent("chotu:open"))}>
-              <MessageCircle size={16} aria-hidden /> Questions about this item? Ask Chotu
+              <MessageCircle size={16} aria-hidden /> Questions about this item? Ask the assistant
             </button>
           </div>
 

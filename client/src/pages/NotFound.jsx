@@ -12,7 +12,7 @@ export default function NotFound() {
       </p>
       <Teddy size={140} framing="full" mood="thinking" />
       <h1 className={styles.title}>Offside. This page doesn't exist.</h1>
-      <p className={styles.text}>The link may be old or mistyped. Chotu looked everywhere and is not pleased about it.</p>
+      <p className={styles.text}>The link may be old or mistyped. Try the shop, or search for what you were after.</p>
       <div className={styles.actions}>
         <Button to="/" variant="dark">
           Back to the home page

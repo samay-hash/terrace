@@ -20,7 +20,7 @@ export default function Help() {
     <div className={`container ${styles.page}`}>
       <header className={styles.header}>
         <h1 className={`display ${styles.title}`}>Help</h1>
-        <p>Everything about delivery, returns, sizes and care. Still stuck? Chotu answers in seconds, a person by email within a day.</p>
+        <p>Everything about delivery, returns, sizes and care. Still stuck? The assistant answers in seconds, a person by email within a day.</p>
       </header>
 
       <div className={styles.layout}>
@@ -92,7 +92,7 @@ export default function Help() {
               Monday to Saturday, 10 am to 7 pm IST.
             </p>
             <Button variant="dark" onClick={() => window.dispatchEvent(new CustomEvent("chotu:open"))}>
-              Ask Chotu now
+              Ask the assistant
             </Button>
           </section>
 

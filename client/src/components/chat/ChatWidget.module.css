@@ -12,24 +12,29 @@
 .launcher {
   display: grid;
   place-items: center;
-  width: 72px;
-  height: 72px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
-  background: radial-gradient(circle at 50% 35%, var(--surface), var(--surface-2) 70%);
-  border: 1px solid var(--line);
   color: var(--ink);
-  box-shadow: 0 16px 36px -14px rgba(30, 22, 14, 0.45);
-  overflow: hidden;
   transition: transform 220ms var(--ease-out);
 }
 
+/* Just the teddy: no disc behind it, only a soft shadow under the shape. */
+.launcher > span {
+  filter: drop-shadow(0 10px 14px rgba(40, 26, 12, 0.32));
+}
+
 .launcher:hover {
-  transform: translateY(-3px) scale(1.03);
+  transform: translateY(-3px) scale(1.04);
 }
 
 .launcher[aria-expanded="true"] {
+  width: 56px;
+  height: 56px;
+  margin: 20px;
   background: var(--ink);
   color: var(--bg);
+  box-shadow: var(--shadow-pop);
 }
 
 .nudge {
@@ -370,8 +375,11 @@
 
 @media (max-width: 640px) {
   .launcher {
-    width: 54px;
-    height: 54px;
+    width: 76px;
+    height: 76px;
+  }
+  .launcher > span {
+    transform: scale(0.8);
   }
   .launcher svg {
     width: 50px;

@@ -11,10 +11,10 @@ const supportsWebGL = (() => {
   }
 })();
 
-// Chotu as a live 3D teddy. three.js is loaded on demand; the canvas only
+// The assistant as a live 3D teddy. three.js is loaded on demand; the canvas only
 // renders while it's on screen and the tab is visible; reduced-motion users
 // get a still pose; browsers without WebGL see the flat illustration.
-export function Teddy({ size = 64, mood = "idle", framing = "head", follow = true, className = "", label = "Chotu, the Terrace assistant" }) {
+export function Teddy({ size = 64, mood = "idle", framing = "head", follow = true, className = "", label = "The Terrace assistant" }) {
   const hostRef = useRef(null);
   const moodRef = useRef(mood);
   const [failed, setFailed] = useState(!supportsWebGL);

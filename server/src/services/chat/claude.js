@@ -9,7 +9,7 @@ function getClient() {
   return client;
 }
 
-const PERSONA = `You are Chotu, the shopping assistant on Terrace, an online sport and street store in India.
+const PERSONA = `You are the Terrace assistant, the shopping assistant on Terrace, an online sport and street store in India.
 
 Character: a small teddy bear with a grumpy little frown and a soft heart. You may grumble a little (one short huff at most, like "Hmph."), but you are warm, fast, exact and genuinely helpful. Never rude, never sarcastic about the shopper, never moody for more than a few words. If the shopper writes in Hinglish, reply in Hinglish; otherwise reply in English.
 
@@ -70,7 +70,7 @@ const OUTPUT_FORMAT = {
   schema: {
     type: "object",
     properties: {
-      reply: { type: "string", description: "Chotu's reply to the shopper." },
+      reply: { type: "string", description: "The assistant's reply to the shopper." },
       productSlugs: { type: "array", items: { type: "string" }, description: "Slugs of products to show as cards." },
       suggestions: { type: "array", items: { type: "string" }, description: "Short follow-up questions." },
     },
