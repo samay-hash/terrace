@@ -4,7 +4,8 @@ import { ArrowUp, RotateCcw, X } from "lucide-react";
 import { api, assetUrl } from "../../lib/api.js";
 import { formatPrice } from "../../lib/format.js";
 import { readJSON, writeJSON } from "../../lib/storage.js";
-import { Chotu } from "./Chotu.jsx";
+import { Teddy, TeddyAvatar } from "./Teddy.jsx";
+import { useWishlist } from "../../context/WishlistContext.jsx";
 import styles from "./ChatWidget.module.css";
 
 const HISTORY_KEY = "terrace.chotu";
@@ -14,7 +15,7 @@ const MAX_LENGTH = 1200;
 const WELCOME = {
   role: "assistant",
   local: true,
-  content: "Hmph. You found me. I'm Chotu. I know everything on these shelves: what's in stock, sizes, delivery and returns. Ask. Quickly.",
+  content: "Hi, I'm Chotu. I know everything on these shelves: what's in stock, sizes, delivery, returns and your orders. What are you looking for?",
   suggestions: ["Trainers under ₹10,000", "What's on sale?", "Gift ideas for her"],
 };
 
@@ -61,6 +62,8 @@ export function ChatWidget() {
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
   const [nudge, setNudge] = useState(false);
+  const [talking, setTalking] = useState(false);
+  const { slugs: wishlist } = useWishlist();
   const listRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -110,8 +113,15 @@ export function ChatWidget() {
     setInput("");
     setPending(true);
     try {
-      const reply = await api.post("/chat", { messages: toApiHistory(next), productSlug });
+      const reply = await api.post("/chat", {
+        messages: toApiHistory(next),
+        productSlug,
+        page: (location.pathname + location.search).slice(0, 200),
+        wishlist: wishlist.slice(0, 20),
+      });
       setMessages((list) => [...list, { role: "assistant", content: reply.reply, products: reply.products, suggestions: reply.suggestions }]);
+      setTalking(true);
+      setTimeout(() => setTalking(false), 1800);
     } catch (error) {
       setMessages((list) => [...list, { role: "assistant", error: true, content: error.message, retry: content }]);
     } finally {
@@ -132,17 +142,22 @@ export function ChatWidget() {
   if (hidden) return null;
 
   const lastAssistant = [...messages].reverse().find((m) => m.role === "assistant" && !m.error);
-  const mood = pending ? "thinking" : "idle";
+  const mood = pending ? "thinking" : talking ? "talking" : "idle";
 
   return (
     <div className={styles.root}>
       {open && (
         <section className={styles.panel} role="dialog" aria-label="Chat with Chotu" aria-modal="false">
           <header className={styles.head}>
-            <Chotu mood={mood} size={44} />
+            <span className={styles.headTeddy}>
+              <Teddy size={60} mood={mood} />
+            </span>
             <div className={styles.headText}>
               <h2>Chotu</h2>
-              <p>{pending ? "Muttering, looking it up…" : "Shop-floor assistant. Grumpy, but quick."}</p>
+              <p>
+                <span className={styles.online} aria-hidden />
+                {pending ? "Looking it up…" : "Your shop assistant"}
+              </p>
             </div>
             <button
               type="button"
@@ -164,7 +179,7 @@ export function ChatWidget() {
             )}
             {messages.map((m, i) => (
               <div key={i} className={styles.message} data-role={m.role} data-error={m.error ? "" : undefined}>
-                {m.role === "assistant" && <Chotu size={26} className={styles.mini} />}
+                {m.role === "assistant" && <TeddyAvatar size={28} className={styles.mini} />}
                 <div className={styles.bubbleWrap}>
                   <p className={styles.bubble}>{m.content}</p>
                   {m.error && (
@@ -187,7 +202,7 @@ export function ChatWidget() {
             ))}
             {pending && (
               <div className={styles.message} data-role="assistant">
-                <Chotu size={26} mood="thinking" className={styles.mini} />
+                <TeddyAvatar size={28} className={styles.mini} />
                 <p className={`${styles.bubble} ${styles.typing}`} aria-label="Chotu is typing">
                   <span />
                   <span />
@@ -252,7 +267,7 @@ export function ChatWidget() {
         aria-expanded={open}
         aria-label={open ? "Close chat with Chotu" : "Chat with Chotu, the shopping assistant"}
       >
-        {open ? <X size={24} /> : <Chotu size={60} mood={nudge ? "pleased" : "idle"} />}
+        {open ? <X size={24} /> : <Teddy size={64} mood={nudge ? "happy" : "idle"} />}
       </button>
     </div>
   );

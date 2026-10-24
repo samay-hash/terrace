@@ -1,16 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowUpRight, BadgeCheck, RotateCcw, Truck, Banknote, ShieldCheck } from "lucide-react";
-import { useCategories, useProducts, useReviewHighlights } from "../../hooks/queries.js";
+import { ArrowUpRight, RotateCcw, Truck, Banknote, ShieldCheck } from "lucide-react";
+import { useCategories, useProducts } from "../../hooks/queries.js";
 import { assetUrl } from "../../lib/api.js";
 import { pluralize } from "../../lib/format.js";
 import { photoProps } from "../../lib/photos.js";
 import { useScrollProgress } from "../../hooks/useScrollProgress.js";
-import { ProductRail } from "../product/ProductRail.jsx";
+import { ProductGrid } from "../product/ProductCard.jsx";
 import { Button } from "../ui/Button.jsx";
-import { Rating } from "../ui/Controls.jsx";
 import { ErrorState, Skeleton } from "../ui/Feedback.jsx";
-import { Chotu } from "../chat/Chotu.jsx";
 import styles from "./HomeSections.module.css";
 
 // Lifestyle photography (CC0) for categories that have it; the rest use the
@@ -138,31 +136,29 @@ const TABS = [
 
 export function ProductTabs() {
   const [tab, setTab] = useState(TABS[0]);
-  const { data, isLoading, error, refetch } = useProducts({ ...tab.params, limit: 12 });
+  const { data, isLoading, isFetching, error, refetch } = useProducts({ ...tab.params, limit: 8 });
 
   return (
     <section className={`container ${styles.section}`} aria-labelledby="tabs-title">
       <div className={styles.head}>
-        <div>
-          <h2 id="tabs-title" className={`display ${styles.title}`}>
-            This week at Terrace
-          </h2>
-          <div className={styles.tabs} role="tablist" aria-label="Product lists">
-            {TABS.map((t) => (
-              <button key={t.id} type="button" role="tab" aria-selected={t.id === tab.id} onClick={() => setTab(t)}>
-                {t.label}
-              </button>
-            ))}
-          </div>
+        <h2 id="tabs-title" className={`display ${styles.title}`}>
+          This week at Terrace
+        </h2>
+        <div className={styles.tabs} role="tablist" aria-label="Product lists">
+          {TABS.map((t) => (
+            <button key={t.id} type="button" role="tab" aria-selected={t.id === tab.id} onClick={() => setTab(t)}>
+              {t.label}
+            </button>
+          ))}
         </div>
       </div>
-      <div role="tabpanel" aria-label={tab.label}>
-        {error ? <ErrorState error={error} onRetry={refetch} /> : <ProductRail products={data?.items ?? []} loading={isLoading} label={tab.label} />}
+      <div role="tabpanel" aria-label={tab.label} className={styles.tabPanel} data-fetching={isFetching && !isLoading ? "" : undefined}>
+        {error ? <ErrorState error={error} onRetry={refetch} /> : <ProductGrid products={data?.items ?? []} loading={isLoading} skeletonCount={8} />}
       </div>
       <div className={styles.more}>
-        <Link to={tab.link} className={styles.headLink}>
-          See all {tab.label.toLowerCase()} <ArrowUpRight size={16} aria-hidden />
-        </Link>
+        <Button to={tab.link} variant="secondary" size="lg">
+          See more {tab.label.toLowerCase()}
+        </Button>
       </div>
     </section>
   );
@@ -204,10 +200,10 @@ const STORY = [
     label: "Shop sports gear",
   },
   {
-    photo: "sneakers-steps",
+    photo: "street-walk",
     kicker: "On the street",
-    title: "Trainers that go from steps to stands.",
-    text: "Everyday runners and court classics in UK sizes, with free exchanges if the fit isn't right the first time.",
+    title: "Shoes for the long way round.",
+    text: "Everyday runners, court classics and suede boots in UK sizes, with free exchanges if the fit isn't right the first time.",
     to: "/shop?category=footwear",
     label: "Shop footwear",
   },
@@ -270,47 +266,6 @@ export function ScrollStory() {
   );
 }
 
-export function ReviewsStrip() {
-  const { data } = useReviewHighlights();
-  if (!data?.items?.length) return null;
-
-  return (
-    <section className={`container ${styles.section}`} aria-labelledby="reviews-title">
-      <div className={styles.reviewsHead}>
-        <div>
-          <h2 id="reviews-title" className={`display ${styles.title}`}>
-            Heard on the shop floor
-          </h2>
-          <p className={styles.sub}>Recent reviews from people who bought from us.</p>
-        </div>
-        <Rating value={data.average} count={data.count} size={16} />
-      </div>
-      <ul className={`${styles.reviews} no-scrollbar`}>
-        {data.items.slice(0, 3).map((r) => (
-          <li key={r.id} className={styles.review}>
-            <Rating value={r.rating} count={1} size={14} showValue={false} />
-            <blockquote>“{r.body}”</blockquote>
-            <p className={styles.reviewAuthor}>
-              {r.authorName}
-              {r.verified && (
-                <span>
-                  <BadgeCheck size={14} aria-hidden /> Verified buyer
-                </span>
-              )}
-            </p>
-            <Link to={`/product/${r.product.slug}`} className={styles.reviewProduct}>
-              <span>
-                <img className="product-photo" src={assetUrl(r.product.image)} alt="" width="48" height="48" loading="lazy" />
-              </span>
-              {r.product.name}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
 export function SaleBanner() {
   const { data } = useProducts({ onSale: "true", sort: "popular", limit: 3 });
   const count = data?.pagination?.total;
@@ -343,48 +298,36 @@ export function SaleBanner() {
   );
 }
 
-export function AskChotu() {
-  return (
-    <section className={`container ${styles.section}`} aria-labelledby="chotu-title">
-      <div className={styles.chotu}>
-        <Chotu size={112} />
-        <div className={styles.chotuCopy}>
-          <h2 id="chotu-title" className={`display ${styles.chotuTitle}`}>
-            Questions? Ask Chotu.
-          </h2>
-          <p className={styles.sub}>
-            Our shop-floor assistant is small, permanently annoyed and knows every item on the shelves: stock by size, fit, delivery
-            dates and where your order is.
-          </p>
-        </div>
-        <div className={styles.chotuQuote}>
-          <p>“Hmph. Between UK 8 and 9 in trainers? Take the 9. Next question.”</p>
-          <Button variant="dark" onClick={() => window.dispatchEvent(new CustomEvent("chotu:open"))}>
-            Ask Chotu
-          </Button>
-        </div>
-      </div>
-    </section>
-  );
-}
+const SERVICES = [
+  { icon: Truck, title: "Free shipping", text: "On orders over ₹2,999" },
+  { icon: RotateCcw, title: "30-day returns", text: "Free, from your order page" },
+  { icon: Banknote, title: "Cash on delivery", text: "Across India" },
+  { icon: ShieldCheck, title: "Checked at checkout", text: "The price you see is final" },
+];
 
-export function Promises() {
-  const items = [
-    { icon: Truck, title: "Free shipping over ₹2,999", text: "Dispatched the same day before 2 pm" },
-    { icon: RotateCcw, title: "30-day free returns", text: "Unused, with tags, from your order page" },
-    { icon: Banknote, title: "Cash on delivery", text: "Pay in cash or UPI when it arrives" },
-    { icon: ShieldCheck, title: "Prices checked at checkout", text: "What you see is what you pay" },
-  ];
+// Calm closing section: one line, two actions, and the store's promises.
+export function Closing() {
   return (
-    <section className={`container ${styles.promisesSection}`} aria-label="Our promises">
-      <ul className={styles.promises}>
-        {items.map(({ icon: Icon, title, text }) => (
+    <section className={`container ${styles.closing}`} aria-labelledby="closing-title">
+      <h2 id="closing-title" className={`display ${styles.closingTitle}`}>
+        Find something you'll keep.
+      </h2>
+      <div className={styles.closingActions}>
+        <Button to="/shop" size="lg">
+          Shop everything
+        </Button>
+        <Button size="lg" variant="secondary" onClick={() => window.dispatchEvent(new CustomEvent("chotu:open"))}>
+          Ask Chotu
+        </Button>
+      </div>
+      <ul className={styles.services}>
+        {SERVICES.map(({ icon: Icon, title, text }) => (
           <li key={title}>
-            <Icon size={22} strokeWidth={1.6} aria-hidden />
-            <div>
-              <p className={styles.promiseTitle}>{title}</p>
-              <p className={styles.promiseText}>{text}</p>
-            </div>
+            <Icon size={20} strokeWidth={1.5} aria-hidden />
+            <p>
+              <strong>{title}</strong>
+              <span>{text}</span>
+            </p>
           </li>
         ))}
       </ul>

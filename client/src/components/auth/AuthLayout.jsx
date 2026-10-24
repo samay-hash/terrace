@@ -1,5 +1,5 @@
 import { Logo } from "../layout/Logo.jsx";
-import { Chotu } from "../chat/Chotu.jsx";
+import { Teddy } from "../chat/Teddy.jsx";
 import { RotateCcw, Banknote, MessageCircle } from "lucide-react";
 import { photoProps } from "../../lib/photos.js";
 import styles from "./AuthLayout.module.css";
@@ -15,7 +15,7 @@ export function AuthLayout({ heading, subheading, quote, children }) {
           <p className={styles.sub}>{subheading}</p>
 
           <div className={styles.mascot}>
-            <Chotu size={120} mood="idle" />
+            <Teddy size={132} framing="full" />
             <p className={styles.bubble}>
               <span>Chotu</span>
               {quote}

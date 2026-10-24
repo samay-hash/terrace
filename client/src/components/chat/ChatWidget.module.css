@@ -12,17 +12,24 @@
 .launcher {
   display: grid;
   place-items: center;
-  width: 64px;
-  height: 64px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
-  background: var(--ink);
-  color: var(--bg);
-  box-shadow: 0 12px 30px -10px rgba(20, 20, 20, 0.5);
-  transition: transform 200ms var(--ease-out);
+  background: radial-gradient(circle at 50% 35%, #fbf4e8, var(--tint-sand) 70%);
+  border: 1px solid rgba(20, 20, 20, 0.08);
+  color: var(--ink);
+  box-shadow: 0 16px 36px -14px rgba(20, 20, 20, 0.45);
+  overflow: hidden;
+  transition: transform 220ms var(--ease-out);
 }
 
 .launcher:hover {
-  transform: translateY(-2px) rotate(-4deg);
+  transform: translateY(-3px) scale(1.03);
+}
+
+.launcher[aria-expanded="true"] {
+  background: var(--ink);
+  color: var(--bg);
 }
 
 .nudge {
@@ -72,9 +79,28 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
-  background: var(--dark);
-  color: var(--on-dark);
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-3);
+  background: linear-gradient(180deg, #fbf4e8, var(--tint-sand));
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.headTeddy {
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+}
+
+.online {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: #3aa66b;
+  box-shadow: 0 0 0 3px rgba(58, 166, 107, 0.18);
+  vertical-align: 1px;
 }
 
 .headText {
@@ -91,9 +117,9 @@
 }
 
 .headText p {
-  margin-top: 2px;
+  margin-top: 4px;
   font-size: var(--text-xs);
-  color: var(--on-dark-2);
+  color: var(--ink-2);
 }
 
 .headButton {
@@ -102,12 +128,12 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  color: var(--on-dark-2);
+  color: var(--ink-2);
 }
 
 .headButton:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--on-dark);
+  background: rgba(20, 20, 20, 0.06);
+  color: var(--ink);
 }
 
 .list {

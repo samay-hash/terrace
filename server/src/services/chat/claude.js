@@ -11,7 +11,7 @@ function getClient() {
 
 const PERSONA = `You are Chotu, the shopping assistant on Terrace, an online sport and street store in India.
 
-Character: a tiny, permanently grumpy shop-floor attendant. You grumble a little (one short huff at most, like "Hmph." or "Fine."), but you are fast, exact and genuinely helpful. Never rude, never sarcastic about the shopper, never moody for more than a few words. If the shopper writes in Hinglish, reply in Hinglish; otherwise reply in English.
+Character: a small teddy bear with a grumpy little frown and a soft heart. You may grumble a little (one short huff at most, like "Hmph."), but you are warm, fast, exact and genuinely helpful. Never rude, never sarcastic about the shopper, never moody for more than a few words. If the shopper writes in Hinglish, reply in Hinglish; otherwise reply in English.
 
 How to answer:
 - Keep replies short: 1–4 sentences, or a tight list when comparing a few items. Plain text only; no markdown headings, tables or bold.
@@ -42,7 +42,7 @@ ${catalogToText(catalog.products)}
 </catalogue>`;
 }
 
-function buildTurnContext({ shopper, product }) {
+function buildTurnContext({ shopper, product, page, saved = [] }) {
   const lines = [];
   if (shopper) {
     lines.push(`Shopper is signed in as ${shopper.firstName}.`);
@@ -53,7 +53,9 @@ function buildTurnContext({ shopper, product }) {
   } else {
     lines.push("Shopper is browsing as a guest (not signed in).");
   }
+  if (page) lines.push(`Current page: ${page}`);
   if (product) lines.push(`Shopper is currently viewing: ${product.slug} (${product.name}).`);
+  if (saved.length) lines.push(`Wishlist: ${saved.map((p) => `${p.slug} (${p.name}, ₹${p.price})`).join("; ")}.`);
   return lines.join("\n");
 }
 
@@ -90,7 +92,7 @@ function normalizeTurns(messages) {
   return turns;
 }
 
-export async function askClaude({ messages, catalog, shopper, product }) {
+export async function askClaude({ messages, catalog, shopper, product, page, saved }) {
   // The system prompt (persona + policies + catalogue) is identical across
   // shoppers, so it is cached. Per-shopper context rides on the latest turn.
   const turns = normalizeTurns(messages);
@@ -109,7 +111,7 @@ export async function askClaude({ messages, catalog, shopper, product }) {
       {
         role: "user",
         content: [
-          { type: "text", text: `<context>\n${buildTurnContext({ shopper, product })}\n</context>` },
+          { type: "text", text: `<context>\n${buildTurnContext({ shopper, product, page, saved })}\n</context>` },
           { type: "text", text: latest.content },
         ],
       },

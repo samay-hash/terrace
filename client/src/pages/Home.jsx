@@ -1,46 +1,34 @@
 import { useDocumentTitle } from "../hooks/useDocumentTitle.js";
-import { CinematicHero, FeaturedStage } from "../components/home/Hero.jsx";
-import {
-  AskChotu,
-  CategoryExplorer,
-  ParallaxBand,
-  ProductTabs,
-  Promises,
-  ReviewsStrip,
-  SaleBanner,
-  ScrollStory,
-} from "../components/home/HomeSections.jsx";
+import { CinematicHero } from "../components/home/Hero.jsx";
+import { CategoryExplorer, Closing, ParallaxBand, ProductTabs, SaleBanner, ScrollStory } from "../components/home/HomeSections.jsx";
 
 export default function Home() {
   useDocumentTitle();
   return (
     <>
       <CinematicHero />
-      <Promises />
-      <FeaturedStage />
+      <ProductTabs />
       <CategoryExplorer />
       <ParallaxBand
         id="band-watches"
         photo="watch-drive"
         kicker="The watch room"
         title="Time, well kept."
-        text="Steel divers, leather-strap chronographs and the occasional grail from Rolex, Longines and IWC. Sized for free, delivered in a presentation box."
+        text="Steel divers and leather-strap chronographs from Rolex, Longines and IWC, sized for free and delivered in a presentation box."
         cta={{ to: "/shop?category=watches", label: "Explore watches" }}
       />
-      <ProductTabs />
       <ScrollStory />
       <SaleBanner />
       <ParallaxBand
-        id="band-matchday"
-        photo="stadium"
-        kicker="Matchday"
-        title="From nets to floodlights."
-        text="English willow bats, match balls and helmets for weekend games, plus everything you need to watch the big one in comfort."
-        cta={{ to: "/shop?category=sports", label: "Shop sports gear" }}
+        id="band-eyewear"
+        photo="sunglasses"
+        kicker="Eyewear"
+        title="Bright days, handled."
+        text="UV400 aviators, clubmasters and shields, with a hard case in every box."
+        cta={{ to: "/shop?category=eyewear", label: "Shop sunglasses" }}
         align="right"
       />
-      <ReviewsStrip />
-      <AskChotu />
+      <Closing />
     </>
   );
 }

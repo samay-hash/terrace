@@ -7,10 +7,12 @@ const MAX_CARDS = 4;
 const MAX_SUGGESTIONS = 3;
 
 export async function chat(req, res) {
-  const { messages, productSlug } = req.valid.body;
+  const { messages, productSlug, page, wishlist = [] } = req.valid.body;
   const [catalog, shopper] = await Promise.all([getCatalog(), getShopperContext(req.user)]);
   const product = productSlug ? catalog.products.find((p) => p.slug === productSlug) : undefined;
-  const input = { messages, catalog, shopper, product };
+  // Only slugs that exist in the catalogue are used; the rest are ignored.
+  const saved = wishlist.map((slug) => catalog.products.find((p) => p.slug === slug)).filter(Boolean);
+  const input = { messages, catalog, shopper, product, page, saved };
 
   let answer;
   let source = "rules";

@@ -1,0 +1,16 @@
+.teddy {
+  display: inline-block;
+  flex: none;
+  line-height: 0;
+}
+
+.teddy canvas {
+  display: block;
+}
+
+.avatar {
+  display: inline-block;
+  flex: none;
+  border-radius: 50%;
+  background: var(--tint-sand);
+}

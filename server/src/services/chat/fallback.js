@@ -7,7 +7,7 @@ import { STORE_POLICIES, sizesInStock } from "./knowledge.js";
 
 const rupees = (n) => `₹${n.toLocaleString("en-IN")}`;
 
-const HUFFS = ["Hmph.", "Fine.", "Ugh, okay.", "Right.", "Hmm."];
+const HUFFS = ["Hmph, fine.", "On it.", "Right.", "Got it.", "Hmm."];
 function huff(seed) {
   return HUFFS[seed.length % HUFFS.length];
 }
@@ -17,6 +17,7 @@ const has = (text, words) => words.some((w) => new RegExp(`(^|[^a-z])${w}`, "i")
 const INTENTS = [
   { name: "greeting", test: (t) => /^(hi+|hey+|hello+|namaste|yo|hola|sup|good (morning|evening|afternoon))\b/i.test(t.trim()) },
   { name: "thanks", test: (t) => has(t, ["thank", "thx", "shukriya", "dhanyavad"]) },
+  { name: "wishlist", test: (t) => has(t, ["wishlist", "wish list", "saved", "favourite", "favorite"]) },
   { name: "order", test: (t) => has(t, ["order", "track", "where is my", "kab aayega", "kab aaega", "status"]) },
   { name: "bag", test: (t) => has(t, ["my bag", "my cart", "cart", "bag me", "bag mein", "basket"]) && !has(t, ["handbag", "backpack", "tote"]) },
   { name: "returns", test: (t) => has(t, ["return", "exchange", "refund", "wapas", "vapas", "replace"]) },
@@ -154,7 +155,7 @@ const FOLLOW_UPS = {
   about: ["What's popular?", "Top rated watches"],
 };
 
-export function fallbackReply({ messages, catalog, shopper, product }) {
+export function fallbackReply({ messages, catalog, shopper, product, saved = [] }) {
   const text = messages.at(-1).content;
   const intent = INTENTS.find((i) => i.test(text))?.name;
   const h = huff(text);
@@ -187,6 +188,20 @@ export function fallbackReply({ messages, catalog, shopper, product }) {
   }
   if (intent === "thanks") {
     return { reply: "Hmph. You're welcome. Go on, the bag won't fill itself.", productSlugs: [], suggestions: ["What's new?", "What's on sale?"] };
+  }
+
+  if (intent === "wishlist") {
+    if (!saved.length) {
+      return { reply: `${h} Your wishlist is empty. Tap the heart on anything you like and I'll keep an eye on it.`, productSlugs: [], suggestions: ["What's popular?", "What's on sale?"] };
+    }
+    const inStock = saved.filter((p) => p.stock > 0);
+    const onSale = saved.filter((p) => p.compareAtPrice > p.price);
+    const total = saved.reduce((sum, p) => sum + p.price, 0);
+    return {
+      reply: `${h} You've saved ${saved.length} item${saved.length > 1 ? "s" : ""} worth ${rupees(total)} together. ${inStock.length === saved.length ? "All in stock." : `${saved.length - inStock.length} sold out right now.`}${onSale.length ? ` ${onSale.length} on sale.` : ""}`,
+      productSlugs: saved.slice(0, 4).map((p) => p.slug),
+      suggestions: ["Delivery time?", "Cash on delivery?"],
+    };
   }
 
   if (intent === "order") {

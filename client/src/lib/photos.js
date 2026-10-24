@@ -1,5 +1,5 @@
 // Editorial photography used across the store. Every image is free to use;
-// CC BY / CC BY-SA images are credited on the Help page (see PhotoCredits).
+// all are credited on the Help page (see PhotoCredits).
 const BASE = "/images/editorial";
 
 export const PHOTOS = {
@@ -26,14 +26,6 @@ export const PHOTOS = {
   sunglasses: {
     alt: "Black sunglasses resting on a stone ledge",
     credit: { author: "Steve Halama", license: "CC0", source: "https://commons.wikimedia.org/wiki/File:Steve_Halama_2017-02-02_(Unsplash).jpg" },
-  },
-  stadium: {
-    alt: "A cricket match under floodlights at Barsapara Stadium, Guwahati",
-    credit: { author: "Javs1233", license: "CC BY-SA 4.0", source: "https://commons.wikimedia.org/wiki/File:Barsapara_Cricket_Stadium_match_under_floodlights.jpg" },
-  },
-  "pocket-watch": {
-    alt: "An engraved gold pocket watch, open, on a black background",
-    credit: { author: "Auckland Museum", license: "CC BY 2.0", source: "https://commons.wikimedia.org/wiki/File:Watch,_Gold_(48708080673).jpg" },
   },
   "street-walk": {
     alt: "Suede boots and black jeans walking past a white brick wall",

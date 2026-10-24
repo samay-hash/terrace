@@ -225,4 +225,7 @@ export const chatSchema = z.object({
     .max(20)
     .refine((messages) => messages.at(-1).role === "user", "The last message must come from the shopper."),
   productSlug: z.string().trim().toLowerCase().regex(/^[a-z0-9-]{1,100}$/).optional(),
+  // Where the shopper is and what they've saved, so answers can refer to it.
+  page: z.string().trim().max(200).regex(/^\/[\w\-/?=&%.+,]*$/, "Invalid page").optional(),
+  wishlist: z.array(z.string().regex(/^[a-z0-9-]{1,100}$/)).max(20).optional(),
 });

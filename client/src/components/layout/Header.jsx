@@ -12,7 +12,8 @@ import { SearchOverlay } from "./SearchOverlay.jsx";
 import { Drawer } from "../ui/Overlay.jsx";
 import styles from "./Header.module.css";
 
-const SHORT_NAMES = { sports: "Sports" };
+// The rest of the departments live in the Shop mega menu.
+const PRIMARY = ["watches", "footwear", "eyewear"];
 const COLLECTIONS = [
   { to: "/shop?sort=newest", label: "New in" },
   { to: "/shop?sort=popular", label: "Bestsellers" },
@@ -136,7 +137,7 @@ function AccountMenu() {
   if (!user) {
     return (
       <Link to="/login" className={styles.iconButton} aria-label="Sign in or create an account" title="Sign in">
-        <User size={20} strokeWidth={1.8} />
+        <User size={20} strokeWidth={1.6} />
       </Link>
     );
   }
@@ -225,44 +226,45 @@ export function Header() {
         <div className={`container ${styles.bar}`}>
           <div className={styles.left}>
             <button type="button" className={`${styles.iconButton} ${styles.burger}`} onClick={() => setMenuOpen(true)} aria-label="Open menu">
-              <Menu size={22} strokeWidth={1.8} />
+              <Menu size={22} strokeWidth={1.6} />
             </button>
+            <nav className={styles.nav} aria-label="Main">
+              <MegaMenu categories={categories} />
+              <Link to="/shop?sort=newest" className={`${styles.navLink} ${isActive(location, { sort: "newest" }) ? styles.current : ""}`}>
+                New in
+              </Link>
+              {PRIMARY.map((slug) => {
+                const c = categories.find((cat) => cat.slug === slug);
+                if (!c) return null;
+                const current = isActive(location, { category: slug });
+                return (
+                  <Link key={slug} to={`/shop?category=${slug}`} className={`${styles.navLink} ${current ? styles.current : ""}`} aria-current={current ? "page" : undefined}>
+                    {c.name}
+                  </Link>
+                );
+              })}
+              <Link to="/shop?onSale=true" className={`${styles.navLink} ${styles.sale} ${isActive(location, { onSale: "true" }) ? styles.current : ""}`}>
+                Sale
+              </Link>
+            </nav>
+          </div>
+
+          <div className={styles.center}>
             <Logo tone={location.pathname === "/" && !scrolled ? "light" : "ink"} />
           </div>
 
-          <nav className={styles.nav} aria-label="Main">
-            <MegaMenu categories={categories} />
-            {categories.map((c) => (
-              <Link
-                key={c.id}
-                to={`/shop?category=${c.slug}`}
-                className={`${styles.navLink} ${isActive(location, { category: c.slug }) ? styles.current : ""}`}
-                aria-current={isActive(location, { category: c.slug }) ? "page" : undefined}
-              >
-                {SHORT_NAMES[c.slug] ?? c.name}
-              </Link>
-            ))}
-            <Link to="/shop?onSale=true" className={`${styles.navLink} ${styles.sale} ${isActive(location, { onSale: "true" }) ? styles.current : ""}`}>
-              Sale
-            </Link>
-          </nav>
-
           <div className={styles.actions}>
             <button type="button" className={styles.searchButton} onClick={() => setSearchOpen(true)} aria-label="Search (press /)">
-              <Search size={18} strokeWidth={1.8} aria-hidden />
+              <Search size={18} strokeWidth={1.6} aria-hidden />
               <span>Search</span>
-              <kbd>/</kbd>
-            </button>
-            <button type="button" className={`${styles.iconButton} ${styles.searchIcon}`} onClick={() => setSearchOpen(true)} aria-label="Search">
-              <Search size={20} strokeWidth={1.8} />
             </button>
             <Link to="/wishlist" className={`${styles.iconButton} ${styles.withCount}`} aria-label={`Wishlist, ${savedCount} saved`} title="Wishlist">
-              <Heart size={20} strokeWidth={1.8} />
+              <Heart size={20} strokeWidth={1.6} />
               {savedCount > 0 && <span className={`${styles.count} tabular`}>{savedCount}</span>}
             </Link>
             <AccountMenu />
             <button type="button" className={`${styles.iconButton} ${styles.withCount}`} onClick={openDrawer} aria-label={`Bag, ${itemCount} ${itemCount === 1 ? "item" : "items"}`}>
-              <ShoppingBag size={20} strokeWidth={1.8} />
+              <ShoppingBag size={20} strokeWidth={1.6} />
               {itemCount > 0 && <span key={itemCount} className={`${styles.count} ${styles.bump} tabular`}>{itemCount > 99 ? "99+" : itemCount}</span>}
             </button>
           </div>

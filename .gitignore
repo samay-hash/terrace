@@ -9,3 +9,6 @@ server/uploads/
 coverage/
 .vercel
 server/seed/contact-sheet.png
+
+# Source artwork kept outside the build
+/Luxury Tech Fashion on a Golden Horizon.png
