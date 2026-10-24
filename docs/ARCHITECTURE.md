@@ -33,24 +33,37 @@ The client is a single-page React app; all data comes from the API. The API is s
 - **Same-origin API through a Vercel rewrite.** Cross-site cookies are increasingly blocked by browsers. Proxying `/api` through the storefront domain keeps the session cookie first-party with `SameSite=Lax`, avoids CORS preflights for most requests and mirrors the Vite dev proxy, so development and production behave the same.
 - **The server owns money and stock.** Carts store only product id, size and quantity. Every read re-prices from the database and reports issues per line (sold out, reduced quantity, removed product). Checkout re-prices again and reserves each line with one conditional update, releasing earlier lines if a later one fails.
 - **Guest bag in the browser, account bag on the server.** Guests can shop without signing up; their bag (ids only) is priced by `POST /cart/quote` and merged into the account at sign in, capped by stock instead of failing.
-- **Per-size stock.** Shirts are bought by size, so stock is tracked per size, with a derived total for listings, filters and low-stock alerts.
+- **Per-size stock with free-text size labels.** Stock is tracked per size, with a derived total for listings, filters and low-stock alerts. Labels are free text (validated) so each category uses its natural run: UK shoe sizes, XS–XXL, or One size. The admin editor offers presets for each.
+- **Ratings stored on the product.** Average and count are recalculated when a review is added or removed, so listings can sort and filter by rating without aggregating reviews on every request.
+- **Wishlist in the browser.** Saved items are slugs in localStorage; the page fetches fresh prices and stock with one `?slugs=` request. No account needed, nothing stale.
 - **Order lines are snapshots.** Name, price, size and image are copied into the order, so editing or deleting a product never rewrites history.
-- **Generated product photography.** Real club photos are copyrighted and inconsistent. `seed/jersey.js` renders front, back and close-up shots from each kit's colours and pattern, giving 108 consistent, licence-free images that go through the same upload pipeline as admin uploads.
+- **Real product photography from open data.** `seed/fetchCatalog.js` pulls 52 products and their studio photos (1000 × 1000, white background) from DummyJSON, an open-source mock-data API, converts prices to rupees and maps placeholder brands to a few house labels. The data and images are committed so seeding works offline, and every image goes through the same validation and upload pipeline as admin uploads.
 - **Errors are designed, not dumped.** Each API error has a code and a message written for the shopper or admin; every page has loading (skeletons), empty and error (with retry) states.
 
 ## Design notes
 
-The brand is an independent Bengaluru kit studio. The visual language comes from the stands: Big Shoulders Display (stadium signage, shirt numbers) for headlines, Instrument Sans for reading, chalk-white pages, pitch green for actions and brass for the small celebratory moments. The one bold piece is the home page's "Kit of the week" tactics board, where chalk pitch markings draw in once and the live featured shirt is pinned on with a magnet. Everything around it stays quiet. Hover on a product card shows the back of the shirt, the side fans see from the stands.
+Terrace is an independent sport and street store from Bengaluru. The design is deliberately quiet so the products carry the colour: warm-white pages, white surfaces, black type and black primary buttons, with deep green and brass used only for small moments (a status dot, a verified badge, the sale kicker). Headlines use Bricolage Grotesque in sentence case with tight tracking; body text is Instrument Sans.
 
-Accessibility: semantic landmarks, skip link, visible focus rings, labelled controls, `aria-live` regions for results and chat, focus trapping in dialogs and drawers, keyboard-operable search suggestions, and `prefers-reduced-motion` support.
+Product photos are shot on white, so every image is multiplied onto the same soft grey "well". That removes the white boxes and makes shoes, watches and cricket bats sit on one consistent surface, like a well-lit shop shelf.
+
+Interaction is used where it helps someone decide, not for decoration:
+- the hero is a **product stage**: four featured products switched by tabs (nothing auto-rotates);
+- the **category explorer** swaps a large picture as you hover each department;
+- product cards show the **second photo on hover** and offer **quick add** without leaving the grid;
+- the **mega menu** and **search overlay** (press `/`) get people to the right shelf fast;
+- the product page has **hover zoom**, a **size guide** that matches the product (shoes or clothing), a **delivery estimate** that counts down to the 2 pm dispatch cut-off, and **reviews** with a star breakdown.
+
+Motion is limited to short transitions that confirm an action (drawer, toast, bag count bump, image swap) and respects `prefers-reduced-motion`.
+
+Accessibility: semantic landmarks, skip link, visible focus rings, labelled controls, `aria-live` regions for results and chat, focus trapping in dialogs and drawers, keyboard-operable menus, tabs and search, radio-group size and star pickers, and alt text on product images.
 
 ## AI tools disclosure
 
-This project was built with Claude (Anthropic) via Claude Code as a coding assistant: scaffolding, writing components and API code, the seed jersey renderer, documentation and tests, under my direction and review. The assistant also powers Chotu at runtime when an `ANTHROPIC_API_KEY` is configured.
+This project was built with Claude (Anthropic) via Claude Code as a coding assistant: scaffolding, writing components and API code, the catalogue import script, documentation and tests, under my direction and review. The assistant also powers Chotu at runtime when an `ANTHROPIC_API_KEY` is configured.
 
 ## What was tested
 
-- **Automated:** 50 API tests (`server/tests/`) covering auth, sessions, CSRF, admin authorisation, validation and injection, cart pricing, order isolation, concurrent checkout, uploads, headers and rate limiting. All pass.
-- **Browser (headless Chrome):** home, shop, product, sign in/up, chat, cart drawer, checkout and order pages at 1440 px and 390 px; admin overview, products, product editor, categories and orders; the full guest bag → sign in → merge → checkout → confirmation flow; Chotu's product recommendations.
+- **Automated:** 60 API tests (`server/tests/`) covering auth, sessions, CSRF, admin authorisation, validation and injection, cart pricing, order isolation, concurrent checkout, uploads, reviews, facets, wishlist lookups, newsletter, headers and rate limiting. All pass.
+- **Browser (headless Chrome):** home, shop, product, wishlist, sign in/up, chat, mega menu, search overlay, quick add, bag drawer, checkout and order pages at 1440 px and 390 px; admin overview, products, product editor (with image upload and size presets), categories, orders and reviews; the full guest bag → sign in → merge → checkout → confirmation flow; admin create → edit → delete product flow.
 - **Manual API checks** with curl: customer sessions against admin routes, uploads without the CSRF header and with fake image files, client-sent prices being ignored.
 - **Not verified:** the Claude-powered assistant path, because no API key was available during development; the rule-based assistant was used for all chat testing. Deployment to Vercel/Render needs the account setup described in the README.

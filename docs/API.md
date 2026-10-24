@@ -24,9 +24,18 @@ Access: **Public** anyone, **User** any signed-in account, **Admin** role `admin
 | Method | Path | Access | Notes |
 |---|---|---|---|
 | GET | `/categories` | Public | Categories with live product counts. |
-| GET | `/products` | Public | Query: `q`, `category` (slug), `size`, `kitType`, `minPrice`, `maxPrice`, `onSale`, `inStock`, `featured`, `sort` (`featured`, `newest`, `price-asc`, `price-desc`, `popular`, `name`), `page`, `limit` (≤ 48). Returns `{ items, pagination }`. |
-| GET | `/products/facets` | Public | Price range of live products. |
+| GET | `/products` | Public | Query: `q` (name, brand or SKU), `category` (slug), `brand`, `gender`, `size` (label), `minPrice`, `maxPrice`, `minRating`, `onSale`, `inStock`, `featured`, `slugs` (comma-separated, ≤ 50, for wishlist and recently viewed), `sort` (`featured`, `newest`, `price-asc`, `price-desc`, `popular`, `rating`, `name`), `page`, `limit` (≤ 48). Returns `{ items, pagination }`. |
+| GET | `/products/facets` | Public | Query: `category`. Returns `{ total, price: {min, max}, brands: [{name, count}], sizes: [label] }` for the shop filters. |
 | GET | `/products/:slug` | Public | `{ product, related }`. 404 for hidden products. |
+
+## Reviews and newsletter
+
+| Method | Path | Access | Notes |
+|---|---|---|---|
+| GET | `/products/:slug/reviews` | Public | Query: `sort` (`newest`, `highest`, `lowest`), `page`, `limit` (≤ 20). Returns `{ items, pagination, summary: {average, count, breakdown}, mine }` (`mine` is the signed-in shopper's own review, if any). |
+| POST | `/products/:slug/reviews` | User, rate limited | `{ rating 1–5, title?, body }`. One review per customer per product (409 otherwise). Author name comes from the session; `verified` is set when the customer has ordered the product. |
+| GET | `/reviews/highlights` | Public | Up to six recent 4–5 star reviews with product info, plus the store-wide average and count. |
+| POST | `/newsletter` | Public, rate limited | `{ email }`. Always answers 201 with the same message. |
 
 ## Bag
 
@@ -58,13 +67,13 @@ Access: **Public** anyone, **User** any signed-in account, **Admin** role `admin
 
 | Method | Path | Notes |
 |---|---|---|
-| GET | `/admin/overview` | Counts, 30-day revenue and orders, low stock, recent orders. |
+| GET | `/admin/overview` | Counts (products, customers, reviews, subscribers…), 30-day revenue and orders, low stock, recent orders. |
 | GET | `/admin/products` | Same filters as `/products` plus `status` (`all`, `active`, `draft`) and `stock` (`all`, `low`, `out`); includes hidden products. |
-| POST | `/admin/products` | Create. Body: `name, description, price, compareAtPrice?, category, team?, season?, kitType, details[], images[], sizes[], sku?, isFeatured, isActive`. |
+| POST | `/admin/products` | Create. Body: `name, description, price, compareAtPrice?, category, brand?, gender, details[], images[], sizes[{label, stock}], sku?, isFeatured, isActive`. |
 | GET | `/admin/products/:id` | |
 | PUT | `/admin/products/:id` | Full update. Images removed from the product are deleted from Cloudinary after the save succeeds. |
 | PATCH | `/admin/products/:id` | `{ isActive?, isFeatured? }` quick toggles. |
-| DELETE | `/admin/products/:id` | Deletes the product and its images. |
+| DELETE | `/admin/products/:id` | Deletes the product, its reviews and its images. |
 | POST | `/admin/uploads` | `multipart/form-data`, field `images`, up to 6 files, 5 MB each, JPG/PNG/WebP/AVIF, at least 300×300. Returns `{ images: [{ url, publicId, width, height, format, bytes }] }`. |
 | GET | `/admin/categories` | With counts including hidden products. |
 | POST | `/admin/categories` | `{ name, description?, sortOrder }` |
@@ -72,6 +81,8 @@ Access: **Public** anyone, **User** any signed-in account, **Admin** role `admin
 | DELETE | `/admin/categories/:id` | 409 while products use it. |
 | GET | `/admin/orders` | Query: `status`, `q` (order number), `page`, `limit`. |
 | PATCH | `/admin/orders/:id/status` | `{ status }`. Only valid transitions are accepted; cancelling restocks. |
+| GET | `/admin/reviews` | Query: `q` (text or reviewer), `rating`, `page`, `limit`. |
+| DELETE | `/admin/reviews/:id` | Removes a review and recalculates the product's rating. |
 
 ## Health
 

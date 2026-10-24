@@ -1,6 +1,6 @@
 # Security
 
-Each measure below names where it lives in the code and the automated test that checks it. Run the tests with `cd server && npm test` (50 tests; they need a MongoDB instance).
+Each measure below names where it lives in the code and the automated test that checks it. Run the tests with `cd server && npm test` (60 tests; they need a MongoDB instance).
 
 ## Passwords and accounts
 
@@ -37,10 +37,23 @@ Each measure below names where it lives in the code and the automated test that 
 |---|---|---|
 | Every body, query and params object is parsed by a zod schema; handlers only read the parsed result | `middleware/validate.js`, `validators/schemas.js` | many, e.g. "validates product input" |
 | NoSQL operator injection: values must be primitives, and any key containing `$` or `.` (body or query) is rejected; the query parser doesn't build nested objects | `middleware/sanitize.js`, `app.js` | "blocks NoSQL operator injection in the login body", "rejects bodies with operator keys", "does not turn bracketed query keys into Mongo operators" |
-| Search text is regex-escaped before use, so `(.*)+$` is matched literally (no ReDoS, no pattern injection) | `utils/text.js`, `services/catalog.js` | "treats regex characters in search as plain text" |
+| Search text and the brand filter are regex-escaped before use, so `(.*)+$` or `.*` is matched literally (no ReDoS, no pattern injection) | `utils/text.js`, `services/catalog.js` | "treats regex characters in search as plain text", "filters by brand without treating the value as a pattern" |
+| Slug lists for the wishlist are validated against a strict pattern and capped at 50 | `schemas.js` | "returns products by slug and rejects malformed slugs" |
 | Text fields are trimmed and stripped of control characters; lengths are capped | `utils/text.js`, `schemas.js` | — |
 | JSON bodies limited to 100 KB; malformed JSON returns a clean 400 | `app.js`, `middleware/errorHandler.js` | "returns a clean 400 for malformed JSON and oversized bodies" |
 | Product images must come from our own upload endpoint (no hotlinking or tracking pixels) | `controllers/adminProduct.controller.js` | "refuses image URLs that did not come from our upload endpoint" |
+
+## User-generated content (reviews)
+
+| Measure | Where | Tested by |
+|---|---|---|
+| Only signed-in customers can post; one review per customer per product (unique index plus a check) | `controllers/review.controller.js`, `models/Review.js` | `reviews.test.js` "requires a signed-in customer to post", "allows one review per customer per product" |
+| Rating, title and body validated and length-capped; control characters stripped | `validators/schemas.js` | "validates the rating and body" |
+| Markup such as `<img onerror>` is stored and returned as plain text and rendered by React as text | `Review.js`, `components/product/Reviews.jsx` | "stores markup as plain text and updates the product rating" |
+| The author's name comes from the session; any `userId` in the body is ignored; the user id is never exposed | `review.controller.js` | same test |
+| Moderation (delete) is admin-only and recalculates the product rating | `routes/index.js` | "lets only admins moderate reviews" |
+| Posting reviews and newsletter sign-ups are rate limited (20 per 10 minutes per IP) | `middleware/rateLimit.js` | — |
+| Newsletter answers identically for new and existing emails, so it can't be used to check who subscribed | `controllers/newsletter.controller.js` | "validates the email and answers the same way for repeat sign-ups" |
 
 ## Cross-site scripting
 
