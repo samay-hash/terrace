@@ -18,7 +18,7 @@ export function shippingFor(subtotal) {
 export async function priceLines(lines) {
   const ids = [...new Set(lines.map((line) => String(line.productId)))];
   const products = await Product.find({ _id: { $in: ids } })
-    .select("name slug price compareAtPrice images sizes isActive team")
+    .select("name slug price compareAtPrice images sizes isActive brand")
     .lean();
   const byId = new Map(products.map((product) => [String(product._id), product]));
 
@@ -47,7 +47,7 @@ export async function priceLines(lines) {
       ...base,
       slug: product.slug,
       name: product.name,
-      team: product.team,
+      brand: product.brand,
       image: product.images[0]?.url ?? "",
       unitPrice: product.price,
       compareAtPrice: product.compareAtPrice ?? null,

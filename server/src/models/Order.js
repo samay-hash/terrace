@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { SIZES } from "./Product.js";
+import { SIZE_LABEL } from "./Product.js";
 
 export const ORDER_STATUSES = ["placed", "packed", "shipped", "delivered", "cancelled"];
 
@@ -11,7 +11,7 @@ const orderItemSchema = new mongoose.Schema(
     name: { type: String, required: true },
     slug: { type: String, required: true },
     image: { type: String, default: "" },
-    size: { type: String, enum: SIZES, required: true },
+    size: { type: String, required: true, match: SIZE_LABEL },
     unitPrice: { type: Number, required: true, min: 0 },
     quantity: { type: Number, required: true, min: 1 },
     lineTotal: { type: Number, required: true, min: 0 },

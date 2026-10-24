@@ -38,6 +38,14 @@ export const chatLimiter = rateLimit({
   message: "Chotu needs a breather. Try again in a minute.",
 });
 
+// Reviews and newsletter sign-ups: generous for people, tight for scripts.
+export const formLimiter = rateLimit({
+  ...shared,
+  windowMs: 10 * 60 * 1000,
+  limit: 20,
+  message: "Too many submissions. Please try again in a few minutes.",
+});
+
 export const uploadLimiter = rateLimit({
   ...shared,
   windowMs: 10 * 60 * 1000,

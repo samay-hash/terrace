@@ -8,14 +8,14 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_FEE, priceLines } from "../pricing.js
 // told to answer only from this and the live catalogue below.
 export const STORE_POLICIES = {
   about:
-    "Terrace is an independent kit studio from Bengaluru. We design original football, cricket and basketball shirts and faithful tributes to classic kits, with our own crests (no licensed club badges).",
+    "Terrace is an independent sport and street store from Bengaluru. We stock trainers and heels, watches, sunglasses, bags, clothing and sports gear (cricket, football, tennis, basketball, golf) from brands we trust.",
   shipping: `Free shipping on orders of ₹${FREE_SHIPPING_THRESHOLD.toLocaleString("en-IN")} or more; otherwise a flat ₹${SHIPPING_FEE}. Orders placed before 2 pm on a weekday leave the studio the same day. Delivery takes 3–5 business days to metro cities and up to 8 business days elsewhere in India.`,
   payment: "Cash on delivery is available across India. Online payment is coming soon.",
   returns:
-    "Free returns or size exchanges within 30 days of delivery, as long as the shirt is unworn, unwashed and has its tags. Start a return from the order page or by emailing care@terracekits.in. Refunds for cash-on-delivery orders go to your bank account within 5 business days of the return reaching us.",
+    "Free returns or size exchanges within 30 days of delivery, as long as the item is unused, in its original packaging and has its tags. Watches must have the protective film intact. Start a return from the order page or by emailing care@terracekits.in. Refunds for cash-on-delivery orders go to your bank account within 5 business days of the return reaching us.",
   sizing:
-    "Shirts are a regular fit. Chest measurements (body, not garment): XS 86–91 cm, S 91–96 cm, M 96–101 cm, L 101–106 cm, XL 106–112 cm, XXL 112–118 cm. Retro shirts are cut slightly boxier: if you are between sizes, size down for retro and up for current-season kits.",
-  care: "Wash inside out at 30°C, do not tumble dry, and never iron printed numbers or crests.",
+    "Shoes use UK sizes. Men's UK 6–11 and women's UK 3–8; foot length: UK 3 = 22 cm, UK 4 = 23 cm, UK 5 = 23.7 cm, UK 6 = 24.5 cm, UK 7 = 25.4 cm, UK 8 = 26.2 cm, UK 9 = 27.1 cm, UK 10 = 27.9 cm, UK 11 = 28.8 cm. If you are between sizes in trainers, go half a size up. Clothing is a regular fit; chest (body): XS 86–91 cm, S 91–96, M 96–101, L 101–106, XL 106–112, XXL 112–118. Watches, sunglasses, bags and sports gear are one size.",
+  care: "Wipe leather with a dry cloth, keep watches away from magnets, store sunglasses in their case, and wash clothing inside out at 30°C.",
   contact: "Email care@terracekits.in or call +91 80 4000 2626 (Mon–Sat, 10 am–7 pm IST).",
 };
 
@@ -28,7 +28,7 @@ export async function getCatalog() {
 
   const [products, categories] = await Promise.all([
     Product.find({ isActive: true })
-      .select("name slug price compareAtPrice team season kitType sizes stock description details category images salesCount createdAt isFeatured")
+      .select("name slug price compareAtPrice brand gender sizes stock description details category images salesCount rating reviewCount createdAt isFeatured")
       .populate("category", "name slug")
       .sort({ name: 1 })
       .lean(),
@@ -57,11 +57,11 @@ export function catalogToText(products) {
         `slug=${p.slug}`,
         `name=${p.name}`,
         `category=${p.category?.name ?? ""}`,
-        `type=${p.kitType}`,
-        p.team ? `team=${p.team}` : null,
-        p.season ? `season=${p.season}` : null,
+        p.brand ? `brand=${p.brand}` : null,
+        `for=${p.gender}`,
+        p.reviewCount ? `rating=${p.rating}/5 (${p.reviewCount} reviews)` : null,
         `price=₹${p.price}${sale}`,
-        `in_stock_sizes=${sizes.length ? sizes.join("/") : "sold out"}`,
+        `in_stock=${sizes.length ? sizes.join("/") : "sold out"}`,
         `about=${p.description.split("\n")[0].slice(0, 180)}`,
       ]
         .filter(Boolean)
@@ -105,7 +105,7 @@ export function toCard(product) {
     id: String(product._id),
     slug: product.slug,
     name: product.name,
-    team: product.team,
+    brand: product.brand,
     price: product.price,
     compareAtPrice: product.compareAtPrice ?? null,
     image: product.images?.[0]?.url ?? "",

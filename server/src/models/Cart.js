@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { SIZES } from "./Product.js";
+import { SIZE_LABEL } from "./Product.js";
 
 export const MAX_QTY_PER_LINE = 10;
 export const MAX_CART_LINES = 30;
@@ -8,7 +8,7 @@ export const MAX_CART_LINES = 30;
 // looked up from Product every time the cart is read.
 const cartItemSchema = new mongoose.Schema({
   product: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
-  size: { type: String, enum: SIZES, required: true },
+  size: { type: String, required: true, match: SIZE_LABEL },
   quantity: { type: Number, required: true, min: 1, max: MAX_QTY_PER_LINE },
 });
 

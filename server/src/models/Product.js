@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 
-export const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
-export const KIT_TYPES = ["home", "away", "third", "retro", "training", "special"];
+export const GENDERS = ["men", "women", "unisex"];
+// Size labels are free text so each category can use its own run:
+// "XS"–"XXL" for clothing, "UK 7" for shoes, "One size" for accessories.
+export const SIZE_LABEL = /^[A-Za-z0-9][A-Za-z0-9 ./-]{0,15}$/;
 
 const imageSchema = new mongoose.Schema(
   {
@@ -19,7 +21,7 @@ const imageSchema = new mongoose.Schema(
 
 const sizeSchema = new mongoose.Schema(
   {
-    label: { type: String, enum: SIZES, required: true },
+    label: { type: String, required: true, trim: true, match: SIZE_LABEL },
     stock: { type: Number, min: 0, default: 0, required: true },
   },
   { _id: false },
@@ -35,11 +37,11 @@ const productSchema = new mongoose.Schema(
     // Optional "was" price shown struck through when a product is on sale.
     compareAtPrice: { type: Number, min: 0 },
     category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true, index: true },
-    team: { type: String, trim: true, maxlength: 80, default: "" },
-    season: { type: String, trim: true, maxlength: 20, default: "" },
-    kitType: { type: String, enum: KIT_TYPES, default: "home" },
+    brand: { type: String, trim: true, maxlength: 60, default: "", index: true },
+    gender: { type: String, enum: GENDERS, default: "unisex", index: true },
     details: { type: [{ type: String, trim: true, maxlength: 160 }], default: [] },
     images: { type: [imageSchema], default: [] },
+    // Kept in the order the admin entered them (that is the display order).
     sizes: { type: [sizeSchema], default: [] },
     // Sum of size stock, kept in sync on save so listings can filter and sort on it.
     stock: { type: Number, min: 0, default: 0, index: true },
@@ -47,6 +49,9 @@ const productSchema = new mongoose.Schema(
     isFeatured: { type: Boolean, default: false, index: true },
     isActive: { type: Boolean, default: true, index: true },
     salesCount: { type: Number, default: 0, min: 0 },
+    // Denormalised from reviews so listings can show and sort by rating.
+    rating: { type: Number, default: 0, min: 0, max: 5 },
+    reviewCount: { type: Number, default: 0, min: 0 },
   },
   {
     timestamps: true,
@@ -65,6 +70,7 @@ const productSchema = new mongoose.Schema(
 productSchema.index({ isActive: 1, price: 1 });
 productSchema.index({ isActive: 1, createdAt: -1 });
 productSchema.index({ isActive: 1, salesCount: -1 });
+productSchema.index({ isActive: 1, rating: -1 });
 
 productSchema.virtual("onSale").get(function onSale() {
   return Boolean(this.compareAtPrice && this.compareAtPrice > this.price);

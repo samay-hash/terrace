@@ -3,7 +3,7 @@ import { AppError } from "../utils/AppError.js";
 import { buildProductFilter, paginate, sortFor } from "../services/catalog.js";
 
 // Fields shoppers need on a product card.
-const CARD_FIELDS = "name slug price compareAtPrice images team season kitType stock sizes isFeatured category createdAt";
+const CARD_FIELDS = "name slug price compareAtPrice images brand gender stock sizes isFeatured category rating reviewCount createdAt";
 
 export async function listProducts(req, res) {
   const query = req.valid.query;
@@ -43,11 +43,37 @@ export async function getProduct(req, res) {
   res.json({ product, related });
 }
 
-// Price bounds and counts for the shop filters, scoped to live products.
-export async function getFacets(_req, res) {
-  const [bounds] = await Product.aggregate([
-    { $match: { isActive: true } },
-    { $group: { _id: null, min: { $min: "$price" }, max: { $max: "$price" }, count: { $sum: 1 } } },
+// Options for the shop filters (price range, brands, sizes), scoped to live
+// products and, when given, to one category.
+const SIZE_ORDER = ["XS", "S", "M", "L", "XL", "XXL"];
+function sizeRank(label) {
+  const clothing = SIZE_ORDER.indexOf(label);
+  if (clothing !== -1) return clothing;
+  const uk = /^UK (\d+(\.\d)?)$/.exec(label);
+  if (uk) return 100 + Number(uk[1]);
+  return label === "One size" ? 1000 : 500;
+}
+
+export async function getFacets(req, res) {
+  const { category } = req.valid.query;
+  const match = await buildProductFilter({ category });
+
+  const [result] = await Product.aggregate([
+    { $match: match },
+    {
+      $facet: {
+        price: [{ $group: { _id: null, min: { $min: "$price" }, max: { $max: "$price" }, count: { $sum: 1 } } }],
+        brands: [{ $match: { brand: { $ne: "" } } }, { $group: { _id: "$brand", count: { $sum: 1 } } }, { $sort: { _id: 1 } }],
+        sizes: [{ $unwind: "$sizes" }, { $match: { "sizes.stock": { $gt: 0 } } }, { $group: { _id: "$sizes.label" } }],
+      },
+    },
   ]);
-  res.json({ price: { min: bounds?.min ?? 0, max: bounds?.max ?? 0 }, total: bounds?.count ?? 0 });
+
+  const bounds = result.price[0];
+  res.json({
+    total: bounds?.count ?? 0,
+    price: { min: bounds?.min ?? 0, max: bounds?.max ?? 0 },
+    brands: result.brands.map((b) => ({ name: b._id, count: b.count })),
+    sizes: result.sizes.map((s) => s._id).sort((a, b) => sizeRank(a) - sizeRank(b) || a.localeCompare(b)),
+  });
 }

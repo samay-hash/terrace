@@ -2,12 +2,14 @@ import { Product } from "../models/Product.js";
 import { Order } from "../models/Order.js";
 import { User } from "../models/User.js";
 import { Category } from "../models/Category.js";
+import { Review } from "../models/Review.js";
+import { Subscriber } from "../models/Subscriber.js";
 import { LOW_STOCK_THRESHOLD } from "../services/catalog.js";
 
 export async function getOverview(_req, res) {
   const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
-  const [products, activeProducts, outOfStock, lowStock, customers, categories, revenue, recentOrders, openOrders] =
+  const [products, activeProducts, outOfStock, lowStock, customers, categories, revenue, recentOrders, openOrders, reviews, subscribers] =
     await Promise.all([
       Product.countDocuments(),
       Product.countDocuments({ isActive: true }),
@@ -24,10 +26,12 @@ export async function getOverview(_req, res) {
       ]),
       Order.find().populate("user", "name email").sort({ createdAt: -1 }).limit(6),
       Order.countDocuments({ status: { $in: ["placed", "packed"] } }),
+      Review.countDocuments(),
+      Subscriber.countDocuments(),
     ]);
 
   res.json({
-    counts: { products, activeProducts, outOfStock, customers, categories, openOrders },
+    counts: { products, activeProducts, outOfStock, customers, categories, openOrders, reviews, subscribers },
     last30Days: { revenue: revenue[0]?.total ?? 0, orders: revenue[0]?.orders ?? 0 },
     lowStock,
     recentOrders,

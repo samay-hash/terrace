@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validate } from "../middleware/validate.js";
 import { requireAuth, requireRole } from "../middleware/auth.js";
-import { authLimiter, chatLimiter, uploadLimiter } from "../middleware/rateLimit.js";
+import { authLimiter, chatLimiter, formLimiter, uploadLimiter } from "../middleware/rateLimit.js";
 import { imageUpload } from "../middleware/upload.js";
 import * as s from "../validators/schemas.js";
 import * as auth from "../controllers/auth.controller.js";
@@ -11,6 +11,8 @@ import * as cart from "../controllers/cart.controller.js";
 import * as orders from "../controllers/order.controller.js";
 import * as adminProducts from "../controllers/adminProduct.controller.js";
 import * as admin from "../controllers/admin.controller.js";
+import * as reviews from "../controllers/review.controller.js";
+import { subscribe } from "../controllers/newsletter.controller.js";
 import { chat } from "../controllers/chat.controller.js";
 
 export const router = Router();
@@ -26,8 +28,16 @@ router.get("/auth/me", auth.me);
 // ---------- Public catalogue ----------
 router.get("/categories", categories.listCategories);
 router.get("/products", validate({ query: s.productListQuery }), products.listProducts);
-router.get("/products/facets", products.getFacets);
+router.get("/products/facets", validate({ query: s.facetsQuery }), products.getFacets);
 router.get("/products/:slug", validate({ params: s.slugParam }), products.getProduct);
+
+// ---------- Reviews ----------
+router.get("/reviews/highlights", reviews.reviewHighlights);
+router.get("/products/:slug/reviews", validate({ params: s.slugParam, query: s.reviewListQuery }), reviews.listProductReviews);
+router.post("/products/:slug/reviews", requireAuth, formLimiter, validate({ params: s.slugParam, body: s.reviewInput }), reviews.createReview);
+
+// ---------- Newsletter ----------
+router.post("/newsletter", formLimiter, validate({ body: s.newsletterSchema }), subscribe);
 
 // ---------- Cart ----------
 router.post("/cart/quote", validate({ body: s.cartLinesSchema }), cart.quoteCart);
@@ -68,5 +78,8 @@ adminRouter.delete("/categories/:id", validate({ params: s.idParam }), categorie
 
 adminRouter.get("/orders", validate({ query: s.adminOrderListQuery }), orders.adminListOrders);
 adminRouter.patch("/orders/:id/status", validate({ params: s.idParam, body: s.orderStatusSchema }), orders.updateOrderStatus);
+
+adminRouter.get("/reviews", validate({ query: s.adminReviewListQuery }), reviews.adminListReviews);
+adminRouter.delete("/reviews/:id", validate({ params: s.idParam }), reviews.adminDeleteReview);
 
 router.use("/admin", adminRouter);

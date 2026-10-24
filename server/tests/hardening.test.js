@@ -10,7 +10,7 @@ before(async () => {
   await setupDatabase();
   await createUser({ email: "admin@example.com", role: "admin" });
   admin = await signedInAgent("admin@example.com");
-  await createProduct({ name: "Paris Nights '95 Retro Shirt" });
+  await createProduct({ name: "Datejust 41 Two-Tone (2024)" });
 });
 after(teardownDatabase);
 
@@ -20,7 +20,7 @@ describe("input handling", () => {
     assert.equal(res.status, 200);
     assert.equal(res.body.items.length, 0);
 
-    const literal = await request().get("/api/products").query({ q: "'95" });
+    const literal = await request().get("/api/products").query({ q: "(2024)" });
     assert.equal(literal.body.items.length, 1);
   });
 
@@ -113,7 +113,7 @@ describe("image uploads", () => {
 
 describe("assistant", () => {
   it("answers from the live catalogue without a model key", async () => {
-    const res = await request().post("/api/chat").set(CSRF).send({ messages: [{ role: "user", content: "show me retro shirts" }] });
+    const res = await request().post("/api/chat").set(CSRF).send({ messages: [{ role: "user", content: "show me sunglasses" }] });
     assert.equal(res.status, 200);
     assert.equal(res.body.source, "rules");
     assert.ok(res.body.reply.length > 0);

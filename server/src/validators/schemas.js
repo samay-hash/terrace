@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { objectId } from "../middleware/validate.js";
-import { KIT_TYPES, SIZES } from "../models/Product.js";
+import { GENDERS, SIZE_LABEL } from "../models/Product.js";
 import { ORDER_STATUSES } from "../models/Order.js";
 import { MAX_QTY_PER_LINE, MAX_CART_LINES } from "../models/Cart.js";
 import { cleanMultiline, cleanText } from "../utils/text.js";
@@ -41,15 +41,19 @@ export const loginSchema = z.object({
 
 // ---------- Catalogue ----------
 
-const sortValues = ["featured", "newest", "price-asc", "price-desc", "popular", "name"];
+const sortValues = ["featured", "newest", "price-asc", "price-desc", "popular", "rating", "name"];
+
+const sizeLabel = z.string({ error: "Choose a size." }).trim().regex(SIZE_LABEL, "Choose a valid size.");
 
 const boolFlag = z.enum(["true", "false"]).transform((v) => v === "true");
 
 export const productListQuery = z.object({
   q: z.string().trim().max(80).optional(),
   category: z.string().trim().toLowerCase().max(60).optional(),
-  size: z.enum(SIZES).optional(),
-  kitType: z.enum(KIT_TYPES).optional(),
+  brand: z.string().trim().max(60).optional(),
+  gender: z.enum(GENDERS).optional(),
+  size: sizeLabel.optional(),
+  minRating: z.coerce.number().min(1).max(5).optional(),
   minPrice: z.coerce.number().int().min(0).optional(),
   maxPrice: z.coerce.number().int().min(0).optional(),
   onSale: boolFlag.optional(),
@@ -66,6 +70,8 @@ export const adminProductListQuery = productListQuery.extend({
   stock: z.enum(["all", "low", "out"]).default("all"),
   limit: z.coerce.number().int().min(1).max(100).default(20),
 });
+
+export const facetsQuery = z.object({ category: z.string().trim().toLowerCase().max(60).optional() });
 
 export const slugParam = z.object({ slug: z.string().trim().toLowerCase().regex(/^[a-z0-9-]{1,100}$/, "Invalid product") });
 export const idParam = z.object({ id: objectId });
@@ -85,7 +91,7 @@ const imageInput = z.object({
 });
 
 const sizeInput = z.object({
-  label: z.enum(SIZES),
+  label: sizeLabel,
   stock: z.coerce.number().int("Stock must be a whole number.").min(0, "Stock cannot be negative.").max(10000),
 });
 
@@ -102,14 +108,14 @@ export const productInput = z
     price: price("Price"),
     compareAtPrice: price("Compare-at price").nullish(),
     category: objectId,
-    team: optionalText(80, "Team"),
-    season: optionalText(20, "Season"),
-    kitType: z.enum(KIT_TYPES).default("home"),
+    brand: optionalText(60, "Brand"),
+    gender: z.enum(GENDERS).default("unisex"),
     details: z.array(text(2, 160, "Detail")).max(8).default([]),
     images: z.array(imageInput).max(8, "A product can have up to 8 images.").default([]),
     sizes: z
       .array(sizeInput)
       .min(1, "Add at least one size.")
+      .max(12, "Use 12 sizes or fewer.")
       .refine((sizes) => new Set(sizes.map((s) => s.label)).size === sizes.length, "Each size can only be listed once."),
     sku: optionalText(40, "SKU"),
     isFeatured: z.boolean().default(false),
@@ -135,7 +141,7 @@ export const categoryInput = z.object({
 
 const cartLine = z.object({
   productId: objectId,
-  size: z.enum(SIZES, { error: "Choose a size." }),
+  size: sizeLabel,
   quantity: z.coerce.number().int().min(1).max(MAX_QTY_PER_LINE, `You can buy up to ${MAX_QTY_PER_LINE} of one item.`),
 });
 
@@ -170,6 +176,32 @@ export const adminOrderListQuery = z.object({
   page: z.coerce.number().int().min(1).max(500).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
 });
+
+// ---------- Reviews and newsletter ----------
+
+export const reviewListQuery = z.object({
+  sort: z.enum(["newest", "highest", "lowest"]).default("newest"),
+  page: z.coerce.number().int().min(1).max(200).default(1),
+  limit: z.coerce.number().int().min(1).max(20).default(5),
+});
+
+export const reviewInput = z.object({
+  rating: z.coerce.number({ error: "Choose a star rating." }).int().min(1, "Choose a star rating.").max(5),
+  title: optionalText(80, "Title"),
+  body: z
+    .string({ error: "Write a few words about the product." })
+    .transform(cleanMultiline)
+    .pipe(z.string().min(10, "Write at least 10 characters.").max(1000, "Keep it under 1000 characters.")),
+});
+
+export const adminReviewListQuery = z.object({
+  q: z.string().trim().max(60).optional(),
+  rating: z.coerce.number().int().min(1).max(5).optional(),
+  page: z.coerce.number().int().min(1).max(500).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+});
+
+export const newsletterSchema = z.object({ email });
 
 // ---------- Chat ----------
 

@@ -7,6 +7,7 @@ const SORTS = {
   "price-asc": { price: 1, createdAt: -1 },
   "price-desc": { price: -1, createdAt: -1 },
   popular: { salesCount: -1, createdAt: -1 },
+  rating: { rating: -1, reviewCount: -1 },
   name: { name: 1 },
   "stock-asc": { stock: 1, name: 1 },
   updated: { updatedAt: -1 },
@@ -25,7 +26,7 @@ export async function buildProductFilter(query, { includeInactive = false } = {}
 
   if (query.q) {
     const pattern = new RegExp(escapeRegex(query.q), "i");
-    filter.$or = [{ name: pattern }, { team: pattern }, { sku: pattern }];
+    filter.$or = [{ name: pattern }, { brand: pattern }, { sku: pattern }];
   }
 
   if (query.category) {
@@ -34,7 +35,9 @@ export async function buildProductFilter(query, { includeInactive = false } = {}
     filter.category = category?._id ?? null;
   }
 
-  if (query.kitType) filter.kitType = query.kitType;
+  if (query.brand) filter.brand = new RegExp(`^${escapeRegex(query.brand)}$`, "i");
+  if (query.gender) filter.gender = query.gender === "unisex" ? "unisex" : { $in: [query.gender, "unisex"] };
+  if (query.minRating) filter.rating = { $gte: query.minRating };
   if (query.size) filter.sizes = { $elemMatch: { label: query.size, stock: { $gt: 0 } } };
   if (query.inStock) filter.stock = { $gt: 0 };
   if (query.featured) filter.isFeatured = true;

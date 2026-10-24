@@ -1,5 +1,6 @@
 import { Product } from "../models/Product.js";
 import { Category } from "../models/Category.js";
+import { Review } from "../models/Review.js";
 import { AppError } from "../utils/AppError.js";
 import { slugify } from "../utils/text.js";
 import { buildProductFilter, paginate, sortFor } from "../services/catalog.js";
@@ -12,7 +13,7 @@ export async function adminListProducts(req, res) {
 
   const [items, total] = await Promise.all([
     Product.find(filter)
-      .select("name slug price compareAtPrice images stock sizes isActive isFeatured category sku team updatedAt createdAt")
+      .select("name slug price compareAtPrice images stock sizes isActive isFeatured category sku brand rating reviewCount updatedAt createdAt")
       .populate("category", "name slug")
       .sort(sortFor(query.sort))
       .skip((query.page - 1) * query.limit)
@@ -107,6 +108,7 @@ export async function deleteProduct(req, res) {
   if (!product) throw AppError.notFound("Product not found.");
 
   await product.deleteOne();
+  await Review.deleteMany({ product: product._id });
   invalidateCatalogCache();
   await removeImages(product.images.map((image) => image.publicId));
   res.status(204).end();
