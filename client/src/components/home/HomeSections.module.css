@@ -201,22 +201,23 @@
   position: relative;
   display: grid;
   align-items: center;
-  min-height: clamp(560px, 92vh, 860px);
-  margin-top: var(--space-9);
+  min-height: clamp(520px, 82vh, 800px);
+  width: calc(100% - 2 * var(--gutter));
+  max-width: 1720px;
+  margin: var(--space-9) auto 0;
+  border-radius: var(--radius-xl);
   overflow: hidden;
+  background: #1a1714;
   color: #fff;
   isolation: isolate;
 }
 
-/* Photo and shade together, with a light fade at the very top and bottom
-   so the band eases into the page rather than starting on a hard edge. */
+/* Photo and shade together, inside the band's rounded frame. */
 .bandFade {
   position: absolute;
   inset: 0;
   z-index: -1;
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, #000 7%, #000 93%, rgba(0, 0, 0, 0.25) 100%);
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, #000 7%, #000 93%, rgba(0, 0, 0, 0.25) 100%);
 }
 
 .bandMedia {
@@ -440,14 +441,13 @@
 
 .storyStage {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 56%;
-  -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.2) 0%, #000 12%), linear-gradient(180deg, #000 0%, #000 100%);
-  -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.2) 0%, #000 12%), linear-gradient(180deg, #000 0%, #000 100%);
-  mask-composite: intersect;
+  top: var(--space-5);
+  right: var(--gutter);
+  bottom: var(--space-5);
+  width: 50%;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: #1a1714;
 }
 
 /* Later chapters sit on top. The next photo waits clipped below and wipes
@@ -853,7 +853,8 @@
     background: rgba(10, 12, 14, 0.55);
   }
   .band {
-    min-height: 640px;
+    min-height: 600px;
+    border-radius: var(--radius-lg);
   }
   .section {
     padding-top: var(--space-8);

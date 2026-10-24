@@ -1,25 +1,27 @@
 /* ---------- campaign hero ---------- */
+/* The photo sits in a rounded frame inset from the screen edges, so it
+   has a clean border on every side instead of a fade. */
 .cinema {
   position: relative;
   container-type: size;
   display: grid;
   place-items: center;
-  height: clamp(600px, calc(100svh - var(--header-h)), 940px);
+  width: calc(100% - 2 * var(--gutter));
+  max-width: 1720px;
+  height: clamp(560px, calc(100svh - var(--header-h) - var(--space-5)), 900px);
+  margin: var(--space-2) auto 0;
+  border-radius: var(--radius-xl);
   overflow: hidden;
   color: var(--ink);
   isolation: isolate;
-  background: var(--bg);
+  background: #e9dcc8;
 }
 
-/* Only the photo's own opacity drops over the last stretch, so it eases
-   into the next section without a hard edge or any wash over it. */
 .frame {
   position: absolute;
   inset: 0;
   z-index: -2;
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 84%, rgba(0, 0, 0, 0.4) 100%);
-  mask-image: linear-gradient(180deg, #000 0%, #000 84%, rgba(0, 0, 0, 0.4) 100%);
 }
 
 /* The photo box keeps the image's aspect ratio and always covers the hero.
@@ -324,7 +326,8 @@ a.meta:hover {
     --fx: 0.42;
   }
   .cinema {
-    height: clamp(560px, 86svh, 760px);
+    height: clamp(540px, 82svh, 740px);
+    border-radius: var(--radius-lg);
   }
   .copy {
     margin-top: -14cqh;

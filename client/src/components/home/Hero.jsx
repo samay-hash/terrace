@@ -77,7 +77,7 @@ export function CinematicHero() {
         <div className={styles.photo}>
           <img
             src="/images/editorial/curtain-1672.webp"
-            srcSet="/images/editorial/curtain-960.webp 960w, /images/editorial/curtain-1672.webp 1672w"
+            srcSet="/images/editorial/curtain-960.webp 960w, /images/editorial/curtain-1672.webp 1672w, /images/editorial/curtain-2560.webp 2560w"
             sizes="100vw"
             alt="Late sun through a cream curtain onto a dark desk with a laptop and a watch, beside a lit wardrobe of shirts and jackets"
             fetchPriority="high"

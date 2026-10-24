@@ -27,11 +27,11 @@ What a reviewer sees on the home page, top to bottom:
 - **This week at Terrace:** a two-row product grid with New in, Bestsellers, Top rated and On sale tabs, and a See more link.
 - **Category explorer:** hovering a department swaps the large photo.
 - **Watch and eyewear bands:** full-width photos that cross-fade slowly with a gentle zoom and a sweep of warm light. Progress lines can be clicked to jump between photos.
-- **Scroll story:** the section holds still while you scroll through three chapters. Each new photo wipes up over the last and melts into the page, and an index below fills as you go (it can be clicked to jump between chapters).
+- **Scroll story:** the section holds still while you scroll through three chapters. Each new photo wipes up over the last, and an index below fills as you go (it can be clicked to jump between chapters).
 - **Sale panel:** a print-style panel with a halftone pattern and a live count of reduced items.
 - **Closing band:** cross-fading photos with two actions, followed by the store's service promises.
 - **Footer:** black, with the sale panel's dashed guides and brass halftone, link columns, contact details and a working newsletter form.
-- **Edges:** the hero and the full-width bands fade into the page at their top and bottom instead of ending on a hard line.
+- **Framing:** the hero, the photo bands and the story photo sit in rounded frames inset from the screen edges, so every photo has a clean border.
 
 Across the rest of the store, interactions are there to help people decide:
 
