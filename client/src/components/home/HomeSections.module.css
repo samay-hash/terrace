@@ -208,15 +208,15 @@
   isolation: isolate;
 }
 
-/* Photo and shade together, faded out at the top and bottom so the band
-   melts into the cream page rather than starting on a hard edge. */
+/* Photo and shade together, with a light fade at the very top and bottom
+   so the band eases into the page rather than starting on a hard edge. */
 .bandFade {
   position: absolute;
   inset: 0;
   z-index: -1;
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
-  mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, #000 7%, #000 93%, rgba(0, 0, 0, 0.25) 100%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, #000 7%, #000 93%, rgba(0, 0, 0, 0.25) 100%);
 }
 
 .bandMedia {
@@ -285,7 +285,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 17%;
+  bottom: clamp(28px, 8%, 56px);
   display: flex;
   gap: 6px;
 }
@@ -444,9 +444,9 @@
   right: 0;
   bottom: 0;
   width: 56%;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%), linear-gradient(180deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.2) 0%, #000 12%), linear-gradient(180deg, #000 0%, #000 100%);
   -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(90deg, transparent 0%, #000 22%), linear-gradient(180deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.2) 0%, #000 12%), linear-gradient(180deg, #000 0%, #000 100%);
   mask-composite: intersect;
 }
 

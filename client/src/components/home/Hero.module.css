@@ -39,17 +39,15 @@
   animation: settle 2400ms var(--ease-out);
 }
 
-/* The photo melts into the page at both edges instead of ending on a hard
-   line: a short fade from the header, a longer one into the next section. */
+/* A short, light fade at the very bottom so the photo eases into the next
+   section instead of ending on a hard line. */
 .cinema::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background:
-    linear-gradient(180deg, var(--bg) 0%, rgba(248, 244, 236, 0) 9%),
-    linear-gradient(0deg, var(--bg) 0%, rgba(248, 244, 236, 0.85) 6%, rgba(248, 244, 236, 0) 22%);
+  background: linear-gradient(0deg, var(--bg) 0%, rgba(248, 244, 236, 0.6) 4%, rgba(248, 244, 236, 0) 10%);
 }
 
 /* A soft lift of light behind the words, nothing more. */
@@ -303,7 +301,7 @@ a.meta:hover {
   .mobileLook {
     position: absolute;
     right: calc(var(--gutter) + 96px);
-    bottom: 20%;
+    bottom: 12%;
     display: flex;
     gap: var(--space-2);
     overflow-x: auto;
