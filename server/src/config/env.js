@@ -45,6 +45,13 @@ if (!parsed.success) {
 
 const env = parsed.data;
 
+// A local database address in production always means the wrong value was
+// copied into the host's settings; say so instead of timing out later.
+if (env.NODE_ENV === "production" && /(127\.0\.0\.1|localhost)/.test(env.MONGODB_URI)) {
+  console.error("Invalid environment configuration:\n  - MONGODB_URI points to a local database. Use the MongoDB Atlas connection string in production.");
+  process.exit(1);
+}
+
 export const config = {
   ...env,
   isProduction: env.NODE_ENV === "production",
