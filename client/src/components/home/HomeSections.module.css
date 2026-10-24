@@ -206,7 +206,17 @@
   overflow: hidden;
   color: #fff;
   isolation: isolate;
-  background: var(--dark);
+}
+
+/* Photo and shade together, faded out at the top and bottom so the band
+   melts into the cream page rather than starting on a hard edge. */
+.bandFade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
 }
 
 .bandMedia {
@@ -275,7 +285,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: clamp(20px, 4vh, 40px);
+  bottom: 17%;
   display: flex;
   gap: 6px;
 }
@@ -329,7 +339,7 @@
   }
 }
 
-.band::after {
+.bandFade::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -337,7 +347,7 @@
   background: linear-gradient(90deg, rgba(10, 12, 14, 0.78) 0%, rgba(10, 12, 14, 0.42) 45%, rgba(10, 12, 14, 0.08) 100%);
 }
 
-.band[data-align="right"]::after {
+.band[data-align="right"] .bandFade::after {
   background: linear-gradient(270deg, rgba(10, 12, 14, 0.8) 0%, rgba(10, 12, 14, 0.42) 45%, rgba(10, 12, 14, 0.1) 100%);
 }
 
@@ -345,7 +355,7 @@
   justify-content: flex-end;
 }
 
-.band[data-align="center"]::after {
+.band[data-align="center"] .bandFade::after {
   background: radial-gradient(70% 70% at 50% 50%, rgba(10, 10, 10, 0.62) 0%, rgba(10, 10, 10, 0.3) 70%, rgba(10, 10, 10, 0.2) 100%);
 }
 
@@ -412,89 +422,173 @@
 }
 
 /* ---------- scroll story ---------- */
+/* The section is taller than the screen; its inner stage is pinned while
+   --story runs from 0 to 1 across the chapters. */
 .story {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: clamp(32px, 5vw, 96px);
-  padding-top: var(--space-9);
+  --story: 0;
+  position: relative;
+  height: calc(100vh + var(--count) * 75vh);
+  margin-top: var(--space-8);
 }
 
-.storyMedia {
+.storyPin {
   position: sticky;
-  top: calc(var(--header-h) + var(--space-5));
-  height: calc(100vh - var(--header-h) - var(--space-7));
-  max-height: 760px;
-  border-radius: var(--radius-xl);
+  top: var(--header-h);
+  height: calc(100vh - var(--header-h));
   overflow: hidden;
-  background: var(--dark);
 }
 
-.storyMedia img {
+.storyStage {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 56%;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%), linear-gradient(180deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 22%), linear-gradient(180deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  mask-composite: intersect;
+}
+
+/* Later chapters sit on top. The next photo waits clipped below and wipes
+   up into place; going back, it wipes down to reveal the one beneath. */
+.storyFrame {
   position: absolute;
   inset: 0;
+  overflow: hidden;
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 1200ms cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.storyFrame[data-state="next"] {
+  clip-path: inset(100% 0 0 0);
+}
+
+.storyFrame img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0;
-  transform: scale(1.06);
-  transition:
-    opacity 700ms ease,
-    transform 1400ms var(--ease-out);
-}
-
-.storyMedia img[data-active] {
-  opacity: 1;
   transform: scale(1);
+  transition: transform 1600ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-.storyDots {
-  position: absolute;
-  left: var(--space-5);
-  bottom: var(--space-5);
-  display: flex;
-  gap: 6px;
+.storyFrame[data-state="next"] img {
+  transform: scale(1.18);
 }
 
-.storyDots span {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.5);
-  transition:
-    width 300ms var(--ease-out),
-    background-color 300ms ease;
+.storyFrame[data-state="past"] img {
+  transform: scale(1.06);
 }
 
-.storyDots span[data-active] {
-  width: 28px;
-  background: #fff;
-}
-
-.storySteps {
+.storyInner {
+  position: relative;
   display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+  padding-block: clamp(32px, 7vh, 72px);
 }
 
-.storyStep {
+.storyCount {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.storyCount span {
+  display: inline-block;
+  color: var(--ink);
+  animation: rise 600ms var(--ease-out);
+}
+
+.storyChapters {
+  display: grid;
+  align-content: center;
+  max-width: 480px;
+}
+
+.storyChapter {
+  grid-area: 1 / 1;
   display: grid;
   align-content: center;
   justify-items: start;
   gap: var(--space-4);
-  min-height: 78vh;
-  opacity: 0.28;
-  transition: opacity 500ms ease;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(28px);
+  transition:
+    opacity 450ms ease,
+    transform 700ms var(--ease-out),
+    visibility 0s linear 450ms;
 }
 
-.storyStep[data-active] {
+.storyChapter[data-active] {
   opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 700ms ease 250ms,
+    transform 900ms var(--ease-out) 250ms,
+    visibility 0s;
 }
 
 .storyTitle {
-  font-size: var(--display-md);
-  max-width: 14ch;
+  font-size: clamp(2.4rem, 1.5rem + 3vw, 4.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+  max-width: 12ch;
+}
+
+.storyText {
+  max-width: 40ch;
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  color: var(--ink-2);
 }
 
 .storyInlinePhoto {
   display: none;
+}
+
+.storyIndex {
+  display: grid;
+  grid-template-columns: repeat(var(--count), minmax(0, 1fr));
+  gap: var(--space-4);
+  max-width: 480px;
+}
+
+.storyIndex button {
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+  padding-top: var(--space-2);
+  font-size: var(--text-sm);
+  text-align: left;
+  color: var(--ink-3);
+  transition: color 300ms ease;
+}
+
+.storyIndex button[aria-current],
+.storyIndex button:hover {
+  color: var(--ink);
+}
+
+.storyBar {
+  position: relative;
+  display: block;
+  height: 2px;
+  background: var(--line-strong);
+  overflow: hidden;
+}
+
+/* Each bar fills during its own chapter's share of the scroll. */
+.storyBar span {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  transform-origin: left;
+  transform: scaleX(clamp(0, var(--story) * var(--count) - var(--i), 1));
 }
 
 /* ---------- sale ---------- */
@@ -669,6 +763,10 @@
   .sale {
     grid-template-columns: 1fr;
   }
+  .saleDots {
+    top: auto;
+    height: 42%;
+  }
 }
 
 @media (max-width: 860px) {
@@ -713,15 +811,31 @@
     color: var(--ink-3);
   }
   .story {
-    grid-template-columns: 1fr;
+    height: auto;
   }
-  .storyMedia {
+  .storyPin {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+  .storyStage,
+  .storyCount,
+  .storyIndex {
     display: none;
   }
-  .storyStep {
-    min-height: 0;
+  .storyInner {
+    display: block;
+    padding-block: 0;
+  }
+  .storyChapters {
+    gap: var(--space-8);
+    max-width: none;
+  }
+  .storyChapter {
+    grid-area: auto;
     opacity: 1;
-    padding-bottom: var(--space-7);
+    visibility: visible;
+    transform: none;
   }
   .storyInlinePhoto {
     display: block;
@@ -734,13 +848,12 @@
   .band {
     min-height: 560px;
   }
-  .band::after,
-  .band[data-align="right"]::after {
-    background: linear-gradient(0deg, rgba(10, 12, 14, 0.85) 0%, rgba(10, 12, 14, 0.45) 60%, rgba(10, 12, 14, 0.2) 100%);
+  .bandFade::after,
+  .band[data-align="right"] .bandFade::after {
+    background: rgba(10, 12, 14, 0.55);
   }
   .band {
-    align-items: end;
-    padding-bottom: var(--space-7);
+    min-height: 640px;
   }
   .section {
     padding-top: var(--space-8);
@@ -754,5 +867,12 @@
   }
   .saleProducts li:nth-child(2) {
     transform: none;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
 }

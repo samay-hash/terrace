@@ -8,7 +8,7 @@
   overflow: hidden;
   color: var(--ink);
   isolation: isolate;
-  background: #e9dcc8;
+  background: var(--bg);
 }
 
 .frame {
@@ -37,6 +37,19 @@
   width: 100%;
   height: 100%;
   animation: settle 2400ms var(--ease-out);
+}
+
+/* The photo melts into the page at both edges instead of ending on a hard
+   line: a short fade from the header, a longer one into the next section. */
+.cinema::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(248, 244, 236, 0) 9%),
+    linear-gradient(0deg, var(--bg) 0%, rgba(248, 244, 236, 0.85) 6%, rgba(248, 244, 236, 0) 22%);
 }
 
 /* A soft lift of light behind the words, nothing more. */
@@ -289,8 +302,8 @@ a.meta:hover {
   }
   .mobileLook {
     position: absolute;
-    right: calc(var(--gutter) + 84px);
-    bottom: 24px;
+    right: calc(var(--gutter) + 96px);
+    bottom: 20%;
     display: flex;
     gap: var(--space-2);
     overflow-x: auto;
@@ -300,7 +313,7 @@ a.meta:hover {
     display: grid;
     padding: 8px 14px;
     border-radius: var(--radius-sm);
-    background: rgba(20, 16, 12, 0.35);
+    background: rgba(20, 16, 12, 0.5);
     border: 1px dashed rgba(255, 255, 255, 0.45);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);

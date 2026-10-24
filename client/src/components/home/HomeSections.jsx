@@ -200,13 +200,15 @@ function PhotoBand({ photos, align = "left", labelledBy, children, className = "
 
   return (
     <section ref={ref} className={`${styles.band} ${className}`} data-align={align} data-playing={playing ? "" : undefined} aria-labelledby={labelledBy}>
-      <div className={styles.bandMedia} aria-hidden>
-        {photos.map((name, i) => (
-          <div key={name} className={styles.bandSlide} data-active={i === index ? "" : undefined}>
-            <img {...photoProps(name)} alt="" loading="lazy" />
-          </div>
-        ))}
-        <span key={index} className={styles.bandLight} />
+      <div className={styles.bandFade} aria-hidden>
+        <div className={styles.bandMedia}>
+          {photos.map((name, i) => (
+            <div key={name} className={styles.bandSlide} data-active={i === index ? "" : undefined}>
+              <img {...photoProps(name)} alt="" loading="lazy" />
+            </div>
+          ))}
+          <span key={index} className={styles.bandLight} />
+        </div>
       </div>
       <div className={`container ${styles.bandInner}`}>
         <div className={styles.bandCopy}>{children}</div>
@@ -266,51 +268,94 @@ const STORY = [
   },
 ];
 
-// Scroll-driven story: the picture on the left stays put and changes as each
-// chapter on the right reaches the middle of the screen.
+// Pinned scroll story: the section holds still while you scroll through its
+// chapters. Each new photo wipes up over the last on the right and melts
+// into the page at its edge; the copy changes on the left, and an index
+// below fills as you go. Phones get a plain stacked list instead.
 export function ScrollStory() {
+  const ref = useRef(null);
   const [active, setActive] = useState(0);
-  const stepRefs = useRef([]);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) if (entry.isIntersecting) setActive(Number(entry.target.dataset.index));
-      },
-      { rootMargin: "-45% 0px -45% 0px" },
-    );
-    stepRefs.current.forEach((el) => el && observer.observe(el));
-    return () => observer.disconnect();
+    const el = ref.current;
+    if (!el) return undefined;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 72;
+      const rect = el.getBoundingClientRect();
+      const travel = rect.height - (window.innerHeight - headerH);
+      const p = travel > 0 ? Math.min(1, Math.max(0, (headerH - rect.top) / travel)) : 0;
+      el.style.setProperty("--story", p.toFixed(4));
+      setActive(Math.min(STORY.length - 1, Math.floor(p * STORY.length)));
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
+  // Scroll to the middle of a chapter's share of the pinned track.
+  function goTo(i) {
+    const el = ref.current;
+    const headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 72;
+    const travel = el.offsetHeight - (window.innerHeight - headerH);
+    const top = el.getBoundingClientRect().top + window.scrollY - headerH + (travel * (i + 0.5)) / STORY.length;
+    window.scrollTo({ top, behavior: "smooth" });
+  }
+
   return (
-    <section className={`container ${styles.story}`} aria-labelledby="story-title">
-      <h2 id="story-title" className="visually-hidden">
-        Where our gear goes
-      </h2>
-      <div className={styles.storyMedia} aria-hidden>
-        {STORY.map((step, i) => (
-          <img key={step.photo} {...photoProps(step.photo, "(max-width: 860px) 100vw, 55vw")} alt="" loading="lazy" data-active={i === active ? "" : undefined} />
-        ))}
-        <div className={styles.storyDots}>
+    <section ref={ref} className={styles.story} style={{ "--count": STORY.length }} aria-labelledby="story-title">
+      <div className={styles.storyPin}>
+        <div className={styles.storyStage} aria-hidden>
           {STORY.map((step, i) => (
-            <span key={step.photo} data-active={i === active ? "" : undefined} />
+            <div key={step.photo} className={styles.storyFrame} data-state={i < active ? "past" : i === active ? "active" : "next"}>
+              <img {...photoProps(step.photo, "(max-width: 860px) 100vw, 55vw")} alt="" loading="lazy" />
+            </div>
           ))}
         </div>
+
+        <div className={`container ${styles.storyInner}`}>
+          <h2 id="story-title" className="visually-hidden">
+            Where our gear goes
+          </h2>
+          <p className={styles.storyCount} aria-hidden>
+            <span key={active}>{String(active + 1).padStart(2, "0")}</span> / {String(STORY.length).padStart(2, "0")}
+          </p>
+          <div className={styles.storyChapters}>
+            {STORY.map((step, i) => (
+              <article key={step.photo} className={styles.storyChapter} data-active={i === active ? "" : undefined}>
+                <img className={styles.storyInlinePhoto} {...photoProps(step.photo, "100vw")} alt="" loading="lazy" />
+                <p className={styles.bandKickerDark}>{step.kicker}</p>
+                <h3 className={`display ${styles.storyTitle}`}>{step.title}</h3>
+                <p className={styles.storyText}>{step.text}</p>
+                <Link to={step.to} className={styles.headLink}>
+                  {step.label} <ArrowUpRight size={16} aria-hidden />
+                </Link>
+              </article>
+            ))}
+          </div>
+          <ol className={styles.storyIndex}>
+            {STORY.map((step, i) => (
+              <li key={step.photo} style={{ "--i": i }}>
+                <button type="button" onClick={() => goTo(i)} aria-current={i === active ? "step" : undefined}>
+                  <span className={styles.storyBar}>
+                    <span />
+                  </span>
+                  {step.kicker}
+                </button>
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
-      <ul className={styles.storySteps}>
-        {STORY.map((step, i) => (
-          <li key={step.photo} ref={(el) => (stepRefs.current[i] = el)} data-index={i} data-active={i === active ? "" : undefined} className={styles.storyStep}>
-            <img className={styles.storyInlinePhoto} {...photoProps(step.photo, "100vw")} alt="" loading="lazy" />
-            <p className={styles.bandKickerDark}>{step.kicker}</p>
-            <h3 className={`display ${styles.storyTitle}`}>{step.title}</h3>
-            <p className={styles.sub}>{step.text}</p>
-            <Link to={step.to} className={styles.headLink}>
-              {step.label} <ArrowUpRight size={16} aria-hidden />
-            </Link>
-          </li>
-        ))}
-      </ul>
     </section>
   );
 }

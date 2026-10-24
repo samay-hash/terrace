@@ -1,42 +1,43 @@
+/* Black, with the same print details as the sale panel: dashed guides at
+   the content edges and a brass halftone gathering in one corner. */
 .footer {
   position: relative;
   isolation: isolate;
   overflow: hidden;
   margin-top: var(--space-9);
-  background: radial-gradient(120% 80% at 50% 0%, #161616 0%, var(--dark) 60%);
+  border-top: 1px dashed rgba(255, 255, 255, 0.14);
+  background:
+    radial-gradient(60% 80% at 100% 100%, rgba(212, 176, 122, 0.12), transparent 70%),
+    var(--dark);
   color: var(--on-dark-2);
   font-size: var(--text-sm);
 }
 
-.stars {
+.footer::before {
+  content: "";
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 50%;
   z-index: -1;
+  width: min(100% - 2 * var(--gutter), var(--page-max) - 2 * var(--gutter));
+  transform: translateX(-50%);
+  border-inline: 1px dashed rgba(255, 255, 255, 0.12);
   pointer-events: none;
 }
 
-.stars span {
+.dots {
   position: absolute;
-  border-radius: 50%;
-  background: #fff;
-  opacity: 0.12;
-  animation: twinkle 5s ease-in-out infinite;
-}
-
-.stars span[data-bright] {
-  box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.55);
-}
-
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 0.08;
-    transform: scale(0.8);
-  }
-  50% {
-    opacity: 0.85;
-    transform: scale(1);
-  }
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  width: min(62%, 760px);
+  height: 62%;
+  background: #c9a25e;
+  opacity: 0.4;
+  -webkit-mask: url("/images/halftone.svg") right bottom / auto 100% no-repeat;
+  mask: url("/images/halftone.svg") right bottom / auto 100% no-repeat;
+  pointer-events: none;
 }
 
 .top {
@@ -167,7 +168,7 @@
   gap: var(--space-5);
   padding-top: var(--space-5);
   padding-bottom: var(--space-6);
-  border-top: 1px solid var(--dark-line);
+  border-top: 1px dashed rgba(255, 255, 255, 0.14);
   font-size: var(--text-xs);
 }
 

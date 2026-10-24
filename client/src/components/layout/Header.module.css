@@ -12,52 +12,14 @@
     backdrop-filter 320ms ease;
 }
 
-/* Once the page moves, the bar turns to frosted glass: a strong blur with
-   lifted colour, a bright top edge and a slow sheen drifting across, so
-   whatever scrolls beneath shows through like light through water. */
+/* Once the page moves, the bar turns to quiet frosted glass: mostly cream,
+   blurred enough that what passes beneath reads only as soft colour. */
 .header[data-scrolled] {
-  background-color: rgba(250, 246, 238, 0.5);
-  border-bottom-color: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(22px) saturate(1.9) brightness(1.04);
-  -webkit-backdrop-filter: blur(22px) saturate(1.9) brightness(1.04);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    inset 0 -1px 0 rgba(120, 96, 64, 0.1),
-    0 14px 34px -22px rgba(40, 28, 14, 0.4);
-}
-
-.header::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0) 60%),
-    linear-gradient(100deg, transparent 25%, rgba(255, 255, 255, 0.4) 45%, rgba(255, 255, 255, 0.1) 52%, transparent 65%);
-  background-size:
-    100% 100%,
-    300% 100%;
-  opacity: 0;
-  transition: opacity 320ms ease;
-}
-
-.header[data-scrolled]::before {
-  opacity: 1;
-  animation: sheen 9s ease-in-out infinite alternate;
-}
-
-@keyframes sheen {
-  from {
-    background-position:
-      0 0,
-      110% 0;
-  }
-  to {
-    background-position:
-      0 0,
-      -10% 0;
-  }
+  background-color: rgba(248, 244, 236, 0.78);
+  border-bottom-color: rgba(27, 24, 20, 0.08);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 8px 24px -18px rgba(40, 28, 14, 0.28);
 }
 
 .bar {
