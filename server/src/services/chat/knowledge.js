@@ -9,7 +9,7 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_FEE, priceLines } from "../pricing.js
 export const STORE_POLICIES = {
   about:
     "Terrace is an independent sport and street store from Bengaluru. We stock trainers and heels, watches, sunglasses, bags, clothing and sports gear (cricket, football, tennis, basketball, golf) from brands we trust.",
-  shipping: `Free shipping on orders of ₹${FREE_SHIPPING_THRESHOLD.toLocaleString("en-IN")} or more; otherwise a flat ₹${SHIPPING_FEE}. Orders placed before 2 pm on a weekday leave the studio the same day. Delivery takes 3–5 business days to metro cities and up to 8 business days elsewhere in India.`,
+  shipping: `Free shipping on orders of ₹${FREE_SHIPPING_THRESHOLD.toLocaleString("en-IN")} or more; otherwise a flat ₹${SHIPPING_FEE}. Orders placed before 2 pm, Monday to Saturday, leave our store the same day. Delivery takes 3–5 business days to metro cities and up to 8 business days elsewhere in India.`,
   payment: "Cash on delivery is available across India. Online payment is coming soon.",
   returns:
     "Free returns or size exchanges within 30 days of delivery, as long as the item is unused, in its original packaging and has its tags. Watches must have the protective film intact. Start a return from the order page or by emailing care@terracekits.in. Refunds for cash-on-delivery orders go to your bank account within 5 business days of the return reaching us.",

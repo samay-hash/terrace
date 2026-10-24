@@ -58,6 +58,18 @@ function wantsGender(text) {
   return undefined;
 }
 
+// Words shoppers use interchangeably for the same kind of product.
+const SYNONYMS = [
+  ["trainer", "sneaker", "jordan", "cleat"],
+  ["heel", "stiletto", "pump", "sandal"],
+  ["bag", "tote", "satchel", "handbag", "backpack", "hobo"],
+  ["sunglass", "aviator", "shades", "clubmaster"],
+];
+function expand(token) {
+  const group = SYNONYMS.find((g) => g.some((w) => token.startsWith(w)));
+  return group ?? [token.replace(/s$/, "")];
+}
+
 const STOP_WORDS = new Set(
   "the and for with show me some want need looking any have what which under below above over price rupees please can you get good best recommend suggest chahiye dikhao koi mujhe mere liye hai kya size gift something".split(" "),
 );
@@ -83,20 +95,38 @@ function searchCatalog(text, products, categories) {
     .filter((p) => (max === undefined || p.price <= max) && (min === undefined || p.price >= min))
     .filter((p) => !categorySlugs.length || categorySlugs.includes(p.category?.slug))
     .filter((p) => !gender || p.gender === gender || p.gender === "unisex")
+    // "Something for her" means personal items, not a tube of shuttlecocks.
+    .filter((p) => !gender || categorySlugs.length || p.category?.slug !== "sports")
     .filter((p) => !size || sizesInStock(p).includes(size))
     .filter((p) => !wantsSale(t) || p.compareAtPrice > p.price)
     .map((p) => {
-      const haystack = `${p.name} ${p.brand} ${p.description} ${p.details.join(" ")}`.toLowerCase();
+      const name = `${p.name} ${p.brand}`.toLowerCase();
+      const haystack = `${name} ${p.description} ${p.details.join(" ")}`.toLowerCase();
       let score = 0;
       for (const colour of colours) if (haystack.includes(colour)) score += 3;
-      for (const token of tokens) if (haystack.includes(token)) score += 1;
+      // Words in the product name count for more than words in its description.
+      let hits = 0;
+      for (const token of tokens) {
+        const words = expand(token);
+        if (words.some((w) => name.includes(w))) {
+          score += 3;
+          hits += 1;
+        } else if (words.some((w) => haystack.includes(w))) {
+          score += 1;
+          hits += 1;
+        }
+      }
       if (p.brand && t.includes(p.brand.toLowerCase())) score += 4;
+      if (gender && p.gender === gender) score += 3;
       if (colours.length && !colours.some((c) => haystack.includes(c))) score -= 5;
-      score += (p.rating ?? 0) / 5 + Math.min(p.salesCount ?? 0, 200) / 400;
-      return { product: p, score };
+      score += (p.rating ?? 0) / 10 + Math.min(p.salesCount ?? 0, 200) / 800;
+      return { product: p, score, hits };
     })
     .filter(({ score }) => !colours.length || score > 0)
     .sort((a, b) => b.score - a.score);
+
+  // If some products match the words used, drop the ones that match none.
+  const matched = scored.some((s) => s.hits > 0) ? scored.filter((s) => s.hits > 0) : scored;
 
   const isSearch = Boolean(
     categorySlugs.length || colours.length || gender || size || max !== undefined || min !== undefined || wantsSale(t) ||
@@ -104,7 +134,7 @@ function searchCatalog(text, products, categories) {
       products.some((p) => p.brand && t.includes(p.brand.toLowerCase())),
   );
 
-  return { isSearch, results: scored.slice(0, 4).map((s) => s.product), filters: { min, max } };
+  return { isSearch, results: matched.slice(0, 4).map((s) => s.product), filters: { min, max } };
 }
 
 function describeProduct(p) {
