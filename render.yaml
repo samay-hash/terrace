@@ -1,0 +1,36 @@
+# Render blueprint for the Terrace API. Secrets are marked sync: false so
+# they are entered in the Render dashboard and never committed.
+services:
+  - type: web
+    name: terrace-api
+    runtime: node
+    rootDir: server
+    plan: free
+    region: singapore
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      # Browser -> Vercel edge -> Render load balancer -> app
+      - key: TRUST_PROXY
+        value: "2"
+      - key: COOKIE_SAMESITE
+        value: lax
+      - key: CLIENT_ORIGIN
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false

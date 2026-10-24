@@ -77,11 +77,25 @@ const OUTPUT_FORMAT = {
   },
 };
 
+// The Messages API needs the conversation to start with the shopper and to
+// alternate roles; merge any back-to-back turns the client sent.
+function normalizeTurns(messages) {
+  const turns = [];
+  for (const m of messages) {
+    const last = turns.at(-1);
+    if (last && last.role === m.role) last.content = `${last.content}\n${m.content}`;
+    else turns.push({ role: m.role, content: m.content });
+  }
+  while (turns.length && turns[0].role !== "user") turns.shift();
+  return turns;
+}
+
 export async function askClaude({ messages, catalog, shopper, product }) {
   // The system prompt (persona + policies + catalogue) is identical across
   // shoppers, so it is cached. Per-shopper context rides on the latest turn.
-  const history = messages.slice(0, -1).map((m) => ({ role: m.role, content: m.content }));
-  const latest = messages.at(-1);
+  const turns = normalizeTurns(messages);
+  const history = turns.slice(0, -1);
+  const latest = turns.at(-1);
 
   const response = await getClient().beta.messages.create({
     model: config.CHAT_MODEL,

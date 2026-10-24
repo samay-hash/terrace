@@ -8,7 +8,7 @@
     "start": "node src/server.js",
     "seed": "node --env-file-if-exists=.env seed/seed.js",
     "render-images": "node seed/renderImages.js",
-    "test": "node --env-file-if-exists=.env.test --test --test-concurrency=1 tests/"
+    "test": "node --test --test-concurrency=1 \"tests/**/*.test.js\""
   },
   "license": "MIT",
   "type": "module",
