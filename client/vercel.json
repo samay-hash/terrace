@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://terrace-api.onrender.com/api/:path*"
+      "destination": "https://terrace-s40s.onrender.com/api/:path*"
     },
     {
       "source": "/(.*)",

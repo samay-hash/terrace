@@ -42,8 +42,8 @@ Every product, price and stock level comes from the database. The browser is nev
 
 | | |
 |---|---|
-| **Storefront** | _Vercel URL, added after deployment_ |
-| **API** | _Render URL, added after deployment_ |
+| **Storefront** | https://terracecommerce.vercel.app |
+| **API** | https://terrace-s40s.onrender.com/api/health |
 | **Repository** | https://github.com/samay-hash/terrace |
 | **Demo accounts** | Admin and customer credentials are shared privately with reviewers, as the brief asks |
 
@@ -272,7 +272,7 @@ Following section 11 of the brief:
 
 | # | Item | Where |
 |---|---|---|
-| 1 | Live website URL | [Live demo](#live-demo) (added after deployment) |
+| 1 | Live website URL | https://terracecommerce.vercel.app |
 | 2 | GitHub repository URL | https://github.com/samay-hash/terrace |
 | 3 | Admin demo credentials | Shared privately with reviewers; not in this repository |
 | 4 | Customer demo credentials | Shared privately; the account has three sample orders |
