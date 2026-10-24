@@ -30,8 +30,12 @@ function PitchLines() {
 }
 
 function KitOfTheWeek() {
-  const { data, isLoading } = useProducts({ featured: "true", inStock: "true", sort: "popular", limit: 1 });
-  const product = data?.items?.[0];
+  const featured = useProducts({ featured: "true", inStock: "true", sort: "popular", limit: 1 });
+  // If nothing is marked featured, fall back to the bestseller.
+  const needsFallback = featured.isSuccess && !featured.data.items.length;
+  const fallback = useProducts({ inStock: "true", sort: "popular", limit: 1 }, { enabled: needsFallback });
+  const product = featured.data?.items?.[0] ?? fallback.data?.items?.[0];
+  const isLoading = featured.isLoading || (needsFallback && fallback.isLoading);
   const { add, pending } = useAddToBag();
   const sizes = product ? [...product.sizes].filter((s) => s.stock > 0).sort((a, b) => SIZE_ORDER.indexOf(a.label) - SIZE_ORDER.indexOf(b.label)) : [];
   const [size, setSize] = useState(null);
@@ -43,9 +47,16 @@ function KitOfTheWeek() {
       <PitchLines />
       <span className={styles.tag}>Kit of the week</span>
 
-      {isLoading || !product ? (
+      {isLoading ? (
         <div className={styles.card}>
           <Skeleton height="100%" radius="var(--radius-md)" />
+        </div>
+      ) : !product ? (
+        <div className={styles.info}>
+          <p className={styles.infoName}>New shirts are being hung on the rails.</p>
+          <Button to="/shop" size="sm" variant="dark">
+            Browse the shop
+          </Button>
         </div>
       ) : (
         <>

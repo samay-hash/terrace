@@ -338,6 +338,14 @@
 }
 
 @media (max-width: 640px) {
+  .launcher {
+    width: 54px;
+    height: 54px;
+  }
+  .launcher svg {
+    width: 50px;
+    height: 50px;
+  }
   .root:has(.panel) {
     left: 0;
     right: 0;

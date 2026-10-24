@@ -113,7 +113,7 @@ export default function ProductEdit() {
   useDocumentTitle(isNew ? "Add product" : `Edit ${product?.name ?? "product"}`);
 
   const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: ["admin"] });
+    queryClient.invalidateQueries({ queryKey: ["admin"], predicate: (q) => q.queryKey[1] !== "product" });
     queryClient.invalidateQueries({ queryKey: ["products"] });
     queryClient.invalidateQueries({ queryKey: ["product"] });
     queryClient.invalidateQueries({ queryKey: ["categories"] });
@@ -136,9 +136,12 @@ export default function ProductEdit() {
   const remove = useMutation({
     mutationFn: () => api.delete(`/admin/products/${id}`),
     onSuccess: () => {
+      // Drop the deleted product's cache before refreshing lists, so nothing
+      // tries to refetch it.
+      queryClient.removeQueries({ queryKey: ["admin", "product", id] });
+      navigate("/admin/products", { replace: true });
       invalidate();
       toast.success("Product deleted.");
-      navigate("/admin/products", { replace: true });
     },
     onError: (err) => toast.error(err.message),
   });
