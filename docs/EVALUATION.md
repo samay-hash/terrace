@@ -10,7 +10,7 @@ This page follows the brief's evaluation criteria (section 12) one by one: what 
 | Backend, APIs and database | 15% | Complete |
 | Authentication and security | 15% | Complete, 60 automated tests passing |
 | Responsiveness and accessibility | 5% | Complete, checked at 1920, 1440, 1200 and 390 px |
-| Deployment, documentation and explanation | 10% | Documentation complete; deployment configured, waiting for the production MongoDB Atlas and Cloudinary keys |
+| Deployment, documentation and explanation | 10% | Documentation complete; Cloudinary connected; hosting configured, waiting for a MongoDB Atlas cluster |
 
 ---
 
@@ -61,7 +61,7 @@ Motion stops when it is off screen and respects `prefers-reduced-motion`.
 | Bag persistence | Done | A guest bag is kept in the browser and merged into the account bag at sign in |
 | Checkout and orders | Done | Cash-on-delivery checkout, order confirmation, order history with a status timeline |
 | Admin product CRUD with confirmation on delete | Done | `/admin/products` |
-| Image upload to Cloudinary from the admin | Done (Cloudinary driver goes live with the keys) | Product editor: drag and drop, reorder, set cover, alt text. Locally, without keys, the same pipeline stores files on disk |
+| Image upload to Cloudinary from the admin | Done, verified against the live Cloudinary account | Admin → Products → Add product (or edit one) → Images: drag and drop, reorder, set cover, alt text. Files land in the `terrace/products` folder |
 | Category management | Done | `/admin/categories` |
 | Extras | Done | Order management, review moderation, overview metrics, wishlist, reviews, size guides, a store assistant |
 
@@ -150,11 +150,10 @@ The full flows were run in a headless browser:
 
 - The storefront deploys to Vercel and the API to Render. Configuration is in [`client/vercel.json`](../client/vercel.json) and [`render.yaml`](../render.yaml).
 - Vercel forwards `/api` to Render, so the session cookie stays first-party.
-- The remaining step is to add the production MongoDB Atlas and Cloudinary keys and seed the production database, as described in the README's [Deploy](../README.md#deploy) section.
+- Cloudinary is connected and the full catalogue's photos are already hosted there. The remaining step is a MongoDB Atlas connection string, then seeding the production database, as described in the README's [Deploy](../README.md#deploy) section.
 - The live URLs and demo credentials will be shared with reviewers once that is done.
 
 ## Open items
 
-- **Live deployment:** waiting for the production MongoDB Atlas and Cloudinary credentials (see above).
-- **Cloudinary uploads:** the upload pipeline (validation, re-encoding, metadata, admin-only access) is tested. The Cloudinary storage driver itself is used as soon as the keys are set; until then, development uploads are stored locally by the same code path.
+- **Live deployment:** waiting for a MongoDB Atlas connection string (see above).
 - **Claude-powered assistant replies:** these were not exercised, because no Anthropic API key was available during development. The rule-based assistant answers from the same live catalogue and was used for all testing. The Claude path switches on when `ANTHROPIC_API_KEY` is set and falls back to the rules on any error.

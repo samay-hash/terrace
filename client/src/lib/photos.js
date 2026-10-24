@@ -39,6 +39,10 @@ export const PHOTOS = {
     alt: "Lane numbers on a red running track",
     credit: { author: "Kolleen Gladden", license: "CC0", source: "https://commons.wikimedia.org/wiki/File:Starting_line_(Unsplash).jpg" },
   },
+  "sneakers-floor": {
+    alt: "Black knit trainers with white soles stepping across a dark wooden floor",
+    credit: { author: "chuttersnap", license: "CC0", source: "https://commons.wikimedia.org/wiki/File:Black_white_sneakers_logo_(Unsplash).jpg" },
+  },
   "watch-classic": {
     alt: "A white-dial watch on a black leather strap, worn with a dark sleeve",
     credit: { author: "Devon Janse van Rensburg", license: "CC0", source: "https://commons.wikimedia.org/wiki/File:Daniel_Wellington_(Unsplash).jpg" },

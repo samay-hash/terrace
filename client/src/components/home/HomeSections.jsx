@@ -251,7 +251,7 @@ const STORY = [
     label: "Shop sports gear",
   },
   {
-    photo: "street-walk",
+    photo: "sneakers-floor",
     kicker: "On the street",
     title: "Shoes for the long way round.",
     text: "Everyday runners, court classics and suede boots in UK sizes, with free exchanges if the fit isn't right the first time.",

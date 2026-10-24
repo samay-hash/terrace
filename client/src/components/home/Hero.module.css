@@ -84,12 +84,15 @@
   opacity: 0.6;
 }
 
-.title {
-  font-size: clamp(2.9rem, 1.6rem + 5vw, 6.5rem);
-  font-weight: 500;
-  line-height: 0.98;
-  letter-spacing: -0.05em;
-  color: #1b1712;
+/* Large, light and tightly set: the headline reads as quiet confidence
+   rather than weight. Scoped under .copy so it outranks the global
+   .display weight. */
+.copy .title {
+  font-size: clamp(3.1rem, 1.6rem + 5.6vw, 7.25rem);
+  font-weight: 300;
+  line-height: 0.96;
+  letter-spacing: -0.06em;
+  color: #17130e;
 }
 
 .line {

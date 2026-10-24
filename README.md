@@ -1,6 +1,6 @@
 # Terrace — sport and street goods
 
-Terrace is a full-stack e-commerce store built for the Web Developer hiring assignment: trainers, watches, eyewear, bags, clothing and sports gear, with real product photography. It has a custom storefront, email/password accounts, a server-priced bag and checkout, reviews, a wishlist, an admin dashboard with Cloudinary image uploads, and a shopping assistant (a small 3D teddy) who knows the live catalogue.
+Terrace is a full-stack e-commerce store built for the Web Developer hiring assignment: trainers, watches, eyewear, bags, clothing and sports gear, with real product photography. It has a custom storefront, email/password accounts, a server-priced bag and checkout, reviews, a wishlist, an admin dashboard with Cloudinary image uploads, and a shopping assistant (a small 3D polar bear) who knows the live catalogue.
 
 | | |
 |---|---|
@@ -30,7 +30,7 @@ Terrace is a full-stack e-commerce store built for the Web Developer hiring assi
 - Reviews: search and filter by rating, remove reviews (the product rating is recalculated).
 
 **The Terrace assistant**
-- A small 3D teddy (three.js, loaded only when shown) floating on every store page with no frame around it. It follows the cursor, blinks, thinks while a reply loads and talks when it lands; reduced-motion users get a still pose and browsers without WebGL a flat illustration.
+- A small 3D polar bear (three.js, loaded only when shown) floating on every store page with no frame around it. It follows the cursor, blinks, thinks while a reply loads and talks when it lands; reduced-motion users get a still pose and browsers without WebGL a flat illustration.
 - Answers questions about products, stock by size, sizing, delivery, returns, payment and, when signed in, the shopper's bag and latest order. It also knows which page you're on and what's in your wishlist. Recommends products as tappable cards and offers follow-up chips. Replies in Hinglish if you write in Hinglish.
 - With `ANTHROPIC_API_KEY` set, replies come from Claude (model set by `CHAT_MODEL`) using the live catalogue and store policies as context, with structured JSON output. Without a key, or if the call fails, a rule-based engine answers from the same live data, so the assistant always works.
 

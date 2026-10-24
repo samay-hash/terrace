@@ -11,7 +11,7 @@ const supportsWebGL = (() => {
   }
 })();
 
-// The assistant as a live 3D teddy. three.js is loaded on demand; the canvas only
+// The assistant as a live 3D polar bear. three.js is loaded on demand; the canvas only
 // renders while it's on screen and the tab is visible; reduced-motion users
 // get a still pose; browsers without WebGL see the flat illustration.
 export function Teddy({ size = 64, mood = "idle", framing = "head", follow = true, className = "", label = "The Terrace assistant" }) {
