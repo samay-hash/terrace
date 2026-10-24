@@ -9,8 +9,9 @@
   gap: var(--space-4);
   padding: var(--space-6);
   border-radius: var(--radius-lg);
-  background: var(--accent);
-  color: var(--bg);
+  /* The store's deep green in both themes. */
+  background: #2b4a3f;
+  color: var(--on-dark);
 }
 
 .thanks svg {
@@ -24,7 +25,7 @@
 }
 
 .thanks p {
-  color: rgba(244, 243, 239, 0.8);
+  color: var(--on-dark-2);
 }
 
 .head {
@@ -117,7 +118,7 @@
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   background: var(--sale-soft);
-  color: #7d2219;
+  color: var(--sale-ink);
   font-size: var(--text-sm);
 }
 
@@ -147,7 +148,7 @@
   width: 80px;
   height: 88px;
   border-radius: var(--radius-sm);
-  background: var(--well);
+  background: var(--photo-well);
 }
 
 .thumb img {
@@ -181,7 +182,7 @@
   gap: var(--space-3);
   padding: var(--space-5);
   border-radius: var(--radius-lg);
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--line);
 }
 

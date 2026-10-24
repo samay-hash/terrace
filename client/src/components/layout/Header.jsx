@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, Search, ShoppingBag, User, LogOut, Package, LayoutDashboard, Heart, ChevronDown } from "lucide-react";
+import { Menu, Search, ShoppingBag, User, LogOut, Package, LayoutDashboard, Heart, ChevronDown, Moon, Sun } from "lucide-react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { useCart } from "../../context/CartContext.jsx";
 import { useWishlist } from "../../context/WishlistContext.jsx";
 import { useCategories, useFacets, useProducts } from "../../hooks/queries.js";
+import { useTheme } from "../../hooks/useTheme.js";
 import { assetUrl } from "../../lib/api.js";
 import { formatPrice } from "../../lib/format.js";
 import { Logo } from "./Logo.jsx";
@@ -98,7 +99,7 @@ function MegaMenu({ categories }) {
               ))}
             </div>
             {feature && (
-              <Link to={`/product/${feature.slug}`} className={styles.megaFeature}>
+              <Link to={`/product/${feature.slug}`} className={`${styles.megaFeature} photo-scope`}>
                 <span className={styles.megaFeatureMedia}>
                   <img className="product-photo" src={assetUrl(feature.images[0]?.url)} alt="" width="400" height="400" />
                 </span>
@@ -182,6 +183,16 @@ function AccountMenu() {
   );
 }
 
+function ThemeToggle() {
+  const { theme, toggle } = useTheme();
+  const dark = theme === "dark";
+  return (
+    <button type="button" className={styles.iconButton} onClick={toggle} aria-label={dark ? "Switch to light mode" : "Switch to dark mode"} title={dark ? "Light mode" : "Dark mode"}>
+      {dark ? <Sun size={19} strokeWidth={1.6} /> : <Moon size={19} strokeWidth={1.6} />}
+    </button>
+  );
+}
+
 export function Header() {
   const location = useLocation();
   const { itemCount, openDrawer } = useCart();
@@ -191,6 +202,7 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { theme, toggle: toggleTheme } = useTheme();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -258,6 +270,7 @@ export function Header() {
               <Search size={18} strokeWidth={1.6} aria-hidden />
               <span>Search</span>
             </button>
+            <ThemeToggle />
             <Link to="/wishlist" className={`${styles.iconButton} ${styles.withCount}`} aria-label={`Wishlist, ${savedCount} saved`} title="Wishlist">
               <Heart size={20} strokeWidth={1.6} />
               {savedCount > 0 && <span className={`${styles.count} tabular`}>{savedCount}</span>}
@@ -322,6 +335,10 @@ export function Header() {
             <Link to="/help" onClick={() => setMenuOpen(false)}>
               Help and returns
             </Link>
+            <button type="button" className={styles.mobileTheme} onClick={toggleTheme} aria-pressed={theme === "dark"}>
+              {theme === "dark" ? <Sun size={16} aria-hidden /> : <Moon size={16} aria-hidden />}
+              {theme === "dark" ? "Light mode" : "Dark mode"}
+            </button>
           </div>
         </div>
       </Drawer>

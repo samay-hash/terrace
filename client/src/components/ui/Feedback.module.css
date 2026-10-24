@@ -78,12 +78,12 @@
 
 .notice[data-tone="error"] {
   background: var(--sale-soft);
-  color: #7d2219;
+  color: var(--sale-ink);
 }
 
 .notice[data-tone="warn"] {
   background: var(--warn-soft);
-  color: #6b4a0c;
+  color: var(--warn-ink);
 }
 
 .notice[data-tone="ok"] {

@@ -13,7 +13,8 @@ Terrace is a full-stack e-commerce store built for the Web Developer hiring assi
 ## What's inside
 
 **Storefront**
-- **Home:** a full-screen editorial hero (a styled look with "shop the look" tags on the watch and trainers: one-size pieces go straight to checkout, sized ones open the size picker), a two-row "This week at Terrace" grid with New in / Bestsellers / Top rated / On sale tabs and a See more link, a category explorer (hover a department to swap the photo), a scroll story where a sticky photo changes chapter by chapter, a sale banner with live counts, two full-width parallax photo bands, and a short closing section with store services.
+- **Home:** a full-screen editorial hero (an evening study with dotted pointers to the watch on the desk and the wardrobe behind it, each with an "Order now" link: one-size pieces go straight to checkout), a two-row "This week at Terrace" grid with New in / Bestsellers / Top rated / On sale tabs and a See more link, a category explorer (hover a department to swap the photo), a scroll story where a sticky photo changes chapter by chapter, a halftone sale panel with live counts, two full-width parallax photo bands, and a short closing section with store services.
+- **Light and dark themes:** a soft cream light theme and a warm charcoal dark theme, switched from the header, the mobile menu or the admin sidebar. The choice is saved per browser; until then the site follows the system setting, and `public/theme.js` applies it before the first paint so there is no flash.
 - **Header:** Shop mega menu (categories, brands, collections, editor's pick), category links, full-width search overlay with live results (press `/` anywhere), wishlist and bag counts, account menu.
 - **Shop:** search by name, brand or SKU; filter by category, men/women, size in stock, brand, price band, rating, sale and stock; sort by featured, newest, bestselling, top rated and price; category chips; 2- or 3-column grid; numbered pagination. All state lives in the URL.
 - **Product cards:** hover shows a second photo; quick add (one tap for one-size items, a size row otherwise); wishlist heart; rating; sale and new badges.
@@ -137,6 +138,6 @@ The storefront runs on **Vercel**, the API on **Render**, data on **MongoDB Atla
 ## Data and image credits
 
 - **Products, photos and seed reviews:** [DummyJSON](https://dummyjson.com), an open-source mock-data API. Placeholder brand names were mapped to a few house labels (Terrace Studio, Fieldcraft, Vera Nolan, Haldane & Co., Solstice Optics, Arlo & Pine); prices were converted to rupees.
-- **Editorial photos** (hero, parallax bands, scroll story, category explorer, sign-in): Wikimedia Commons, all CC0 (Unsplash uploads). The hero image of the styled look was supplied by the project owner. Each is credited on the Help page (`/help#credits`) and listed in `client/src/lib/photos.js`.
+- **Editorial photos** (hero, parallax bands, scroll story, category explorer, sign-in): Wikimedia Commons, all CC0 (Unsplash uploads). The hero image (the evening study) was supplied by the project owner. Each is credited on the Help page (`/help#credits`) and listed in `client/src/lib/photos.js`.
 - **Fonts:** Bricolage Grotesque and Instrument Sans (SIL Open Font License), served by Google Fonts.
 - This is a demo store: nothing is shipped or charged.

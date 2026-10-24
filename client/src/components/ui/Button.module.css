@@ -61,16 +61,16 @@
 
 .primary:hover:not(:disabled),
 .dark:hover:not(:disabled) {
-  background: #2c2c2e;
+  background: var(--ink-hover);
 }
 
 .accent {
   background: var(--accent);
-  color: var(--on-dark);
+  color: var(--bg);
 }
 
 .accent:hover:not(:disabled) {
-  background: #213a31;
+  background: var(--accent-hover);
 }
 
 .secondary {
@@ -117,11 +117,11 @@
 
 .danger {
   background: var(--sale);
-  color: #fff;
+  color: var(--bg);
 }
 
 .danger:hover:not(:disabled) {
-  background: #9a2c23;
+  background: var(--sale-hover);
 }
 
 .spinner {

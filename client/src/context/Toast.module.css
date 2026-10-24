@@ -16,8 +16,9 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
-  background: var(--ink);
-  color: var(--bg);
+  background: var(--dark-2);
+  color: var(--on-dark);
+  border: 1px solid var(--dark-line);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-pop);
   font-size: var(--text-sm);

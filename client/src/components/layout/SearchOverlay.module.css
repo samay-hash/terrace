@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: 85;
-  background: rgba(20, 20, 20, 0.32);
+  background: var(--scrim);
   animation: fade 160ms ease;
 }
 
@@ -137,7 +137,7 @@
   display: block;
   aspect-ratio: 4 / 5;
   border-radius: var(--radius-sm);
-  background: var(--well);
+  background: var(--photo-well);
   overflow: hidden;
   margin-bottom: var(--space-2);
 }

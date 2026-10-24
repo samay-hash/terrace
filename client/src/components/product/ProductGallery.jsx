@@ -40,7 +40,7 @@ export function ProductGallery({ images, name }) {
       )}
 
       <div
-        className={styles.main}
+        className={`${styles.main} photo-scope`}
         role="tabpanel"
         onMouseMove={onMove}
         onMouseLeave={() => setZoom(null)}

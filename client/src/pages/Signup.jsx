@@ -63,10 +63,9 @@ export default function Signup() {
     <AuthLayout
       heading="Good gear starts with an account."
       subheading="An account keeps your bag on every device, speeds up checkout and lets you follow each order to your door."
-      quote="Another one. Fine. Fill the form, I'll handle the rest."
     >
       <div className={styles.head}>
-        <h1 className={styles.title}>Create your account</h1>
+        <h1 className={`display ${styles.title}`}>Create your account</h1>
         <p className={styles.sub}>Takes under a minute. No card needed.</p>
       </div>
       <form className={styles.fields} onSubmit={onSubmit} noValidate>
@@ -88,12 +87,6 @@ export default function Signup() {
       <p className={styles.legal}>
         By creating an account you agree to our terms of sale and <Link to="/help">returns policy</Link>.
       </p>
-      <p className={styles.switch}>
-        Already have an account? <Link to={`/login${params.get("next") ? `?next=${encodeURIComponent(next)}` : ""}`}>Sign in</Link>
-      </p>
-      <Link to="/" className={styles.back}>
-        Back to the store
-      </Link>
     </AuthLayout>
   );
 }

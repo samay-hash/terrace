@@ -25,7 +25,7 @@
   aspect-ratio: 4 / 5;
   overflow: hidden;
   border-radius: var(--radius-md);
-  background: var(--well);
+  background: var(--photo-well);
 }
 
 .mediaLink {
@@ -74,7 +74,7 @@
 .placeholder {
   position: absolute;
   inset: 0;
-  background: var(--well-2);
+  background: var(--photo-well-2);
 }
 
 .badges {

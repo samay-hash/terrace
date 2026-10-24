@@ -5,10 +5,8 @@
 }
 
 .title {
-  font-size: var(--text-2xl);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+  font-size: clamp(1.9rem, 1.6rem + 0.8vw, 2.4rem);
+  letter-spacing: -0.035em;
 }
 
 .sub {
@@ -57,36 +55,15 @@
 }
 
 .legal {
-  margin-top: var(--space-4);
+  margin-top: var(--space-5);
   font-size: var(--text-xs);
   color: var(--ink-3);
   text-align: center;
 }
 
-.switch {
-  margin-top: var(--space-7);
-  padding-top: var(--space-5);
-  border-top: 1px solid var(--line);
-  text-align: center;
-  font-size: var(--text-sm);
-  color: var(--ink-2);
-}
-
-.switch a,
 .legal a {
   color: var(--ink);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
-}
-
-.back {
-  display: inline-flex;
-  margin-top: var(--space-4);
-  font-size: var(--text-sm);
-  color: var(--ink-3);
-}
-
-.back:hover {
-  color: var(--ink);
 }

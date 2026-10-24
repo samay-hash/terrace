@@ -40,7 +40,7 @@
   gap: var(--space-4);
   padding: var(--space-4);
   border-radius: var(--radius-lg);
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--line);
   transition: border-color 140ms ease;
 }
@@ -55,8 +55,8 @@
 
 .thumbs img {
   border-radius: var(--radius-sm);
-  background: var(--well);
-  border: 2px solid #fff;
+  background: var(--photo-well);
+  border: 2px solid var(--surface);
 }
 
 .thumbs img + img {

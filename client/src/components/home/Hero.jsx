@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
 import { useProductsBySlugs } from "../../hooks/queries.js";
 import { useScrollProgress } from "../../hooks/useScrollProgress.js";
 import { useAddToBag } from "../../hooks/useAddToBag.js";
@@ -8,56 +7,74 @@ import { formatPrice } from "../../lib/format.js";
 import { Button } from "../ui/Button.jsx";
 import styles from "./Hero.module.css";
 
-// Products worn in the campaign photo, with where they sit in the image (as
-// a percentage of the photo's width and height) and which side the label
-// opens towards.
+// What's pointed out in the campaign photo: where it sits (as a percentage
+// of the photo's width and height), which way the dotted pointer runs and
+// how long it is. Items with a slug are products; the rest link to a shelf.
 const LOOK = [
-  { slug: "cellini-date-black-dial", label: "The watch", x: 70.2, y: 54.4, side: "left" },
-  { slug: "out-of-office-low-sneakers", label: "The trainers", x: 91.6, y: 76.5, side: "left" },
+  { id: "watch", slug: "ingenieur-automatic-steel", x: 66.8, y: 76.6, dir: "up", len: 92 },
+  { id: "wardrobe", to: "/shop?category=clothing", meta: "The wardrobe edit", chip: "Shirts and dresses", x: 69.6, y: 45, dir: "left", len: 72 },
 ];
 
-function Hotspot({ spot, product, index }) {
+// A dotted line that ends in an arrowhead at the item. Drawn in the
+// direction of travel so the moving dots flow towards the product.
+function DottedArrow({ dir, len }) {
+  const up = dir === "up";
+  const w = up ? 12 : len;
+  const h = up ? len : 12;
+  const line = up ? `M6 0 V${len - 4}` : `M0 6 H${len - 4}`;
+  const head = up ? `M1.5 ${len - 8} L6 ${len - 2} L10.5 ${len - 8}` : `M${len - 8} 1.5 L${len - 2} 6 L${len - 8} 10.5`;
+  return (
+    <svg className={styles.arrow} width={w} height={h} viewBox={`0 0 ${w} ${h}`} aria-hidden>
+      <path className={styles.dots} d={line} />
+      <path className={styles.head} d={head} />
+    </svg>
+  );
+}
+
+function useOrderNow(product) {
   const navigate = useNavigate();
   const { add, pending } = useAddToBag();
-  if (!product) return null;
-  const oneSize = product.sizes.length === 1;
-
-  // One-size items go straight to checkout; sized items need a size first.
-  async function buyNow() {
-    if (!oneSize) {
+  // One-size pieces go straight to checkout; sized ones need a size first.
+  async function order() {
+    if (product.sizes.length !== 1) {
       navigate(`/product/${product.slug}`);
       return;
     }
     if (await add({ productId: product.id, size: product.sizes[0].label, quantity: 1 })) navigate("/checkout");
   }
+  return { order, pending };
+}
 
+function Pointer({ spot, index, children }) {
   return (
-    <div className={styles.spot} data-side={spot.side} style={{ left: `${spot.x}%`, top: `${spot.y}%`, "--delay": `${1100 + index * 220}ms` }}>
-      <span className={styles.dot} aria-hidden />
-      <span className={styles.leader} aria-hidden />
-      <div className={styles.tag}>
-        <span className={styles.tagLabel}>{spot.label}</span>
-        <Link to={`/product/${product.slug}`} className={styles.tagName}>
-          {product.name}
-        </Link>
-        <div className={styles.tagRow}>
-          <span className="tabular">{formatPrice(product.price)}</span>
-          <button type="button" className={styles.buy} onClick={buyNow} disabled={pending}>
-            {pending ? "Adding…" : oneSize ? "Buy now" : "Choose size"}
-            <ArrowRight size={14} aria-hidden />
-          </button>
-        </div>
-      </div>
+    <div className={styles.spot} data-dir={spot.dir} style={{ left: `${spot.x}%`, top: `${spot.y}%`, "--len": `${spot.len}px`, "--delay": `${1100 + index * 240}ms` }}>
+      <span className={styles.ring} aria-hidden />
+      <DottedArrow dir={spot.dir} len={spot.len} />
+      <div className={styles.label}>{children}</div>
     </div>
   );
 }
 
-// Campaign hero: the photo covers the screen while keeping the model in
-// frame, and the products he wears are tagged where they appear.
+function ProductPointer({ spot, product, index }) {
+  const { order, pending } = useOrderNow(product);
+  return (
+    <Pointer spot={spot} index={index}>
+      <Link to={`/product/${product.slug}`} className={styles.meta}>
+        {product.brand} {product.name.split(" ")[0]}, <span className="tabular">{formatPrice(product.price)}</span>
+      </Link>
+      <button type="button" className={styles.order} onClick={order} disabled={pending}>
+        {pending ? "Adding…" : "Order now"}
+      </button>
+    </Pointer>
+  );
+}
+
+// Campaign hero: the photo covers the screen while keeping the desk and
+// wardrobe in frame, with dotted pointers to what can be ordered.
 export function CinematicHero() {
   const ref = useRef(null);
   useScrollProgress(ref, { mode: "exit" });
-  const { data: products = [] } = useProductsBySlugs(LOOK.map((s) => s.slug));
+  const { data: products = [] } = useProductsBySlugs(LOOK.filter((s) => s.slug).map((s) => s.slug));
   const bySlug = new Map(products.map((p) => [p.slug, p]));
 
   return (
@@ -65,15 +82,26 @@ export function CinematicHero() {
       <div className={styles.frame}>
         <div className={styles.photo}>
           <img
-            src="/images/editorial/look-1672.webp"
-            srcSet="/images/editorial/look-960.webp 960w, /images/editorial/look-1672.webp 1672w"
+            src="/images/editorial/study-1672.webp"
+            srcSet="/images/editorial/study-960.webp 960w, /images/editorial/study-1672.webp 1672w"
             sizes="100vw"
-            alt="A man in black resting on dark rocks at dusk, wearing a black watch and white leather trainers, a laptop beside him"
+            alt="A dark study at night: a steel watch and a closed laptop on the desk, and a lit wardrobe of shirts and jackets behind"
             fetchPriority="high"
           />
-          {LOOK.map((spot, i) => (
-            <Hotspot key={spot.slug} spot={spot} product={bySlug.get(spot.slug)} index={i} />
-          ))}
+          {LOOK.map((spot, i) => {
+            if (!spot.slug) {
+              return (
+                <Pointer key={spot.id} spot={spot} index={i}>
+                  <span className={styles.meta}>{spot.meta}</span>
+                  <Link to={spot.to} className={styles.order}>
+                    Order now
+                  </Link>
+                </Pointer>
+              );
+            }
+            const product = bySlug.get(spot.slug);
+            return product && <ProductPointer key={spot.id} spot={spot} product={product} index={i} />;
+          })}
         </div>
       </div>
 
@@ -85,10 +113,10 @@ export function CinematicHero() {
               <span>Quiet luxury,</span>
             </span>
             <span className={styles.line}>
-              <span>made to move.</span>
+              <span>every day.</span>
             </span>
           </h1>
-          <p className={styles.lede}>Watches, trainers and the everyday pieces in between. Chosen in Bengaluru, delivered across India.</p>
+          <p className={styles.lede}>Watches, wardrobe staples and the pieces in between. Chosen in Bengaluru, delivered across India.</p>
           <div className={styles.ctas}>
             <Button to="/shop?sort=newest" size="lg" variant="light">
               Shop the edit
@@ -107,16 +135,15 @@ export function CinematicHero() {
 
       <ul className={styles.mobileLook} aria-label="Shop the look">
         {LOOK.map((spot) => {
-          const p = bySlug.get(spot.slug);
+          const p = spot.slug && bySlug.get(spot.slug);
+          if (spot.slug && !p) return null;
           return (
-            p && (
-              <li key={spot.slug}>
-                <Link to={`/product/${p.slug}`}>
-                  <span>{spot.label}</span>
-                  {p.name}
-                </Link>
-              </li>
-            )
+            <li key={spot.id}>
+              <Link to={p ? `/product/${p.slug}` : spot.to}>
+                <span>{p ? `${p.brand}, ${formatPrice(p.price)}` : spot.chip}</span>
+                Order now
+              </Link>
+            </li>
           );
         })}
       </ul>

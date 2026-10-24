@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useDocumentTitle } from "../hooks/useDocumentTitle.js";
 import { safeNext } from "../lib/navigation.js";
@@ -49,13 +49,12 @@ export default function Login() {
 
   return (
     <AuthLayout
-      heading="Welcome back."
+      heading="Your bag, right where you left it."
       subheading="Sign in to check out faster, follow your deliveries and keep your bag on every device."
-      quote="Oh, you're back. Your bag missed you. I didn't."
     >
       <div className={styles.head}>
-        <h1 className={styles.title}>Sign in</h1>
-        <p className={styles.sub}>Use the email and password for your Terrace account.</p>
+        <h1 className={`display ${styles.title}`}>Welcome back</h1>
+        <p className={styles.sub}>Sign in with the email and password for your Terrace account.</p>
       </div>
       <form className={styles.fields} onSubmit={onSubmit} noValidate>
         {formError && <Notice tone="error">{formError}</Notice>}
@@ -65,12 +64,6 @@ export default function Login() {
           Sign in
         </Button>
       </form>
-      <p className={styles.switch}>
-        New to Terrace? <Link to={`/signup${params.get("next") ? `?next=${encodeURIComponent(next)}` : ""}`}>Create an account</Link>
-      </p>
-      <Link to="/" className={styles.back}>
-        Back to the store
-      </Link>
     </AuthLayout>
   );
 }

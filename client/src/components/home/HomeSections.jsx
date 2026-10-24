@@ -272,27 +272,30 @@ export function SaleBanner() {
   if (!count) return null;
 
   return (
-    <section className={`container ${styles.section}`} aria-labelledby="sale-title">
-      <div className={styles.sale}>
-        <div className={styles.saleCopy}>
-          <p className={styles.saleKicker}>Mid-season sale</p>
-          <h2 id="sale-title" className={`display ${styles.saleTitle}`}>
-            Up to 20% off, prices already cut.
-          </h2>
-          <p className={styles.saleText}>{pluralize(count, "piece")} reduced across footwear, watches, bags and sports gear. No code needed.</p>
-          <Button to="/shop?onSale=true" variant="light" size="lg">
-            Shop the sale
-          </Button>
+    <section className={styles.saleBleed} aria-labelledby="sale-title">
+      <div className={`container ${styles.section}`}>
+        <div className={styles.sale}>
+          <span className={styles.saleDots} aria-hidden />
+          <div className={styles.saleCopy}>
+            <p className={styles.saleKicker}>Mid-season sale</p>
+            <h2 id="sale-title" className={`display ${styles.saleTitle}`}>
+              Up to 20% off, prices already cut.
+            </h2>
+            <p className={styles.saleText}>{pluralize(count, "piece")} reduced across footwear, watches, bags and sports gear. No code needed.</p>
+            <Button to="/shop?onSale=true" size="lg">
+              Shop the sale
+            </Button>
+          </div>
+          <ul className={styles.saleProducts}>
+            {data.items.map((p) => (
+              <li key={p.id}>
+                <Link to={`/product/${p.slug}`} aria-label={p.name}>
+                  <img className="product-photo" src={assetUrl(p.images[0]?.url)} alt="" loading="lazy" />
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul className={styles.saleProducts}>
-          {data.items.map((p) => (
-            <li key={p.id}>
-              <Link to={`/product/${p.slug}`} aria-label={p.name}>
-                <img className="product-photo" src={assetUrl(p.images[0]?.url)} alt="" loading="lazy" />
-              </Link>
-            </li>
-          ))}
-        </ul>
       </div>
     </section>
   );

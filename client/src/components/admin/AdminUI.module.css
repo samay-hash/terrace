@@ -2,7 +2,7 @@
   min-width: 0;
   padding: var(--space-5);
   border-radius: var(--radius-lg);
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--line);
 }
 
@@ -22,7 +22,7 @@
 .stat {
   padding: var(--space-4) var(--space-5);
   border-radius: var(--radius-lg);
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--line);
 }
 
@@ -43,7 +43,7 @@
 
 .stat[data-tone="dark"] .statLabel,
 .stat[data-tone="dark"] .statNote {
-  color: rgba(244, 243, 239, 0.75);
+  color: color-mix(in srgb, var(--bg) 75%, transparent);
 }
 
 .statValue {
@@ -65,7 +65,7 @@
   overflow-x: auto;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  background: #fff;
+  background: var(--surface);
 }
 
 .tableWrap table {
@@ -97,5 +97,5 @@
 }
 
 .tableWrap tbody tr:hover td {
-  background: #fcfbf9;
+  background: var(--surface-2);
 }

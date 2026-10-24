@@ -17,7 +17,7 @@
   aspect-ratio: 1;
   overflow: hidden;
   border-radius: var(--radius-sm);
-  background: var(--well);
+  background: var(--photo-well);
   border: 1.5px solid transparent;
   transition: border-color 140ms ease;
 }
@@ -41,7 +41,7 @@
   position: relative;
   overflow: hidden;
   border-radius: var(--radius-xl);
-  background: var(--well);
+  background: var(--photo-well);
   aspect-ratio: 1 / 1.05;
   cursor: zoom-in;
 }

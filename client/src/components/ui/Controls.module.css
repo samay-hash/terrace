@@ -4,7 +4,7 @@
   height: 46px;
   border: 1.5px solid var(--line-strong);
   border-radius: var(--radius-pill);
-  background: #fff;
+  background: var(--surface);
 }
 
 .stepper[data-size="sm"] {
@@ -92,7 +92,7 @@
 
 .badge[data-tone="sale"] {
   background: var(--sale);
-  color: #fff;
+  color: var(--bg);
 }
 
 .badge[data-tone="new"] {
@@ -108,7 +108,7 @@
 
 .badge[data-tone="warn"] {
   background: var(--warn-soft);
-  color: #6b4a0c;
+  color: var(--warn-ink);
 }
 
 .badge[data-tone="ok"] {

@@ -52,7 +52,7 @@
 .thumb {
   flex: none;
   border-radius: var(--radius-sm);
-  background: var(--well);
+  background: var(--photo-well);
   object-fit: cover;
 }
 
@@ -111,7 +111,7 @@
   padding: 0 14px 0 40px;
   border: 1.5px solid var(--line);
   border-radius: var(--radius-md);
-  background: #fff;
+  background: var(--surface);
 }
 
 .searchInput:focus {
@@ -160,7 +160,7 @@
 
 .sizeDots span[data-low] {
   background: var(--warn-soft);
-  color: #6b4a0c;
+  color: var(--warn-ink);
 }
 
 .sizeDots span[data-out] {
@@ -223,7 +223,7 @@
   height: 16px;
   margin: 2px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--surface);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   transition: transform 160ms var(--ease-out);
 }
@@ -296,7 +296,7 @@
   text-align: center;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  background: #fff;
+  background: var(--surface);
 }
 
 .sizeInput input:focus {
@@ -338,7 +338,7 @@
   gap: var(--space-3);
   margin-top: var(--space-5);
   padding: var(--space-4) 0;
-  background: linear-gradient(to top, var(--bg) 70%, rgba(244, 243, 239, 0));
+  background: linear-gradient(to top, var(--bg) 70%, transparent);
 }
 
 .help {
@@ -371,7 +371,7 @@
   padding: 0 28px 0 10px;
   border: 1.5px solid var(--line);
   border-radius: var(--radius-sm);
-  background: #fff;
+  background: var(--surface);
   font-size: var(--text-xs);
   font-weight: 600;
 }

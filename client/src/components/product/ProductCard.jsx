@@ -90,7 +90,7 @@ export function ProductCard({ product, priority = false }) {
 
   return (
     <article className={styles.card}>
-      <div className={styles.media}>
+      <div className={`${styles.media} photo-scope`}>
         <Link to={`/product/${product.slug}`} className={styles.mediaLink} tabIndex={-1} aria-hidden>
           {front ? (
             <img

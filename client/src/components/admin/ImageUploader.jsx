@@ -109,7 +109,7 @@ export function ImageUploader({ images, onChange, error }) {
         <ul className={styles.grid}>
           {images.map((image, i) => (
             <li key={image.publicId} className={styles.tile}>
-              <div className={styles.preview}>
+              <div className={`${styles.preview} photo-scope`}>
                 <img src={assetUrl(image.url)} alt={image.alt || `Product image ${i + 1}`} />
                 {i === 0 && <span className={styles.cover}>Cover</span>}
                 <div className={styles.tools}>
@@ -141,7 +141,7 @@ export function ImageUploader({ images, onChange, error }) {
           ))}
           {pending.map((p) => (
             <li key={p.id} className={styles.tile} aria-busy>
-              <div className={styles.preview} data-pending>
+              <div className={`${styles.preview} photo-scope`} data-pending>
                 <img src={p.preview} alt="" />
                 <span className={styles.spinner} aria-label={`Uploading ${p.name}`} />
               </div>

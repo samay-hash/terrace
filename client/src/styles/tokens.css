@@ -1,42 +1,57 @@
 /*
   Terrace design tokens.
-  A quiet, gallery-like base (warm white, white surfaces, black type and
-  black primary actions) so real product photography carries the colour.
-  Deep green and brass are reserved for small, meaningful moments.
+  A quiet, gallery-like base (soft cream, warm white surfaces, espresso
+  type and primary actions) so real product photography carries the
+  colour. Deep green and brass are reserved for small, meaningful moments.
+  A matching dark theme lives under [data-theme="dark"] at the end.
 */
 :root {
-  --bg: #f7f6f3;
-  --surface: #ffffff;
-  --well: #f1f0ec; /* product image wells; photos are multiplied onto it */
-  --well-2: #e9e7e1;
-  --ink: #141414;
-  --ink-2: #57575c;
-  --ink-3: #8c8c91;
-  --line: #e6e4de;
-  --line-strong: #cfccc4;
+  --bg: #f8f4ec;
+  --surface: #fffdf9;
+  --surface-2: #f1eadf; /* quiet panels: sale card, auth tabs */
+  --well: #f1ece3; /* subtle fills and hovers */
+  --well-2: #e7e0d4;
+  /* Product photos are shot on white and multiplied onto these, so they
+     stay light in both themes. Anything sitting on them uses --photo-ink. */
+  --photo-well: #f2ede5;
+  --photo-well-2: #e8e1d6;
+  --photo-ink: #1b1814;
+  --ink: #1b1814;
+  --ink-2: #5d5750;
+  --ink-3: #8e877e;
+  --ink-hover: #3a342e;
+  --line: #e7dfd2;
+  --line-strong: #d2c8b8;
 
   --accent: #2b4a3f;
-  --accent-soft: #e4ebe7;
+  --accent-hover: #213a31;
+  --accent-soft: #e3eae4;
   --brass: #9c7a45;
-  --brass-soft: #f3ecdf;
+  --brass-soft: #f2e9d9;
   --sale: #b4372b;
-  --sale-soft: #f8e5e2;
+  --sale-hover: #9a2c23;
+  --sale-soft: #f7e3de;
+  --sale-ink: #7d2219;
   --ok: #2f6f4c;
-  --ok-soft: #e3efe8;
+  --ok-soft: #e3eee5;
   --warn: #93650f;
-  --warn-soft: #f6edd8;
+  --warn-soft: #f5ebd5;
+  --warn-ink: #6b4a0c;
 
-  --dark: #141414;
-  --dark-2: #222224;
+  /* Deep espresso for the footer and announcement bar: dark, not black. */
+  --dark: #221d18;
+  --dark-2: #2d2721;
   --dark-line: rgba(255, 255, 255, 0.12);
-  --on-dark: #f5f4f0;
-  --on-dark-2: rgba(245, 244, 240, 0.66);
+  --on-dark: #f6f1e8;
+  --on-dark-2: rgba(246, 241, 232, 0.66);
 
-  /* Stage tints for the hero and category explorer */
-  --tint-sand: #efe9df;
-  --tint-sage: #e3e8e1;
-  --tint-mist: #e2e6ea;
-  --tint-blush: #efe4e0;
+  /* Stage tints behind product photos (category explorer, mega menu) */
+  --tint-sand: #efe6d7;
+  --tint-sage: #e4e8dd;
+  --tint-mist: #e3e6e6;
+  --tint-blush: #f0e3dc;
+
+  --scrim: rgba(20, 16, 12, 0.42);
 
   --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
   --font-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -74,9 +89,72 @@
   --header-h: 72px;
 
   --ease-out: cubic-bezier(0.22, 0.75, 0.2, 1);
-  --shadow-sm: 0 1px 2px rgba(20, 20, 20, 0.06);
-  --shadow-pop: 0 24px 60px -24px rgba(20, 20, 20, 0.28), 0 2px 6px rgba(20, 20, 20, 0.05);
+  --shadow-sm: 0 1px 2px rgba(40, 30, 20, 0.06);
+  --shadow-pop: 0 24px 60px -24px rgba(40, 30, 20, 0.28), 0 2px 6px rgba(40, 30, 20, 0.05);
   --focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--ink);
 
   color-scheme: light;
+}
+
+/* Dark theme: warm charcoal rather than pure black, with the same brass and
+   green accents lifted for contrast. Set by data-theme on <html>. */
+:root[data-theme="dark"] {
+  --bg: #15130f;
+  --surface: #1d1a16;
+  --surface-2: #24201b;
+  --well: #26221d;
+  --well-2: #312c25;
+  --photo-well: #e9e3d8;
+  --photo-well-2: #ddd5c8;
+  --ink: #f1ebe1;
+  --ink-2: #bdb4a8;
+  --ink-3: #8c8378;
+  --ink-hover: #d9d1c5;
+  --line: #2f2a24;
+  --line-strong: #4a4239;
+
+  --accent: #8fbfa8;
+  --accent-hover: #a5cdb9;
+  --accent-soft: #1f2c26;
+  --brass: #d4b07a;
+  --brass-soft: #2c2519;
+  --sale: #ef8a7b;
+  --sale-hover: #f4a194;
+  --sale-soft: #3a211c;
+  --sale-ink: #f6b3a8;
+  --ok: #82c7a0;
+  --ok-soft: #1b2b22;
+  --warn: #e2b660;
+  --warn-soft: #33291a;
+  --warn-ink: #edcd8c;
+
+  --dark: #0f0d0b;
+  --dark-2: #1b1814;
+
+  --tint-sand: #e6dccb;
+  --tint-sage: #dbe0d3;
+  --tint-mist: #dadedf;
+  --tint-blush: #e7d9d1;
+
+  --scrim: rgba(0, 0, 0, 0.6);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-pop: 0 24px 60px -20px rgba(0, 0, 0, 0.7), 0 2px 6px rgba(0, 0, 0, 0.3);
+
+  color-scheme: dark;
+}
+
+/* Product photos stay on a light well in both themes, so anything placed on
+   them (badges, the wishlist heart, quick add) keeps light-theme colours. */
+:root[data-theme="dark"] .photo-scope {
+  --bg: #fffdf9;
+  --surface: #fffdf9;
+  --well: #f1ece3;
+  --ink: #1b1814;
+  --ink-2: #5d5750;
+  --ink-3: #8e877e;
+  --ink-hover: #3a342e;
+  --line: #e7dfd2;
+  --line-strong: #d2c8b8;
+  --sale: #b4372b;
+  color: var(--ink);
 }

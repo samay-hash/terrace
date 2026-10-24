@@ -33,7 +33,7 @@
   display: block;
   overflow: hidden;
   border-radius: var(--radius-sm);
-  background: var(--well);
+  background: var(--photo-well);
   aspect-ratio: 4 / 5;
 }
 
