@@ -1,49 +1,56 @@
 /*
   Terrace design tokens.
-  Chalk-white pages, ink type, pitch green for actions and brass for the
-  small moments of celebration (new in, kit of the week). Dark "night pitch"
-  surfaces are reserved for the footer, promo and sign-in panels.
+  A quiet, gallery-like base (warm white, white surfaces, black type and
+  black primary actions) so real product photography carries the colour.
+  Deep green and brass are reserved for small, meaningful moments.
 */
 :root {
-  --chalk: #f4f3ef;
-  --chalk-2: #eceae6; /* image wells, matches the product photography backdrop */
-  --chalk-3: #e3e0d9;
-  --ink: #14161a;
-  --ink-2: #4b4f57;
-  --ink-3: #7a7e86;
-  --line: #dcd9d1;
-  --line-strong: #c4c0b6;
+  --bg: #f7f6f3;
+  --surface: #ffffff;
+  --well: #f1f0ec; /* product image wells; photos are multiplied onto it */
+  --well-2: #e9e7e1;
+  --ink: #141414;
+  --ink-2: #57575c;
+  --ink-3: #8c8c91;
+  --line: #e6e4de;
+  --line-strong: #cfccc4;
 
-  --pitch: #1f4d3a;
-  --pitch-hover: #173d2e;
-  --pitch-soft: #e3ece6;
-  --brass: #a87a3d;
-  --brass-soft: #f2e8d8;
-  --signal: #b3372c; /* sale prices and destructive actions */
-  --signal-soft: #f7e3df;
-  --ok: #2f7a4f;
-  --warn: #9a6a12;
-  --warn-soft: #f6ecd6;
+  --accent: #2b4a3f;
+  --accent-soft: #e4ebe7;
+  --brass: #9c7a45;
+  --brass-soft: #f3ecdf;
+  --sale: #b4372b;
+  --sale-soft: #f8e5e2;
+  --ok: #2f6f4c;
+  --ok-soft: #e3efe8;
+  --warn: #93650f;
+  --warn-soft: #f6edd8;
 
-  --night: #0d1411;
-  --night-2: #16201b;
-  --night-line: rgba(233, 240, 234, 0.14);
-  --on-night: #e9f0ea;
-  --on-night-2: rgba(233, 240, 234, 0.66);
+  --dark: #141414;
+  --dark-2: #222224;
+  --dark-line: rgba(255, 255, 255, 0.12);
+  --on-dark: #f5f4f0;
+  --on-dark-2: rgba(245, 244, 240, 0.66);
 
-  --font-display: "Big Shoulders Display", "Arial Narrow", sans-serif;
+  /* Stage tints for the hero and category explorer */
+  --tint-sand: #efe9df;
+  --tint-sage: #e3e8e1;
+  --tint-mist: #e2e6ea;
+  --tint-blush: #efe4e0;
+
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
   --font-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  /* Type scale (modular, ratio ~1.25 for UI, larger jumps for display) */
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-md: 1rem;
   --text-lg: 1.125rem;
   --text-xl: 1.375rem;
   --text-2xl: 1.75rem;
-  --display-sm: clamp(2rem, 1.6rem + 1.6vw, 2.75rem);
-  --display-md: clamp(2.5rem, 1.8rem + 3vw, 4rem);
-  --display-lg: clamp(3.25rem, 2rem + 6vw, 7.5rem);
+  --display-xs: clamp(1.5rem, 1.3rem + 0.8vw, 2rem);
+  --display-sm: clamp(1.9rem, 1.5rem + 1.6vw, 2.75rem);
+  --display-md: clamp(2.4rem, 1.7rem + 2.8vw, 3.75rem);
+  --display-lg: clamp(3rem, 1.9rem + 4.6vw, 5.75rem);
 
   --space-1: 4px;
   --space-2: 8px;
@@ -55,18 +62,21 @@
   --space-8: 72px;
   --space-9: 112px;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 26px;
   --radius-pill: 999px;
 
-  --page-max: 1360px;
-  --gutter: clamp(16px, 4vw, 40px);
-  --header-h: 68px;
+  --page-max: 1400px;
+  --gutter: clamp(16px, 4vw, 48px);
+  --header-h: 72px;
 
-  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
-  --shadow-pop: 0 18px 48px -18px rgba(20, 22, 26, 0.35);
-  --focus: 0 0 0 3px var(--chalk), 0 0 0 5px var(--pitch);
+  --ease-out: cubic-bezier(0.22, 0.75, 0.2, 1);
+  --shadow-sm: 0 1px 2px rgba(20, 20, 20, 0.06);
+  --shadow-pop: 0 24px 60px -24px rgba(20, 20, 20, 0.28), 0 2px 6px rgba(20, 20, 20, 0.05);
+  --focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--ink);
 
   color-scheme: light;
 }

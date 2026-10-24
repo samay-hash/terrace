@@ -1,29 +1,118 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Menu, Search, ShoppingBag, User, LogOut, Package, LayoutDashboard } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Menu, Search, ShoppingBag, User, LogOut, Package, LayoutDashboard, Heart, ChevronDown } from "lucide-react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { useCart } from "../../context/CartContext.jsx";
-import { useCategories } from "../../hooks/queries.js";
+import { useWishlist } from "../../context/WishlistContext.jsx";
+import { useCategories, useFacets, useProducts } from "../../hooks/queries.js";
+import { assetUrl } from "../../lib/api.js";
+import { formatPrice } from "../../lib/format.js";
 import { Logo } from "./Logo.jsx";
-import { SearchBox } from "./SearchBox.jsx";
+import { SearchOverlay } from "./SearchOverlay.jsx";
 import { Drawer } from "../ui/Overlay.jsx";
 import styles from "./Header.module.css";
 
-const SHORT_NAMES = { "club-football": "Club", international: "International", retro: "Retro", cricket: "Cricket", basketball: "Basketball", training: "Training" };
+const SHORT_NAMES = { sports: "Sports" };
+const COLLECTIONS = [
+  { to: "/shop?sort=newest", label: "New in" },
+  { to: "/shop?sort=popular", label: "Bestsellers" },
+  { to: "/shop?sort=rating&minRating=4", label: "Top rated" },
+  { to: "/shop?onSale=true", label: "On sale" },
+  { to: "/shop?maxPrice=1999&sort=popular", label: "Gifts under ₹2,000" },
+];
 
-function useNavItems() {
-  const { data: categories = [] } = useCategories();
-  return [
-    ...categories.map((c) => ({ to: `/shop?category=${c.slug}`, label: SHORT_NAMES[c.slug] ?? c.name, slug: c.slug })),
-    { to: "/shop?onSale=true", label: "Sale", sale: true },
-  ];
+function isActive(location, params) {
+  if (location.pathname !== "/shop") return false;
+  const current = new URLSearchParams(location.search);
+  return Object.entries(params).every(([k, v]) => current.get(k) === v);
 }
 
-function isActive(location, item) {
-  const params = new URLSearchParams(location.search);
-  if (location.pathname !== "/shop") return false;
-  if (item.sale) return params.get("onSale") === "true";
-  return params.get("category") === item.slug;
+// Desktop mega menu for "Shop". Opens on hover (with a short delay so it
+// doesn't flicker), click or keyboard, and closes on Escape or leaving.
+function MegaMenu({ categories }) {
+  const [open, setOpen] = useState(false);
+  const timer = useRef(null);
+  const ref = useRef(null);
+  const location = useLocation();
+  const { data: facets } = useFacets();
+  const { data: featured } = useProducts({ featured: "true", inStock: "true", sort: "rating", limit: 1 });
+  const feature = featured?.items?.[0];
+  const brands = [...(facets?.brands ?? [])].sort((a, b) => b.count - a.count).slice(0, 8);
+
+  useEffect(() => setOpen(false), [location]);
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    const onDown = (e) => !ref.current?.contains(e.target) && setOpen(false);
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("mousedown", onDown);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("mousedown", onDown);
+    };
+  }, [open]);
+
+  const enter = () => {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setOpen(true), 120);
+  };
+  const leave = () => {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setOpen(false), 160);
+  };
+
+  return (
+    <div className={styles.megaWrap} ref={ref} onMouseEnter={enter} onMouseLeave={leave}>
+      <button type="button" className={styles.navLink} aria-expanded={open} aria-controls="mega-menu" onClick={() => setOpen((o) => !o)}>
+        Shop <ChevronDown size={14} aria-hidden className={styles.chev} data-open={open ? "" : undefined} />
+      </button>
+      {open && (
+        <div id="mega-menu" className={styles.mega}>
+          <div className={`container ${styles.megaInner}`}>
+            <div className={styles.megaCol}>
+              <p className={styles.megaTitle}>Categories</p>
+              <Link to="/shop" className={styles.megaLink}>
+                Shop everything
+              </Link>
+              {categories.map((c) => (
+                <Link key={c.id} to={`/shop?category=${c.slug}`} className={styles.megaLink}>
+                  {c.name} <span>{c.productCount}</span>
+                </Link>
+              ))}
+            </div>
+            <div className={styles.megaCol}>
+              <p className={styles.megaTitle}>Brands</p>
+              {brands.map((b) => (
+                <Link key={b.name} to={`/shop?brand=${encodeURIComponent(b.name)}`} className={styles.megaLink}>
+                  {b.name} <span>{b.count}</span>
+                </Link>
+              ))}
+            </div>
+            <div className={styles.megaCol}>
+              <p className={styles.megaTitle}>Collections</p>
+              {COLLECTIONS.map((c) => (
+                <Link key={c.to} to={c.to} className={styles.megaLink}>
+                  {c.label}
+                </Link>
+              ))}
+            </div>
+            {feature && (
+              <Link to={`/product/${feature.slug}`} className={styles.megaFeature}>
+                <span className={styles.megaFeatureMedia}>
+                  <img className="product-photo" src={assetUrl(feature.images[0]?.url)} alt="" width="400" height="400" />
+                </span>
+                <span className={styles.megaFeatureText}>
+                  <span>Editor's pick</span>
+                  <strong>{feature.name}</strong>
+                  <span className="tabular">{formatPrice(feature.price)}</span>
+                </span>
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 function AccountMenu() {
@@ -46,9 +135,8 @@ function AccountMenu() {
 
   if (!user) {
     return (
-      <Link to="/login" className={styles.signIn}>
-        <User size={20} aria-hidden />
-        <span>Sign in</span>
+      <Link to="/login" className={styles.iconButton} aria-label="Sign in or create an account" title="Sign in">
+        <User size={20} strokeWidth={1.8} />
       </Link>
     );
   }
@@ -65,7 +153,10 @@ function AccountMenu() {
             <span>{user.email}</span>
           </div>
           <Link role="menuitem" to="/account" className={styles.menuItem} onClick={() => setOpen(false)}>
-            <Package size={17} aria-hidden /> My orders
+            <Package size={17} aria-hidden /> Orders
+          </Link>
+          <Link role="menuitem" to="/wishlist" className={styles.menuItem} onClick={() => setOpen(false)}>
+            <Heart size={17} aria-hidden /> Wishlist
           </Link>
           {isAdmin && (
             <Link role="menuitem" to="/admin" className={styles.menuItem} onClick={() => setOpen(false)}>
@@ -93,9 +184,11 @@ function AccountMenu() {
 export function Header() {
   const location = useLocation();
   const { itemCount, openDrawer } = useCart();
+  const { count: savedCount } = useWishlist();
   const { user, isAdmin } = useAuth();
-  const navItems = useNavItems();
+  const { data: categories = [] } = useCategories();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -105,67 +198,105 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // "/" opens search from anywhere, like most premium stores.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "/" && !["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
   return (
     <>
       <div className={styles.announce}>
         <p className="container">
-          Free shipping on orders over ₹2,999. Cash on delivery across India.{" "}
-          <Link to="/help#returns">30-day free returns</Link>
+          Free shipping over ₹2,999 and free 30-day returns. <Link to="/help#shipping">Delivery details</Link>
         </p>
       </div>
       <header className={styles.header} data-scrolled={scrolled ? "" : undefined}>
         <div className={`container ${styles.bar}`}>
-          <button type="button" className={styles.burger} onClick={() => setMenuOpen(true)} aria-label="Open menu">
-            <Menu size={22} />
-          </button>
-
-          <Logo />
+          <div className={styles.left}>
+            <button type="button" className={`${styles.iconButton} ${styles.burger}`} onClick={() => setMenuOpen(true)} aria-label="Open menu">
+              <Menu size={22} strokeWidth={1.8} />
+            </button>
+            <Logo />
+          </div>
 
           <nav className={styles.nav} aria-label="Main">
-            <NavLink to="/shop" end className={({ isActive: exact }) => `${styles.navLink} ${exact && !location.search ? styles.current : ""}`}>
-              Shop all
-            </NavLink>
-            {navItems.map((item) => (
+            <MegaMenu categories={categories} />
+            {categories.map((c) => (
               <Link
-                key={item.to}
-                to={item.to}
-                className={`${styles.navLink} ${item.sale ? styles.sale : ""} ${isActive(location, item) ? styles.current : ""}`}
-                aria-current={isActive(location, item) ? "page" : undefined}
+                key={c.id}
+                to={`/shop?category=${c.slug}`}
+                className={`${styles.navLink} ${isActive(location, { category: c.slug }) ? styles.current : ""}`}
+                aria-current={isActive(location, { category: c.slug }) ? "page" : undefined}
               >
-                {item.label}
+                {SHORT_NAMES[c.slug] ?? c.name}
               </Link>
             ))}
+            <Link to="/shop?onSale=true" className={`${styles.navLink} ${styles.sale} ${isActive(location, { onSale: "true" }) ? styles.current : ""}`}>
+              Sale
+            </Link>
           </nav>
 
           <div className={styles.actions}>
-            <SearchBox className={styles.search} />
-            <button type="button" className={styles.searchToggle} onClick={() => setMenuOpen(true)} aria-label="Search">
-              <Search size={20} />
+            <button type="button" className={styles.searchButton} onClick={() => setSearchOpen(true)} aria-label="Search (press /)">
+              <Search size={18} strokeWidth={1.8} aria-hidden />
+              <span>Search</span>
+              <kbd>/</kbd>
             </button>
+            <button type="button" className={`${styles.iconButton} ${styles.searchIcon}`} onClick={() => setSearchOpen(true)} aria-label="Search">
+              <Search size={20} strokeWidth={1.8} />
+            </button>
+            <Link to="/wishlist" className={`${styles.iconButton} ${styles.withCount}`} aria-label={`Wishlist, ${savedCount} saved`} title="Wishlist">
+              <Heart size={20} strokeWidth={1.8} />
+              {savedCount > 0 && <span className={`${styles.count} tabular`}>{savedCount}</span>}
+            </Link>
             <AccountMenu />
-            <button type="button" className={styles.bag} onClick={openDrawer} aria-label={`Bag, ${itemCount} ${itemCount === 1 ? "item" : "items"}`}>
-              <ShoppingBag size={21} aria-hidden />
-              {itemCount > 0 && <span className={`${styles.count} tabular`}>{itemCount > 99 ? "99+" : itemCount}</span>}
+            <button type="button" className={`${styles.iconButton} ${styles.withCount}`} onClick={openDrawer} aria-label={`Bag, ${itemCount} ${itemCount === 1 ? "item" : "items"}`}>
+              <ShoppingBag size={20} strokeWidth={1.8} />
+              {itemCount > 0 && <span key={itemCount} className={`${styles.count} ${styles.bump} tabular`}>{itemCount > 99 ? "99+" : itemCount}</span>}
             </button>
           </div>
         </div>
       </header>
 
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+
       <Drawer open={menuOpen} onClose={() => setMenuOpen(false)} side="left" label="Menu">
         <div className={styles.mobile}>
           <Logo />
-          <SearchBox onNavigate={() => setMenuOpen(false)} autoFocus />
+          <button
+            type="button"
+            className={styles.mobileSearch}
+            onClick={() => {
+              setMenuOpen(false);
+              setSearchOpen(true);
+            }}
+          >
+            <Search size={18} aria-hidden /> Search products
+          </button>
           <nav aria-label="Mobile" className={styles.mobileNav}>
             <Link to="/shop" onClick={() => setMenuOpen(false)}>
-              Shop all
+              Shop everything
             </Link>
-            {navItems.map((item) => (
-              <Link key={item.to} to={item.to} onClick={() => setMenuOpen(false)} className={item.sale ? styles.sale : ""}>
-                {item.label}
+            {categories.map((c) => (
+              <Link key={c.id} to={`/shop?category=${c.slug}`} onClick={() => setMenuOpen(false)}>
+                {c.name} <span>{c.productCount}</span>
               </Link>
             ))}
+            <Link to="/shop?onSale=true" onClick={() => setMenuOpen(false)} className={styles.sale}>
+              Sale
+            </Link>
           </nav>
           <div className={styles.mobileFoot}>
+            <Link to="/wishlist" onClick={() => setMenuOpen(false)}>
+              Wishlist {savedCount > 0 && `(${savedCount})`}
+            </Link>
             {user ? (
               <>
                 <Link to="/account" onClick={() => setMenuOpen(false)}>

@@ -20,62 +20,84 @@
 
 .breadcrumb a:hover {
   color: var(--ink);
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 .breadcrumb li[aria-current] {
   color: var(--ink);
-  font-weight: 500;
 }
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  gap: clamp(28px, 4vw, 64px);
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(28px, 4.5vw, 72px);
   align-items: start;
 }
 
 .info {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-5);
   position: sticky;
   top: calc(var(--header-h) + var(--space-4));
 }
 
-.kicker {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  font-size: var(--text-sm);
-  color: var(--ink-2);
-  font-weight: 500;
+.titleBlock {
+  display: grid;
+  gap: var(--space-2);
 }
 
-.season {
-  padding-left: var(--space-3);
-  border-left: 1px solid var(--line-strong);
+.brand {
+  justify-self: start;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.brand:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .name {
   font-size: var(--display-sm);
-  font-weight: 900;
-  line-height: 0.95;
+  line-height: 1.02;
+}
+
+.priceRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.ratingLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .taxNote {
-  margin-top: calc(var(--space-2) * -1);
   font-size: var(--text-xs);
   color: var(--ink-3);
+}
+
+.lede {
+  color: var(--ink-2);
+  line-height: 1.65;
 }
 
 .purchase {
   display: grid;
   gap: var(--space-4);
-  padding: var(--space-5) 0;
+  padding-top: var(--space-5);
   border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  scroll-margin-top: calc(var(--header-h) + 40px);
+}
+
+.oneSize {
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .stock {
@@ -88,8 +110,8 @@
 
 .stock::before {
   content: "";
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: currentColor;
 }
@@ -103,16 +125,24 @@
 }
 
 .stock[data-tone="out"] {
-  color: var(--signal);
+  color: var(--sale);
 }
 
 .buyRow {
   display: flex;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 .buyRow > :first-child {
   height: 56px;
+}
+
+.wish {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
 }
 
 .askChotu {
@@ -121,17 +151,19 @@
   justify-self: start;
   gap: var(--space-2);
   font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--pitch);
+  font-weight: 500;
+  color: var(--ink-2);
 }
 
 .askChotu:hover {
+  color: var(--ink);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
 .details {
   display: grid;
+  border-top: 1px solid var(--line);
 }
 
 .accordion {
@@ -141,6 +173,7 @@
 .accordion summary {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-3);
   padding: var(--space-4) 0;
   font-weight: 600;
@@ -152,27 +185,21 @@
   display: none;
 }
 
-.accordion summary span {
-  flex: 1;
-}
-
 .accordion summary::after {
-  content: "";
-  width: 10px;
-  height: 10px;
-  border-right: 2px solid var(--ink-2);
-  border-bottom: 2px solid var(--ink-2);
-  transform: rotate(45deg) translate(-3px, -3px);
+  content: "+";
+  font-size: 1.4rem;
+  font-weight: 300;
+  line-height: 1;
   transition: transform 200ms var(--ease-out);
 }
 
 .accordion[open] summary::after {
-  transform: rotate(-135deg);
+  transform: rotate(45deg);
 }
 
 .accordionBody {
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-4);
   padding-bottom: var(--space-5);
   color: var(--ink-2);
   font-size: var(--text-sm);
@@ -180,7 +207,7 @@
 }
 
 .accordionBody a {
-  color: var(--pitch);
+  color: var(--ink);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -189,42 +216,57 @@
 .bullets {
   display: grid;
   gap: 6px;
-  padding-left: 0;
 }
 
 .bullets li {
   position: relative;
-  padding-left: 18px;
+  padding-left: 16px;
 }
 
 .bullets li::before {
   content: "";
   position: absolute;
-  left: 2px;
+  left: 0;
   top: 0.65em;
-  width: 7px;
-  height: 7px;
-  background: var(--brass);
-  clip-path: polygon(0 100%, 0 66%, 33% 66%, 33% 33%, 66% 33%, 66% 0, 100% 0, 100% 100%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink);
 }
 
-.sku {
-  font-size: var(--text-xs);
+.specs {
+  display: grid;
+  margin: 0;
+}
+
+.specs div {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+}
+
+.specs dt {
   color: var(--ink-3);
 }
 
-.related {
-  padding-top: var(--space-9);
+.specs dd {
+  margin: 0;
+  color: var(--ink);
 }
 
-.relatedTitle {
+.section {
+  padding-top: var(--space-9);
+  scroll-margin-top: calc(var(--header-h) + 20px);
+}
+
+.sectionTitle {
   font-size: var(--display-sm);
-  font-weight: 900;
   margin-bottom: var(--space-6);
 }
 
 .skeletonImage {
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1 / 1.05;
 }
 
 @media (max-width: 960px) {

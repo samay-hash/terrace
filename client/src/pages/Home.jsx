@@ -1,16 +1,26 @@
 import { useDocumentTitle } from "../hooks/useDocumentTitle.js";
 import { Hero } from "../components/home/Hero.jsx";
-import { AskChotu, CategoryRail, ProductTabs, PromoBanner, RetroRoom } from "../components/home/HomeSections.jsx";
+import {
+  AskChotu,
+  CategoryExplorer,
+  EditorialDuo,
+  ProductTabs,
+  Promises,
+  ReviewsStrip,
+  SaleBanner,
+} from "../components/home/HomeSections.jsx";
 
 export default function Home() {
   useDocumentTitle();
   return (
     <>
       <Hero />
-      <CategoryRail />
+      <Promises />
+      <CategoryExplorer />
       <ProductTabs />
-      <PromoBanner />
-      <RetroRoom />
+      <EditorialDuo />
+      <SaleBanner />
+      <ReviewsStrip />
       <AskChotu />
     </>
   );

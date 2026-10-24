@@ -12,6 +12,7 @@ const Checkout = lazy(() => import("./pages/Checkout.jsx"));
 const OrderPage = lazy(() => import("./pages/OrderPage.jsx"));
 const Account = lazy(() => import("./pages/Account.jsx"));
 const Help = lazy(() => import("./pages/Help.jsx"));
+const Wishlist = lazy(() => import("./pages/Wishlist.jsx"));
 const Login = lazy(() => import("./pages/Login.jsx"));
 const Signup = lazy(() => import("./pages/Signup.jsx"));
 const NotFound = lazy(() => import("./pages/NotFound.jsx"));
@@ -23,6 +24,7 @@ const AdminProducts = lazy(() => import("./pages/admin/Products.jsx"));
 const AdminProductEdit = lazy(() => import("./pages/admin/ProductEdit.jsx"));
 const AdminCategories = lazy(() => import("./pages/admin/Categories.jsx"));
 const AdminOrders = lazy(() => import("./pages/admin/Orders.jsx"));
+const AdminReviews = lazy(() => import("./pages/admin/Reviews.jsx"));
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -48,6 +50,7 @@ export function App() {
             <Route path="product/:slug" element={<ProductPage />} />
             <Route path="cart" element={<CartPage />} />
             <Route path="help" element={<Help />} />
+            <Route path="wishlist" element={<Wishlist />} />
             <Route element={<RequireAuth />}>
               <Route path="checkout" element={<Checkout />} />
               <Route path="account" element={<Account />} />
@@ -67,6 +70,7 @@ export function App() {
               <Route path="products/:id" element={<AdminProductEdit />} />
               <Route path="categories" element={<AdminCategories />} />
               <Route path="orders" element={<AdminOrders />} />
+              <Route path="reviews" element={<AdminReviews />} />
             </Route>
           </Route>
         </Routes>

@@ -33,14 +33,14 @@
   display: block;
   overflow: hidden;
   border-radius: var(--radius-sm);
-  background: var(--chalk-2);
+  background: var(--well);
   aspect-ratio: 4 / 5;
 }
 
 .thumb img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  padding: 10%;
 }
 
 .line[data-blocked] .thumb {
@@ -82,7 +82,7 @@ a.lineName:hover {
 
 .issue {
   font-size: var(--text-sm);
-  color: var(--signal);
+  color: var(--sale);
 }
 
 .issue[data-tone="warn"] {
@@ -109,8 +109,8 @@ a.lineName:hover {
 }
 
 .remove:hover {
-  color: var(--signal);
-  background: var(--signal-soft);
+  color: var(--sale);
+  background: var(--sale-soft);
 }
 
 .meter {
@@ -119,7 +119,7 @@ a.lineName:hover {
   padding: var(--space-3) var(--space-4);
   margin-bottom: var(--space-2);
   border-radius: var(--radius-md);
-  background: var(--chalk-2);
+  background: var(--well);
   font-size: var(--text-sm);
 }
 
@@ -132,7 +132,7 @@ a.lineName:hover {
 .track {
   height: 6px;
   border-radius: var(--radius-pill);
-  background: var(--chalk-3);
+  background: var(--well-2);
   overflow: hidden;
 }
 
@@ -145,7 +145,7 @@ a.lineName:hover {
 }
 
 .track span[data-done] {
-  background: var(--pitch);
+  background: var(--accent);
 }
 
 .rows {

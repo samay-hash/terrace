@@ -1,0 +1,19 @@
+.page {
+  padding-top: var(--space-7);
+}
+
+.header {
+  display: grid;
+  gap: var(--space-3);
+  padding-bottom: var(--space-6);
+  margin-bottom: var(--space-6);
+  border-bottom: 1px solid var(--line);
+}
+
+.title {
+  font-size: var(--display-md);
+}
+
+.sub {
+  color: var(--ink-2);
+}

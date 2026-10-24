@@ -14,8 +14,8 @@ const MAX_LENGTH = 1200;
 const WELCOME = {
   role: "assistant",
   local: true,
-  content: "Hmph. You found me. I'm Chotu. I know every shirt here, what's in stock, sizes, delivery and returns. Ask. Quickly.",
-  suggestions: ["Retro shirts under ₹2,500", "What's on sale?", "Help me pick a size"],
+  content: "Hmph. You found me. I'm Chotu. I know everything on these shelves: what's in stock, sizes, delivery and returns. Ask. Quickly.",
+  suggestions: ["Trainers under ₹10,000", "What's on sale?", "Gift ideas for her"],
 };
 
 // The API expects alternating turns ending with the shopper; drop local-only
@@ -39,7 +39,9 @@ function ProductStrip({ products, onNavigate }) {
       {products.map((p) => (
         <li key={p.id}>
           <Link to={`/product/${p.slug}`} className={styles.product} onClick={onNavigate}>
-            <img src={assetUrl(p.image)} alt="" width="120" height="150" loading="lazy" />
+            <span>
+              <img className="product-photo" src={assetUrl(p.image)} alt="" width="120" height="150" loading="lazy" />
+            </span>
             <span className={styles.productName}>{p.name}</span>
             <span className={`${styles.productPrice} tabular`}>
               {formatPrice(p.price)}
@@ -140,7 +142,7 @@ export function ChatWidget() {
             <Chotu mood={mood} size={44} />
             <div className={styles.headText}>
               <h2>Chotu</h2>
-              <p>{pending ? "Muttering, looking it up…" : "Kit-room assistant. Grumpy, but quick."}</p>
+              <p>{pending ? "Muttering, looking it up…" : "Shop-floor assistant. Grumpy, but quick."}</p>
             </div>
             <button
               type="button"
@@ -158,7 +160,7 @@ export function ChatWidget() {
 
           <div className={styles.list} ref={listRef} aria-live="polite">
             {productSlug && (
-              <p className={styles.context}>Ask about the shirt you're viewing: stock, sizing or delivery.</p>
+              <p className={styles.context}>Ask about the item you're viewing: stock, sizing or delivery.</p>
             )}
             {messages.map((m, i) => (
               <div key={i} className={styles.message} data-role={m.role} data-error={m.error ? "" : undefined}>
@@ -229,7 +231,7 @@ export function ChatWidget() {
 
       {!open && nudge && (
         <div className={styles.nudge}>
-          <p>Size doubts? Ask me. Quickly.</p>
+          <p>Need a size or a gift? Ask me.</p>
           <button
             type="button"
             onClick={() => {

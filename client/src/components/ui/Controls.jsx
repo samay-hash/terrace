@@ -1,4 +1,4 @@
-import { Minus, Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { Minus, Plus, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { discountPercent, formatPrice } from "../../lib/format.js";
 import styles from "./Controls.module.css";
 
@@ -33,6 +33,33 @@ export function Price({ price, compareAtPrice, size = "md", showSaving = false }
           </s>
           {showSaving && <span className={styles.saving}>{off}% off</span>}
         </>
+      )}
+    </span>
+  );
+}
+
+// Read-only star rating. Partial stars are drawn by clipping a filled row.
+export function Rating({ value, count, size = 14, showValue = true, className = "" }) {
+  if (!count) return null;
+  const pct = Math.max(0, Math.min(100, (value / 5) * 100));
+  return (
+    <span className={`${styles.rating} ${className}`} aria-label={`Rated ${value} out of 5 from ${count} ${count === 1 ? "review" : "reviews"}`}>
+      <span className={styles.stars} aria-hidden style={{ "--star": `${size}px` }}>
+        <span className={styles.starsEmpty}>
+          {[0, 1, 2, 3, 4].map((i) => (
+            <Star key={i} size={size} strokeWidth={1.6} />
+          ))}
+        </span>
+        <span className={styles.starsFull} style={{ width: `${pct}%` }}>
+          {[0, 1, 2, 3, 4].map((i) => (
+            <Star key={i} size={size} strokeWidth={1.6} fill="currentColor" />
+          ))}
+        </span>
+      </span>
+      {showValue && (
+        <span className={styles.ratingText} aria-hidden>
+          {value.toFixed(1)} <span>({count})</span>
+        </span>
       )}
     </span>
   );

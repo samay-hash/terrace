@@ -133,12 +133,12 @@ export default function Checkout() {
             {cart.items.map((item) => (
               <li key={item.id ?? `${item.productId}:${item.size}`}>
                 <span className={styles.thumb}>
-                  <img src={assetUrl(item.image)} alt="" width="64" height="80" />
+                  <img className="product-photo" src={assetUrl(item.image)} alt="" width="64" height="72" />
                   <span className={styles.qty}>{item.quantity}</span>
                 </span>
                 <span className={styles.itemText}>
                   <span>{item.name}</span>
-                  <span className={styles.muted}>Size {item.size}</span>
+                  <span className={styles.muted}>{item.size === "One size" ? "One size" : `Size ${item.size}`}</span>
                 </span>
                 <span className="tabular">{formatPrice(item.lineTotal)}</span>
               </li>

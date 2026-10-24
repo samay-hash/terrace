@@ -1,6 +1,6 @@
 import styles from "./Chotu.module.css";
 
-// Chotu, the kit-room attendant: small, permanently annoyed, very helpful.
+// Chotu, the shop-floor attendant: small, permanently annoyed, very helpful.
 // `mood` changes the face: idle (grumpy), thinking (steam), talking, pleased.
 export function Chotu({ mood = "idle", size = 48, withBackground = true, className = "" }) {
   const browL = mood === "pleased" ? "M40,57 L54,59" : "M40,55 L54,61";
@@ -18,7 +18,7 @@ export function Chotu({ mood = "idle", size = 48, withBackground = true, classNa
       role="img"
       aria-label="Chotu, the Terrace assistant"
     >
-      {withBackground && <circle cx="60" cy="60" r="60" fill="var(--pitch)" />}
+      {withBackground && <circle cx="60" cy="60" r="60" fill="var(--tint-sand)" />}
       <defs>
         <clipPath id="chotu-clip">
           <circle cx="60" cy="60" r="60" />
@@ -26,7 +26,7 @@ export function Chotu({ mood = "idle", size = 48, withBackground = true, classNa
       </defs>
       <g clipPath={withBackground ? "url(#chotu-clip)" : undefined}>
         {/* shirt */}
-        <path d="M12,124 C16,98 36,88 60,88 C84,88 104,98 108,124 Z" fill="#14161A" />
+        <path d="M12,124 C16,98 36,88 60,88 C84,88 104,98 108,124 Z" fill="#2B4A3F" />
         <path d="M46,89 L60,103 L74,89" fill="none" stroke="var(--brass)" strokeWidth="4.5" strokeLinejoin="round" />
         <rect x="52" y="78" width="16" height="12" rx="4" fill="#D9A47C" />
         {/* head */}

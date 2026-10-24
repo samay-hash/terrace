@@ -18,7 +18,7 @@ export default function NotFound() {
           Back to the home page
         </Button>
         <Button to="/shop" variant="secondary">
-          Browse shirts
+          Browse the shop
         </Button>
       </div>
     </div>

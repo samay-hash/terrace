@@ -8,6 +8,7 @@
   border: 1.5px solid transparent;
   font-weight: 600;
   line-height: 1;
+  letter-spacing: -0.005em;
   white-space: nowrap;
   transition:
     background-color 160ms ease,
@@ -37,7 +38,7 @@
 }
 
 .md {
-  height: 46px;
+  height: 48px;
   padding: 0 var(--space-5);
   font-size: var(--text-md);
 }
@@ -52,22 +53,24 @@
   width: 100%;
 }
 
-.primary {
-  background: var(--pitch);
-  color: var(--chalk);
-}
-
-.primary:hover:not(:disabled) {
-  background: var(--pitch-hover);
-}
-
+.primary,
 .dark {
   background: var(--ink);
-  color: var(--chalk);
+  color: var(--bg);
 }
 
+.primary:hover:not(:disabled),
 .dark:hover:not(:disabled) {
-  background: #2a2d33;
+  background: #2c2c2e;
+}
+
+.accent {
+  background: var(--accent);
+  color: var(--on-dark);
+}
+
+.accent:hover:not(:disabled) {
+  background: #213a31;
 }
 
 .secondary {
@@ -81,7 +84,7 @@
 }
 
 .light {
-  background: var(--chalk);
+  background: var(--bg);
   color: var(--ink);
 }
 
@@ -96,11 +99,11 @@
 }
 
 .ghost:hover:not(:disabled) {
-  background: var(--chalk-2);
+  background: var(--well);
 }
 
 .danger {
-  background: var(--signal);
+  background: var(--sale);
   color: #fff;
 }
 
@@ -128,7 +131,7 @@
 }
 
 .icon:hover {
-  background: var(--chalk-2);
+  background: var(--well);
 }
 
 @keyframes spin {

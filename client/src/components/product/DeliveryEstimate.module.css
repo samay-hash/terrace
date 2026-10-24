@@ -1,0 +1,27 @@
+.box {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+}
+
+.row {
+  display: flex;
+  gap: var(--space-3);
+  line-height: 1.5;
+}
+
+.row svg {
+  flex: none;
+  margin-top: 1px;
+  color: var(--ink);
+}
+
+.row strong {
+  color: var(--ink);
+  font-weight: 600;
+}

@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
 import { ToastProvider } from "./context/ToastContext.jsx";
+import { WishlistProvider } from "./context/WishlistContext.jsx";
 import { App } from "./App.jsx";
 import "./styles/tokens.css";
 import "./styles/base.css";
@@ -27,7 +28,9 @@ createRoot(document.getElementById("root")).render(
         <ToastProvider>
           <AuthProvider>
             <CartProvider>
-              <App />
+              <WishlistProvider>
+                <App />
+              </WishlistProvider>
             </CartProvider>
           </AuthProvider>
         </ToastProvider>

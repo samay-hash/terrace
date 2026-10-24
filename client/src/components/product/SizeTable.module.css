@@ -3,6 +3,10 @@
   gap: var(--space-3);
 }
 
+.scroll {
+  overflow-x: auto;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -14,12 +18,13 @@
   padding: 10px 12px;
   text-align: left;
   border-bottom: 1px solid var(--line);
+  white-space: nowrap;
 }
 
 .table thead th {
   font-weight: 600;
-  color: var(--ink);
-  background: var(--chalk-2);
+  color: var(--ink-2);
+  background: var(--well);
 }
 
 .table thead th:first-child {
@@ -31,8 +36,7 @@
 }
 
 .table tbody th {
-  font-weight: 700;
-  color: var(--ink);
+  font-weight: 600;
 }
 
 .note {

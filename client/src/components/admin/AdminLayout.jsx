@@ -1,6 +1,6 @@
 import { Suspense, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { LayoutGrid, Shirt, Tags, ReceiptText, Store, LogOut, Menu, X } from "lucide-react";
+import { LayoutGrid, Package, Tags, ReceiptText, Store, LogOut, Menu, X, MessageSquareText } from "lucide-react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { Logo } from "../layout/Logo.jsx";
 import { PageLoader } from "../ui/Feedback.jsx";
@@ -8,9 +8,10 @@ import styles from "./Admin.module.css";
 
 const NAV = [
   { to: "/admin", label: "Overview", icon: LayoutGrid, end: true },
-  { to: "/admin/products", label: "Products", icon: Shirt },
+  { to: "/admin/products", label: "Products", icon: Package },
   { to: "/admin/categories", label: "Categories", icon: Tags },
   { to: "/admin/orders", label: "Orders", icon: ReceiptText },
+  { to: "/admin/reviews", label: "Reviews", icon: MessageSquareText },
 ];
 
 export default function AdminLayout() {

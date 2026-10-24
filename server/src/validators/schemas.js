@@ -54,6 +54,14 @@ export const productListQuery = z.object({
   gender: z.enum(GENDERS).optional(),
   size: sizeLabel.optional(),
   minRating: z.coerce.number().min(1).max(5).optional(),
+  // Comma-separated slugs, used for the wishlist and recently viewed.
+  slugs: z
+    .string()
+    .trim()
+    .max(2000)
+    .transform((v) => v.split(",").filter(Boolean))
+    .pipe(z.array(z.string().regex(/^[a-z0-9-]{1,100}$/)).max(50))
+    .optional(),
   minPrice: z.coerce.number().int().min(0).optional(),
   maxPrice: z.coerce.number().int().min(0).optional(),
   onSale: boolFlag.optional(),

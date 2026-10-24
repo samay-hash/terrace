@@ -35,9 +35,9 @@ export default function Overview() {
         <StatTile tone="dark" label="Revenue, last 30 days" value={formatPrice(last30Days.revenue)} note="Excludes cancelled orders" />
         <StatTile label="Orders, last 30 days" value={last30Days.orders} />
         <StatTile label="Waiting to ship" value={counts.openOrders} note="Placed or packed" />
-        <StatTile label="Live products" value={`${counts.activeProducts} / ${counts.products}`} note={`${counts.categories} categories`} />
+        <StatTile label="Live products" value={`${counts.activeProducts} / ${counts.products}`} note={`${counts.categories} categories, ${counts.reviews} reviews`} />
         <StatTile label="Sold out" value={counts.outOfStock} tone={counts.outOfStock ? "alert" : undefined} note="Products with no stock" />
-        <StatTile label="Customers" value={counts.customers} />
+        <StatTile label="Customers" value={counts.customers} note={`${counts.subscribers} newsletter sign-ups`} />
       </div>
 
       <div className={styles.split}>

@@ -4,7 +4,6 @@
 
 .title {
   font-size: var(--display-md);
-  font-weight: 900;
 }
 
 .steps {
@@ -38,9 +37,9 @@
 
 .steps li[data-done]::before {
   content: "✓";
-  background: var(--pitch-soft);
+  background: var(--accent-soft);
   border-color: transparent;
-  color: var(--pitch);
+  color: var(--accent);
 }
 
 .steps li[aria-current] {
@@ -51,7 +50,7 @@
 .steps li[aria-current]::before {
   background: var(--ink);
   border-color: var(--ink);
-  color: var(--chalk);
+  color: var(--bg);
 }
 
 .layout {
@@ -97,19 +96,19 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-4);
-  border: 1.5px solid var(--pitch);
+  border: 1.5px solid var(--accent);
   border-radius: var(--radius-md);
-  background: var(--pitch-soft);
+  background: var(--accent-soft);
 }
 
 .payment input {
-  accent-color: var(--pitch);
+  accent-color: var(--accent);
   width: 18px;
   height: 18px;
 }
 
 .payment svg {
-  color: var(--pitch);
+  color: var(--accent);
 }
 
 .payment span {
@@ -154,11 +153,16 @@
 .thumb {
   position: relative;
   flex: none;
+  width: 64px;
+  height: 72px;
+  border-radius: var(--radius-sm);
+  background: var(--well);
 }
 
 .thumb img {
-  border-radius: var(--radius-sm);
-  background: var(--chalk-2);
+  width: 100%;
+  height: 100%;
+  padding: 8%;
 }
 
 .qty {
@@ -172,7 +176,7 @@
   padding: 0 5px;
   border-radius: var(--radius-pill);
   background: var(--ink);
-  color: var(--chalk);
+  color: var(--bg);
   font-size: 11px;
   font-weight: 700;
 }

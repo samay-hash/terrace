@@ -5,8 +5,8 @@
 
 .spinner {
   border-radius: 50%;
-  border: 2.5px solid var(--chalk-3);
-  border-top-color: var(--pitch);
+  border: 2.5px solid var(--well-2);
+  border-top-color: var(--accent);
   animation: spin 800ms linear infinite;
 }
 
@@ -20,7 +20,7 @@
   display: block;
   width: 100%;
   border-radius: var(--radius-sm);
-  background: linear-gradient(90deg, var(--chalk-2) 0%, var(--chalk-3) 40%, var(--chalk-2) 80%);
+  background: linear-gradient(90deg, var(--well) 0%, var(--well-2) 40%, var(--well) 80%);
   background-size: 300% 100%;
   animation: shimmer 1.4s ease-in-out infinite;
 }
@@ -39,14 +39,14 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: var(--chalk-2);
+  background: var(--well);
   color: var(--ink-2);
   margin-bottom: var(--space-2);
 }
 
 .errorIcon {
-  background: var(--signal-soft);
-  color: var(--signal);
+  background: var(--sale-soft);
+  color: var(--sale);
 }
 
 .emptyTitle {
@@ -72,12 +72,12 @@
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   font-size: var(--text-sm);
-  background: var(--chalk-2);
+  background: var(--well);
   color: var(--ink-2);
 }
 
 .notice[data-tone="error"] {
-  background: var(--signal-soft);
+  background: var(--sale-soft);
   color: #7d2219;
 }
 
@@ -87,8 +87,8 @@
 }
 
 .notice[data-tone="ok"] {
-  background: var(--pitch-soft);
-  color: var(--pitch);
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 @keyframes spin {

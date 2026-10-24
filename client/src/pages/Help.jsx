@@ -8,7 +8,7 @@ const SECTIONS = [
   { id: "shipping", title: "Shipping and delivery" },
   { id: "returns", title: "Returns and exchanges" },
   { id: "sizing", title: "Size guide" },
-  { id: "care", title: "Caring for your shirt" },
+  { id: "care", title: "Product care" },
   { id: "contact", title: "Contact us" },
 ];
 
@@ -18,7 +18,7 @@ export default function Help() {
     <div className={`container ${styles.page}`}>
       <header className={styles.header}>
         <h1 className={`display ${styles.title}`}>Help</h1>
-        <p>Everything about delivery, returns and fit. Still stuck? Chotu answers in seconds, a human by email within a day.</p>
+        <p>Everything about delivery, returns, sizes and care. Still stuck? Chotu answers in seconds, a person by email within a day.</p>
       </header>
 
       <div className={styles.layout}>
@@ -40,7 +40,7 @@ export default function Help() {
               </div>
               <div>
                 <dt>Dispatch</dt>
-                <dd>Orders placed before 2 pm on a weekday leave the studio the same day.</dd>
+                <dd>Orders placed before 2 pm, Monday to Saturday, leave our store the same day.</dd>
               </div>
               <div>
                 <dt>Delivery time</dt>
@@ -56,26 +56,30 @@ export default function Help() {
           <section id="returns" aria-labelledby="returns-h">
             <h2 id="returns-h">Returns and exchanges</h2>
             <p>
-              Return or exchange any shirt within 30 days of delivery, free of charge, as long as it's unworn, unwashed and still has its
-              tags. Start from your <Link to="/account">order page</Link> or email us with your order number.
+              Return or exchange anything within 30 days of delivery, free of charge, as long as it's unused, in its original packaging
+              and still has its tags. Watches need their protective film intact. Start from your <Link to="/account">order page</Link>{" "}
+              or email us with your order number.
             </p>
             <p>
-              Refunds for cash-on-delivery orders go to your bank account within 5 business days of the shirt reaching us. Size
+              Refunds for cash-on-delivery orders go to your bank account within 5 business days of the item reaching us. Size
               exchanges ship as soon as the return is scanned by the courier.
             </p>
           </section>
 
           <section id="sizing" aria-labelledby="sizing-h">
             <h2 id="sizing-h">Size guide</h2>
-            <p>All shirts are a regular fit. Use your body chest measurement, not a shirt you already own.</p>
-            <SizeTable />
+            <p>Shoes use UK sizes. Clothing is a regular fit. Watches, sunglasses, bags and sports gear are one size.</p>
+            <h3 className={styles.subhead}>Shoes</h3>
+            <SizeTable kind="shoes" />
+            <h3 className={styles.subhead}>Clothing</h3>
+            <SizeTable kind="clothing" />
           </section>
 
           <section id="care" aria-labelledby="care-h">
-            <h2 id="care-h">Caring for your shirt</h2>
+            <h2 id="care-h">Product care</h2>
             <p>
-              Wash inside out at 30°C with similar colours. Don't tumble dry, and never iron over printed numbers or crests. Hang to dry
-              in the shade and your shirt will see out many seasons.
+              Wipe leather shoes and bags with a soft dry cloth and keep them out of direct sun. Keep watches away from magnets and have
+              them serviced every few years. Store sunglasses in their case. Wash clothing inside out at 30°C and hang to dry.
             </p>
           </section>
 

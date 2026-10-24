@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { SlidersHorizontal, X, SearchX } from "lucide-react";
-import { useCategories, useProducts } from "../hooks/queries.js";
+import { Link, useSearchParams } from "react-router-dom";
+import { SlidersHorizontal, X, SearchX, LayoutGrid, Grid3x3, ChevronRight } from "lucide-react";
+import { useCategories, useFacets, useProducts } from "../hooks/queries.js";
 import { useDocumentTitle } from "../hooks/useDocumentTitle.js";
-import { formatPrice, KIT_TYPE_LABEL, pluralize } from "../lib/format.js";
+import { formatPrice, pluralize } from "../lib/format.js";
+import { readJSON, writeJSON } from "../lib/storage.js";
 import { ProductGrid } from "../components/product/ProductCard.jsx";
 import { Pagination } from "../components/ui/Controls.jsx";
 import { Button } from "../components/ui/Button.jsx";
@@ -14,31 +15,39 @@ import styles from "./Shop.module.css";
 
 const SORTS = [
   { value: "featured", label: "Featured" },
-  { value: "popular", label: "Bestselling" },
   { value: "newest", label: "Newest" },
+  { value: "popular", label: "Bestselling" },
+  { value: "rating", label: "Top rated" },
   { value: "price-asc", label: "Price: low to high" },
   { value: "price-desc", label: "Price: high to low" },
 ];
-const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+const GENDERS = [
+  { value: "men", label: "Men" },
+  { value: "women", label: "Women" },
+];
 const PRICE_BANDS = [
-  { id: "u1500", label: `Under ${formatPrice(1500)}`, max: 1499 },
-  { id: "1500-2000", label: `${formatPrice(1500)} to ${formatPrice(2000)}`, min: 1500, max: 2000 },
-  { id: "2000-2500", label: `${formatPrice(2000)} to ${formatPrice(2500)}`, min: 2000, max: 2500 },
-  { id: "o2500", label: `Over ${formatPrice(2500)}`, min: 2501 },
+  { id: "u2k", label: `Under ${formatPrice(2000)}`, max: 1999 },
+  { id: "2-10k", label: `${formatPrice(2000)} – ${formatPrice(10000)}`, min: 2000, max: 10000 },
+  { id: "10-50k", label: `${formatPrice(10000)} – ${formatPrice(50000)}`, min: 10000, max: 50000 },
+  { id: "o50k", label: `Over ${formatPrice(50000)}`, min: 50001 },
 ];
 const PAGE_SIZE = 12;
+const BRANDS_COLLAPSED = 8;
 
 // Shop state lives in the URL so filtered views can be shared and the back
 // button behaves.
 function useShopParams() {
   const [params, setParams] = useSearchParams();
+  const get = (k) => params.get(k) ?? "";
   const state = {
-    q: params.get("q") ?? "",
-    category: params.get("category") ?? "",
-    size: params.get("size") ?? "",
-    kitType: params.get("kitType") ?? "",
-    minPrice: params.get("minPrice") ?? "",
-    maxPrice: params.get("maxPrice") ?? "",
+    q: get("q"),
+    category: get("category"),
+    brand: get("brand"),
+    gender: get("gender"),
+    size: get("size"),
+    minPrice: get("minPrice"),
+    maxPrice: get("maxPrice"),
+    minRating: get("minRating"),
     onSale: params.get("onSale") === "true",
     inStock: params.get("inStock") === "true",
     sort: params.get("sort") ?? "featured",
@@ -56,58 +65,94 @@ function useShopParams() {
     setParams(next);
   }
 
-  return [state, update, () => setParams(state.q ? { q: state.q } : {})];
+  const clearAll = () => setParams(state.q ? { q: state.q } : state.category ? { category: state.category } : {});
+  return [state, update, clearAll];
 }
 
-function Filters({ state, update, categories }) {
+function FilterGroup({ title, children }) {
+  return (
+    <fieldset className={styles.group}>
+      <legend>{title}</legend>
+      {children}
+    </fieldset>
+  );
+}
+
+function Filters({ state, update, categories, facets }) {
+  const [allBrands, setAllBrands] = useState(false);
   const band = PRICE_BANDS.find((b) => String(b.min ?? "") === state.minPrice && String(b.max ?? "") === state.maxPrice);
+  const brands = facets?.brands ?? [];
+  const shownBrands = allBrands ? brands : brands.slice(0, BRANDS_COLLAPSED);
 
   return (
     <div className={styles.filters}>
-      <fieldset className={styles.group}>
-        <legend>Category</legend>
+      <FilterGroup title="Category">
         <div className={styles.list}>
           <label className={styles.radio}>
-            <input type="radio" name="category" checked={!state.category} onChange={() => update({ category: "" })} />
-            <span>All shirts</span>
+            <input type="radio" name="category" checked={!state.category} onChange={() => update({ category: "", size: "", brand: "" })} />
+            <span>Everything</span>
           </label>
           {categories.map((c) => (
             <label key={c.id} className={styles.radio}>
-              <input type="radio" name="category" checked={state.category === c.slug} onChange={() => update({ category: c.slug })} />
+              <input type="radio" name="category" checked={state.category === c.slug} onChange={() => update({ category: c.slug, size: "", brand: "" })} />
               <span>{c.name}</span>
               <span className={styles.count}>{c.productCount}</span>
             </label>
           ))}
         </div>
-      </fieldset>
+      </FilterGroup>
 
-      <fieldset className={styles.group}>
-        <legend>Size in stock</legend>
+      <FilterGroup title="For">
         <div className={styles.chips}>
-          {SIZES.map((size) => (
-            <button
-              key={size}
-              type="button"
-              aria-pressed={state.size === size}
-              onClick={() => update({ size: state.size === size ? "" : size })}
-            >
-              {size}
+          {GENDERS.map((g) => (
+            <button key={g.value} type="button" aria-pressed={state.gender === g.value} onClick={() => update({ gender: state.gender === g.value ? "" : g.value })}>
+              {g.label}
             </button>
           ))}
         </div>
-      </fieldset>
+      </FilterGroup>
 
-      <fieldset className={styles.group}>
-        <legend>Price</legend>
+      {facets?.sizes?.length > 1 && (
+        <FilterGroup title="Size in stock">
+          <div className={styles.chips}>
+            {facets.sizes.map((size) => (
+              <button key={size} type="button" aria-pressed={state.size === size} onClick={() => update({ size: state.size === size ? "" : size })}>
+                {size}
+              </button>
+            ))}
+          </div>
+        </FilterGroup>
+      )}
+
+      {brands.length > 0 && (
+        <FilterGroup title="Brand">
+          <div className={styles.list}>
+            {shownBrands.map((b) => (
+              <label key={b.name} className={styles.radio}>
+                <input type="radio" name="brand" checked={state.brand === b.name} onChange={() => update({ brand: b.name })} />
+                <span>{b.name}</span>
+                <span className={styles.count}>{b.count}</span>
+              </label>
+            ))}
+            {brands.length > BRANDS_COLLAPSED && (
+              <button type="button" className={styles.reset} onClick={() => setAllBrands((v) => !v)}>
+                {allBrands ? "Show fewer" : `Show all ${brands.length}`}
+              </button>
+            )}
+            {state.brand && (
+              <button type="button" className={styles.reset} onClick={() => update({ brand: "" })}>
+                Any brand
+              </button>
+            )}
+          </div>
+        </FilterGroup>
+      )}
+
+      <FilterGroup title="Price">
         <div className={styles.list}>
           {PRICE_BANDS.map((b) => (
             <label key={b.id} className={styles.radio}>
-              <input
-                type="radio"
-                name="price"
-                checked={band?.id === b.id}
-                onChange={() => update({ minPrice: b.min ?? "", maxPrice: b.max ?? "" })}
-              />
+              <input type="radio" name="price" checked={band?.id === b.id} onChange={() => update({ minPrice: b.min ?? "", maxPrice: b.max ?? "" })} />
               <span>{b.label}</span>
             </label>
           ))}
@@ -117,23 +162,17 @@ function Filters({ state, update, categories }) {
             </button>
           )}
         </div>
-      </fieldset>
+      </FilterGroup>
 
-      <fieldset className={styles.group}>
-        <legend>Kit</legend>
+      <FilterGroup title="Rating">
         <div className={styles.chips}>
-          {Object.entries(KIT_TYPE_LABEL).map(([value, label]) => (
-            <button
-              key={value}
-              type="button"
-              aria-pressed={state.kitType === value}
-              onClick={() => update({ kitType: state.kitType === value ? "" : value })}
-            >
-              {label}
+          {[4, 3].map((r) => (
+            <button key={r} type="button" aria-pressed={state.minRating === String(r)} onClick={() => update({ minRating: state.minRating === String(r) ? "" : r })}>
+              {r}★ and up
             </button>
           ))}
         </div>
-      </fieldset>
+      </FilterGroup>
 
       <div className={styles.group}>
         <Checkbox label="On sale" checked={state.onSale} onChange={(e) => update({ onSale: e.target.checked })} />
@@ -146,16 +185,20 @@ function Filters({ state, update, categories }) {
 export default function Shop() {
   const [state, update, clearAll] = useShopParams();
   const { data: categories = [] } = useCategories();
+  const { data: facets } = useFacets(state.category || undefined);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [columns, setColumns] = useState(() => (readJSON("terrace.grid", 3) === 2 ? 2 : 3));
   const category = categories.find((c) => c.slug === state.category);
 
   const query = {
     q: state.q || undefined,
     category: state.category || undefined,
+    brand: state.brand || undefined,
+    gender: state.gender || undefined,
     size: state.size || undefined,
-    kitType: state.kitType || undefined,
     minPrice: state.minPrice || undefined,
     maxPrice: state.maxPrice || undefined,
+    minRating: state.minRating || undefined,
     onSale: state.onSale ? "true" : undefined,
     inStock: state.inStock ? "true" : undefined,
     sort: state.sort,
@@ -164,70 +207,112 @@ export default function Shop() {
   };
   const { data, isLoading, isFetching, error, refetch } = useProducts(query);
 
-  const title = state.q ? `Results for “${state.q}”` : state.onSale && !category ? "Sale" : category?.name ?? "All shirts";
+  const title = state.q ? `“${state.q}”` : state.brand && !category ? state.brand : state.onSale && !category ? "Sale" : category?.name ?? "Everything";
   useDocumentTitle(state.q ? `Search: ${state.q}` : title);
 
   const chips = useMemo(() => {
     const list = [];
-    if (state.q) list.push({ key: "q", label: `“${state.q}”` });
-    if (category) list.push({ key: "category", label: category.name });
+    if (state.q) list.push({ key: "q", label: `Search: ${state.q}` });
+    if (state.brand) list.push({ key: "brand", label: state.brand });
+    if (state.gender) list.push({ key: "gender", label: state.gender === "men" ? "Men" : "Women" });
     if (state.size) list.push({ key: "size", label: `Size ${state.size}` });
-    if (state.kitType) list.push({ key: "kitType", label: KIT_TYPE_LABEL[state.kitType] });
     if (state.minPrice || state.maxPrice) {
-      const label = state.minPrice && state.maxPrice
-        ? `${formatPrice(state.minPrice)} to ${formatPrice(state.maxPrice)}`
-        : state.minPrice ? `Over ${formatPrice(Number(state.minPrice) - 1)}` : `Under ${formatPrice(Number(state.maxPrice) + 1)}`;
-      list.push({ key: "price", label });
+      const band = PRICE_BANDS.find((b) => String(b.min ?? "") === state.minPrice && String(b.max ?? "") === state.maxPrice);
+      list.push({ key: "price", label: band?.label ?? "Price range" });
     }
+    if (state.minRating) list.push({ key: "minRating", label: `${state.minRating}★ and up` });
     if (state.onSale) list.push({ key: "onSale", label: "On sale" });
     if (state.inStock) list.push({ key: "inStock", label: "In stock" });
     return list;
-  }, [state, category]);
+  }, [state]);
 
-  function removeChip(key) {
-    if (key === "price") update({ minPrice: "", maxPrice: "" });
-    else update({ [key]: "" });
-  }
+  const removeChip = (key) => (key === "price" ? update({ minPrice: "", maxPrice: "" }) : update({ [key]: "" }));
+  const setGrid = (n) => {
+    setColumns(n);
+    writeJSON("terrace.grid", n);
+  };
 
   const total = data?.pagination?.total ?? 0;
   const items = data?.items ?? [];
 
   return (
     <div className={`container ${styles.page}`}>
+      <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+        <Link to="/">Home</Link>
+        <ChevronRight size={13} aria-hidden />
+        {category ? (
+          <>
+            <Link to="/shop">Shop</Link>
+            <ChevronRight size={13} aria-hidden />
+            <span aria-current="page">{category.name}</span>
+          </>
+        ) : (
+          <span aria-current="page">Shop</span>
+        )}
+      </nav>
+
       <header className={styles.header}>
-        <h1 className={`display ${styles.title}`}>{title}</h1>
-        {category?.description && !state.q && <p className={styles.description}>{category.description}</p>}
+        <div>
+          <h1 className={`display ${styles.title}`}>{title}</h1>
+          <p className={styles.description}>
+            {state.q
+              ? `${pluralize(total, "result")} for your search.`
+              : category?.description ?? "Everything we stock, from trainers and watches to cricket bats."}
+          </p>
+        </div>
+        <ul className={`${styles.catChips} no-scrollbar`} aria-label="Categories">
+          <li>
+            <Link to="/shop" aria-current={!state.category ? "page" : undefined}>
+              All
+            </Link>
+          </li>
+          {categories.map((c) => (
+            <li key={c.id}>
+              <Link to={`/shop?category=${c.slug}`} aria-current={state.category === c.slug ? "page" : undefined}>
+                {c.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
       </header>
+
+      <div className={styles.toolbar}>
+        <Button variant="secondary" size="sm" className={styles.filterButton} onClick={() => setFiltersOpen(true)}>
+          <SlidersHorizontal size={15} aria-hidden /> Filters{chips.length ? ` (${chips.length})` : ""}
+        </Button>
+        <p className={styles.resultCount} aria-live="polite">
+          {isLoading ? "Loading…" : pluralize(total, "product")}
+        </p>
+        <div className={styles.toolbarRight}>
+          <div className={styles.density} role="group" aria-label="Grid size">
+            <button type="button" aria-pressed={columns === 2} onClick={() => setGrid(2)} aria-label="Two per row, larger images">
+              <LayoutGrid size={17} />
+            </button>
+            <button type="button" aria-pressed={columns === 3} onClick={() => setGrid(3)} aria-label="Three per row">
+              <Grid3x3 size={17} />
+            </button>
+          </div>
+          <Select className={styles.sort} value={state.sort} onChange={(e) => update({ sort: e.target.value })} aria-label="Sort by">
+            {SORTS.map((s) => (
+              <option key={s.value} value={s.value}>
+                Sort: {s.label}
+              </option>
+            ))}
+          </Select>
+        </div>
+      </div>
 
       <div className={styles.layout}>
         <aside className={styles.sidebar} aria-label="Filters">
-          <Filters state={state} update={update} categories={categories} />
+          <Filters state={state} update={update} categories={categories} facets={facets} />
         </aside>
 
-        <section className={styles.results} aria-labelledby="results-count">
-          <div className={styles.toolbar}>
-            <p id="results-count" className={styles.resultCount} aria-live="polite">
-              {isLoading ? "Loading shirts…" : pluralize(total, "shirt")}
-            </p>
-            <div className={styles.toolbarRight}>
-              <Button variant="secondary" size="sm" className={styles.filterButton} onClick={() => setFiltersOpen(true)}>
-                <SlidersHorizontal size={16} aria-hidden /> Filters{chips.length ? ` (${chips.length})` : ""}
-              </Button>
-              <Select className={styles.sort} value={state.sort} onChange={(e) => update({ sort: e.target.value })} aria-label="Sort by">
-                {SORTS.map((s) => (
-                  <option key={s.value} value={s.value}>
-                    Sort: {s.label}
-                  </option>
-                ))}
-              </Select>
-            </div>
-          </div>
-
+        <section className={styles.results} aria-label="Products">
           {chips.length > 0 && (
             <div className={styles.active}>
               {chips.map((chip) => (
                 <button key={chip.key} type="button" className={styles.activeChip} onClick={() => removeChip(chip.key)} aria-label={`Remove filter ${chip.label}`}>
-                  {chip.label} <X size={14} aria-hidden />
+                  {chip.label} <X size={13} aria-hidden />
                 </button>
               ))}
               <button type="button" className={styles.clear} onClick={clearAll}>
@@ -241,18 +326,18 @@ export default function Shop() {
           ) : !isLoading && items.length === 0 ? (
             <EmptyState
               icon={<SearchX size={24} />}
-              title="No shirts match these filters"
+              title="Nothing matches these filters"
               action={
                 <Button variant="dark" onClick={() => (state.q ? update({ q: "" }) : clearAll())}>
                   {state.q ? "Clear search" : "Clear filters"}
                 </Button>
               }
             >
-              Try a different size or price, or remove a filter. Chotu can also help you find something.
+              Try a different size, price or brand, or ask Chotu to find something similar.
             </EmptyState>
           ) : (
             <div className={styles.grid} data-fetching={isFetching && !isLoading ? "" : undefined}>
-              <ProductGrid products={items} loading={isLoading} columns={3} skeletonCount={6} />
+              <ProductGrid products={items} loading={isLoading} columns={columns} skeletonCount={6} />
             </div>
           )}
 
@@ -278,11 +363,11 @@ export default function Shop() {
             <Button variant="secondary" onClick={clearAll}>
               Clear all
             </Button>
-            <Button onClick={() => setFiltersOpen(false)}>Show {pluralize(total, "shirt")}</Button>
+            <Button onClick={() => setFiltersOpen(false)}>Show {pluralize(total, "product")}</Button>
           </div>
         }
       >
-        <Filters state={state} update={update} categories={categories} />
+        <Filters state={state} update={update} categories={categories} facets={facets} />
       </Drawer>
     </div>
   );

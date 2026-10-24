@@ -15,9 +15,9 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: var(--pitch);
-  color: var(--chalk);
-  box-shadow: 0 10px 30px -8px rgba(13, 20, 17, 0.55);
+  background: var(--ink);
+  color: var(--bg);
+  box-shadow: 0 12px 30px -10px rgba(20, 20, 20, 0.5);
   transition: transform 200ms var(--ease-out);
 }
 
@@ -51,7 +51,7 @@
 }
 
 .nudge button:hover {
-  background: var(--chalk-2);
+  background: var(--well);
 }
 
 .panel {
@@ -59,7 +59,7 @@
   flex-direction: column;
   width: min(400px, calc(100vw - 32px));
   height: min(600px, calc(100vh - 120px));
-  background: var(--chalk);
+  background: var(--bg);
   border: 1px solid var(--line);
   border-radius: 20px;
   box-shadow: 0 30px 80px -24px rgba(13, 20, 17, 0.45);
@@ -73,8 +73,8 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
-  background: var(--night);
-  color: var(--on-night);
+  background: var(--dark);
+  color: var(--on-dark);
 }
 
 .headText {
@@ -84,17 +84,16 @@
 
 .headText h2 {
   font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 1.5rem;
+  font-weight: 600;
+  font-size: 1.35rem;
   line-height: 1;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: -0.03em;
 }
 
 .headText p {
   margin-top: 2px;
   font-size: var(--text-xs);
-  color: var(--on-night-2);
+  color: var(--on-dark-2);
 }
 
 .headButton {
@@ -103,12 +102,12 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  color: var(--on-night-2);
+  color: var(--on-dark-2);
 }
 
 .headButton:hover {
   background: rgba(255, 255, 255, 0.08);
-  color: var(--on-night);
+  color: var(--on-dark);
 }
 
 .list {
@@ -173,11 +172,11 @@
   border-radius: 16px 16px 4px 16px;
   background: var(--ink);
   border-color: var(--ink);
-  color: var(--chalk);
+  color: var(--bg);
 }
 
 .message[data-error] .bubble {
-  background: var(--signal-soft);
+  background: var(--sale-soft);
   border-color: transparent;
   color: #7d2219;
 }
@@ -186,7 +185,7 @@
   justify-self: start;
   font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--signal);
+  color: var(--sale);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -218,9 +217,14 @@
 .product img {
   width: 100%;
   aspect-ratio: 4 / 5;
-  object-fit: cover;
+  padding: 10%;
   border-radius: var(--radius-sm);
-  background: var(--chalk-2);
+}
+
+.product span:first-child {
+  display: block;
+  border-radius: var(--radius-sm);
+  background: var(--well);
 }
 
 .productName {
@@ -264,9 +268,9 @@
 }
 
 .suggestions button:hover {
-  border-color: var(--pitch);
-  background: var(--pitch-soft);
-  color: var(--pitch);
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--bg);
 }
 
 .typing {
@@ -307,7 +311,7 @@
   padding: 10px 14px;
   border: 1.5px solid var(--line);
   border-radius: 21px;
-  background: var(--chalk);
+  background: var(--bg);
   font-size: var(--text-sm);
   line-height: 1.45;
   resize: none;
@@ -316,8 +320,7 @@
 
 .composer textarea:focus {
   outline: none;
-  border-color: var(--pitch);
-  box-shadow: 0 0 0 3px var(--pitch-soft);
+  border-color: var(--ink);
 }
 
 .send {
@@ -327,13 +330,13 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: var(--pitch);
-  color: var(--chalk);
+  background: var(--ink);
+  color: var(--bg);
   transition: background-color 140ms ease;
 }
 
 .send:disabled {
-  background: var(--chalk-3);
+  background: var(--well-2);
   color: var(--ink-3);
 }
 

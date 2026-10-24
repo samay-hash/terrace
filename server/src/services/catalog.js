@@ -38,6 +38,7 @@ export async function buildProductFilter(query, { includeInactive = false } = {}
   if (query.brand) filter.brand = new RegExp(`^${escapeRegex(query.brand)}$`, "i");
   if (query.gender) filter.gender = query.gender === "unisex" ? "unisex" : { $in: [query.gender, "unisex"] };
   if (query.minRating) filter.rating = { $gte: query.minRating };
+  if (query.slugs?.length) filter.slug = { $in: query.slugs };
   if (query.size) filter.sizes = { $elemMatch: { label: query.size, stock: { $gt: 0 } } };
   if (query.inStock) filter.stock = { $gt: 0 };
   if (query.featured) filter.isFeatured = true;

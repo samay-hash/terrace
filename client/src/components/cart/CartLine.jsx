@@ -36,7 +36,7 @@ export function CartLine({ item, compact = false, onNavigate }) {
   return (
     <li className={styles.line} data-compact={compact ? "" : undefined} data-blocked={blocked ? "" : undefined} aria-busy={busy || undefined}>
       <Link to={item.slug ? `/product/${item.slug}` : "#"} className={styles.thumb} onClick={onNavigate} tabIndex={-1} aria-hidden>
-        {item.image && <img src={assetUrl(item.image)} alt="" width="120" height="150" />}
+        {item.image && <img className="product-photo" src={assetUrl(item.image)} alt="" width="120" height="150" />}
       </Link>
       <div className={styles.lineBody}>
         <div className={styles.lineTop}>
@@ -49,7 +49,8 @@ export function CartLine({ item, compact = false, onNavigate }) {
               <span className={styles.lineName}>{name}</span>
             )}
             <p className={styles.lineMeta}>
-              Size {item.size}
+              {item.brand && `${item.brand}, `}
+              {item.size === "One size" ? "One size" : `Size ${item.size}`}
               {!compact && item.quantity > 1 && `, ${formatPrice(item.unitPrice)} each`}
             </p>
           </div>

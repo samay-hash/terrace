@@ -7,7 +7,7 @@ export function AuthLayout({ heading, subheading, quote, children }) {
   return (
     <div className={styles.page}>
       <aside className={styles.panel}>
-        <img className={styles.photo} src="/images/pitch-night.webp" alt="" width="1024" height="731" />
+        <img className={styles.photo} src="/images/court-sneakers.webp" alt="" width="1024" height="683" />
         <div className={styles.panelInner}>
           <Logo tone="light" />
           <h2 className={`display ${styles.heading}`}>{heading}</h2>

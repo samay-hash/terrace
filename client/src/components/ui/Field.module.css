@@ -39,16 +39,16 @@
 
 .control:focus {
   outline: none;
-  border-color: var(--pitch);
-  box-shadow: 0 0 0 3px var(--pitch-soft);
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(20, 20, 20, 0.08);
 }
 
 .field[data-invalid] .control {
-  border-color: var(--signal);
+  border-color: var(--sale);
 }
 
 .field[data-invalid] .control:focus {
-  box-shadow: 0 0 0 3px var(--signal-soft);
+  box-shadow: 0 0 0 3px var(--sale-soft);
 }
 
 .textarea {
@@ -70,7 +70,7 @@
 }
 
 .error {
-  color: var(--signal);
+  color: var(--sale);
 }
 
 .affix {
@@ -160,10 +160,10 @@
 }
 
 .check input:checked + .box {
-  background: var(--pitch)
+  background: var(--ink)
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3L15 7' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
     center / 18px no-repeat;
-  border-color: var(--pitch);
+  border-color: var(--ink);
 }
 
 .check input:focus-visible + .box {

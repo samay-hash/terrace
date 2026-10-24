@@ -110,7 +110,7 @@ async function seedUser({ email, password, name, role }) {
 async function seedOrders(customer) {
   if (!customer || (await Order.exists({ user: customer._id }))) return 0;
 
-  const picks = await Product.find({ stock: { $gt: 0 } }).sort({ salesCount: -1 }).limit(8);
+  const picks = await Product.find({ stock: { $gt: 0 }, price: { $lt: 15000 } }).sort({ salesCount: -1 }).limit(8);
   const plans = [
     { status: "delivered", age: 21, lines: [[0, 1], [3, 1]] },
     { status: "shipped", age: 3, lines: [[1, 2]] },

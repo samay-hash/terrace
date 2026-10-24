@@ -28,7 +28,7 @@ export default function CartPage() {
             </Button>
           }
         >
-          Find a shirt you like, pick your size and it will wait here.
+          Find something you like and it will wait here.
         </EmptyState>
       </div>
     );

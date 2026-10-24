@@ -54,7 +54,7 @@ export default function OrderPage() {
           <CheckCircle2 size={28} aria-hidden />
           <div>
             <h1 className={`display ${styles.thanksTitle}`}>Thanks, {address.fullName.split(" ")[0]}. Your order is in.</h1>
-            <p>We'll pack it at the studio and text {address.phone} when it ships. Pay when it arrives.</p>
+            <p>We'll pack it at our store and text {address.phone} when it ships. Pay when it arrives.</p>
           </div>
         </div>
       )}
@@ -78,14 +78,14 @@ export default function OrderPage() {
             {order.items.map((item, i) => (
               <li key={`${item.slug}-${item.size}-${i}`}>
                 <Link to={`/product/${item.slug}`} className={styles.thumb}>
-                  <img src={assetUrl(item.image)} alt="" width="80" height="100" />
+                  <img className="product-photo" src={assetUrl(item.image)} alt="" width="80" height="88" />
                 </Link>
                 <div className={styles.itemText}>
                   <Link to={`/product/${item.slug}`} className={styles.itemName}>
                     {item.name}
                   </Link>
                   <span className={styles.muted}>
-                    Size {item.size}, quantity {item.quantity}
+                    {item.size === "One size" ? "One size" : `Size ${item.size}`}, quantity {item.quantity}
                   </span>
                 </div>
                 <span className="tabular">{formatPrice(item.lineTotal)}</span>

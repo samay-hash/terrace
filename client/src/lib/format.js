@@ -40,11 +40,8 @@ export const ORDER_STATUS_TONE = {
   cancelled: "danger",
 };
 
-export const KIT_TYPE_LABEL = {
-  home: "Home",
-  away: "Away",
-  third: "Third",
-  retro: "Retro",
-  training: "Training",
-  special: "Special",
+export const GENDER_LABEL = {
+  men: "Men",
+  women: "Women",
+  unisex: "Everyone",
 };

@@ -7,11 +7,12 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 16px);
 }
 
 body {
   margin: 0;
-  background: var(--chalk);
+  background: var(--bg);
   color: var(--ink);
   font-family: var(--font-body);
   font-size: var(--text-md);
@@ -78,20 +79,20 @@ button:disabled {
 :focus-visible {
   outline: none;
   box-shadow: var(--focus);
-  border-radius: var(--radius-sm);
 }
 
 ::selection {
-  background: var(--pitch);
-  color: var(--chalk);
+  background: var(--ink);
+  color: var(--bg);
 }
 
+/* Display type: sentence case, tight, optical size from the variable font. */
 .display {
   font-family: var(--font-display);
-  font-weight: 800;
-  line-height: 0.92;
-  letter-spacing: -0.005em;
-  text-transform: uppercase;
+  font-weight: 600;
+  font-optical-sizing: auto;
+  line-height: 1;
+  letter-spacing: -0.035em;
 }
 
 .container {
@@ -99,6 +100,13 @@ button:disabled {
   max-width: var(--page-max);
   margin-inline: auto;
   padding-inline: var(--gutter);
+}
+
+/* Product photos are shot on white; multiplying them onto the well colour
+   removes the white box so every product sits on the same surface. */
+.product-photo {
+  mix-blend-mode: multiply;
+  object-fit: contain;
 }
 
 .visually-hidden {
@@ -120,7 +128,7 @@ button:disabled {
   z-index: 100;
   padding: var(--space-3) var(--space-4);
   background: var(--ink);
-  color: var(--chalk);
+  color: var(--bg);
   border-radius: var(--radius-sm);
 }
 
@@ -130,6 +138,14 @@ button:disabled {
 
 .tabular {
   font-variant-numeric: tabular-nums;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

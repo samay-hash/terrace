@@ -16,7 +16,6 @@
 
 .title {
   font-size: var(--display-md);
-  font-weight: 900;
 }
 
 .layout {
@@ -67,7 +66,7 @@
 }
 
 .content a {
-  color: var(--pitch);
+  color: var(--ink);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -116,4 +115,10 @@
     grid-template-columns: 1fr;
     gap: var(--space-1);
   }
+}
+
+.subhead {
+  margin-top: var(--space-2);
+  font-size: var(--text-lg);
+  font-weight: 600;
 }

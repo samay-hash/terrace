@@ -61,7 +61,7 @@ export default function Signup() {
 
   return (
     <AuthLayout
-      heading="Get a season ticket to the good shirts."
+      heading="Good gear starts with an account."
       subheading="An account keeps your bag on every device, speeds up checkout and lets you follow each order to your door."
       quote="Another one. Fine. Fill the form, I'll handle the rest."
     >

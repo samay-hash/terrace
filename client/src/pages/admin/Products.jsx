@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Plus, Pencil, Trash2, Search, ExternalLink, Shirt } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, ExternalLink, Package } from "lucide-react";
 import { api, assetUrl } from "../../lib/api.js";
 import { formatDate, formatPrice, pluralize } from "../../lib/format.js";
 import { useCategories } from "../../hooks/queries.js";
@@ -96,7 +96,7 @@ export default function Products() {
           <input
             className={styles.searchInput}
             type="search"
-            placeholder="Search by name, team or SKU"
+            placeholder="Search by name, brand or SKU"
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
@@ -130,13 +130,14 @@ export default function Products() {
           <option value="price-asc">Price, low to high</option>
           <option value="price-desc">Price, high to low</option>
           <option value="stock-asc">Stock, lowest first</option>
+          <option value="rating">Top rated</option>
         </Select>
       </div>
 
       {error ? (
         <ErrorState error={error} onRetry={refetch} />
       ) : !isLoading && items.length === 0 ? (
-        <EmptyState icon={<Shirt size={24} />} title="No products found" action={<Button to="/admin/products/new">Add a product</Button>}>
+        <EmptyState icon={<Package size={24} />} title="No products found" action={<Button to="/admin/products/new">Add a product</Button>}>
           Change the filters or add a new product to the catalogue.
         </EmptyState>
       ) : (
@@ -171,7 +172,10 @@ export default function Products() {
                           <img className={styles.thumb} src={assetUrl(p.images[0]?.url)} alt="" width="44" height="55" />
                           <div>
                             <Link to={`/admin/products/${p.id}`}>{p.name}</Link>
-                            <div className={styles.muted}>{p.sku || p.team}</div>
+                            <div className={styles.muted}>
+                              {p.brand}
+                              {p.reviewCount > 0 && `, rated ${p.rating.toFixed(1)} (${p.reviewCount})`}
+                            </div>
                           </div>
                         </div>
                       </td>

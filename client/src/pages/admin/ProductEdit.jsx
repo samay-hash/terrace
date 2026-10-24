@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Plus, X, ExternalLink } from "lucide-react";
 import { api } from "../../lib/api.js";
-import { formatDateTime, KIT_TYPE_LABEL } from "../../lib/format.js";
+import { formatDate, formatDateTime, GENDER_LABEL } from "../../lib/format.js";
 import { useCategories } from "../../hooks/queries.js";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle.js";
 import { useToast } from "../../context/ToastContext.jsx";
@@ -14,7 +14,13 @@ import { Checkbox, Select, TextArea, TextInput } from "../../components/ui/Field
 import { ErrorState, Notice, PageLoader } from "../../components/ui/Feedback.jsx";
 import styles from "./AdminPages.module.css";
 
-const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+const SIZE_PRESETS = [
+  { label: "Clothing", sizes: ["XS", "S", "M", "L", "XL", "XXL"] },
+  { label: "Men's shoes", sizes: ["UK 6", "UK 7", "UK 8", "UK 9", "UK 10", "UK 11"] },
+  { label: "Women's shoes", sizes: ["UK 3", "UK 4", "UK 5", "UK 6", "UK 7", "UK 8"] },
+  { label: "One size", sizes: ["One size"] },
+];
+const SIZE_LABEL = /^[A-Za-z0-9][A-Za-z0-9 ./-]{0,15}$/;
 
 const EMPTY = {
   name: "",
@@ -22,32 +28,28 @@ const EMPTY = {
   price: "",
   compareAtPrice: "",
   category: "",
-  team: "",
-  season: "",
-  kitType: "home",
+  brand: "",
+  gender: "unisex",
   details: [],
   images: [],
-  sizes: { XS: "", S: "", M: "", L: "", XL: "", XXL: "" },
+  sizes: [{ label: "One size", stock: "" }],
   sku: "",
   isFeatured: false,
   isActive: true,
 };
 
 function fromProduct(p) {
-  const sizes = { ...EMPTY.sizes };
-  for (const s of p.sizes) sizes[s.label] = String(s.stock);
   return {
     name: p.name,
     description: p.description,
     price: String(p.price),
     compareAtPrice: p.compareAtPrice ? String(p.compareAtPrice) : "",
     category: p.category?.id ?? p.category ?? "",
-    team: p.team ?? "",
-    season: p.season ?? "",
-    kitType: p.kitType,
+    brand: p.brand ?? "",
+    gender: p.gender ?? "unisex",
     details: p.details ?? [],
     images: p.images ?? [],
-    sizes,
+    sizes: p.sizes.map((s) => ({ label: s.label, stock: String(s.stock) })),
     sku: p.sku ?? "",
     isFeatured: p.isFeatured,
     isActive: p.isActive,
@@ -61,12 +63,11 @@ function toPayload(v) {
     price: Number(v.price),
     compareAtPrice: v.compareAtPrice === "" ? null : Number(v.compareAtPrice),
     category: v.category,
-    team: v.team.trim(),
-    season: v.season.trim(),
-    kitType: v.kitType,
+    brand: v.brand.trim(),
+    gender: v.gender,
     details: v.details.map((d) => d.trim()).filter(Boolean),
     images: v.images.map(({ url, publicId, width, height, format, bytes, alt }) => ({ url, publicId, width, height, format, bytes, alt: alt ?? "" })),
-    sizes: SIZES.filter((label) => v.sizes[label] !== "").map((label) => ({ label, stock: Number(v.sizes[label]) })),
+    sizes: v.sizes.map((s) => ({ label: s.label.trim(), stock: Number(s.stock || 0) })),
     sku: v.sku.trim(),
     isFeatured: v.isFeatured,
     isActive: v.isActive,
@@ -81,9 +82,11 @@ function validate(v) {
   if (v.compareAtPrice !== "" && !/^\d+$/.test(v.compareAtPrice)) e.compareAtPrice = "Enter a whole number or leave empty.";
   else if (v.compareAtPrice !== "" && Number(v.compareAtPrice) <= Number(v.price)) e.compareAtPrice = "Must be higher than the price to show as a sale.";
   if (!v.category) e.category = "Choose a category.";
-  const offered = SIZES.filter((s) => v.sizes[s] !== "");
-  if (!offered.length) e.sizes = "Enter stock for at least one size (0 is fine if it's sold out).";
-  else if (offered.some((s) => !/^\d+$/.test(v.sizes[s]))) e.sizes = "Stock must be a whole number.";
+  const labels = v.sizes.map((s) => s.label.trim());
+  if (!v.sizes.length) e.sizes = "Add at least one size.";
+  else if (labels.some((l) => !SIZE_LABEL.test(l))) e.sizes = "Size names can use letters, numbers, spaces, dots, slashes and dashes (up to 16 characters).";
+  else if (new Set(labels).size !== labels.length) e.sizes = "Each size can only be listed once.";
+  else if (v.sizes.some((s) => s.stock !== "" && !/^\d+$/.test(s.stock))) e.sizes = "Stock must be a whole number.";
   if (!v.images.length) e.images = "Add at least one image.";
   return e;
 }
@@ -174,7 +177,11 @@ export default function ProductEdit() {
       </Link>
       <AdminHeader
         title={isNew ? "Add product" : product?.name}
-        description={isNew ? "New products appear in the store as soon as they're saved as live." : `Last updated ${formatDateTime(product?.updatedAt)}`}
+        description={
+          isNew
+            ? "New products appear in the store as soon as they're saved as live."
+            : `Added ${formatDate(product?.createdAt)}, last updated ${formatDateTime(product?.updatedAt)}`
+        }
         actions={
           !isNew &&
           product?.isActive && (
@@ -206,8 +213,14 @@ export default function ProductEdit() {
                 maxLength={4000}
                 rows={6}
               />
-              <TextInput label="Team" value={values.team} onChange={set("team")} error={errors.team} optional maxLength={80} />
-              <TextInput label="Season" value={values.season} onChange={set("season")} error={errors.season} optional placeholder="26/27 or 1995" maxLength={20} />
+              <TextInput label="Brand" value={values.brand} onChange={set("brand")} error={errors.brand} optional maxLength={60} placeholder="e.g. Puma" />
+              <Select label="For" value={values.gender} onChange={set("gender")} error={errors.gender}>
+                {Object.entries(GENDER_LABEL).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </Select>
             </div>
           </Panel>
 
@@ -215,35 +228,74 @@ export default function ProductEdit() {
             <ImageUploader images={values.images} onChange={set("images")} error={errors.images} />
           </Panel>
 
-          <Panel title="Stock by size">
-            <p className={styles.help} style={{ marginBottom: 12 }}>
-              Leave a size empty if it isn't made. Enter 0 to show it as sold out.
-            </p>
-            <div className={styles.sizeGrid}>
-              {SIZES.map((size) => (
-                <label key={size} className={styles.sizeInput} data-off={values.sizes[size] === "" ? "" : undefined}>
-                  {size}
-                  <input
-                    inputMode="numeric"
-                    value={values.sizes[size]}
-                    placeholder="–"
-                    onChange={(e) => {
-                      const v = e.target.value.replace(/\D/g, "").slice(0, 5);
-                      setValues((x) => ({ ...x, sizes: { ...x.sizes, [size]: v } }));
-                      if (errors.sizes) setErrors((x) => ({ ...x, sizes: undefined }));
-                    }}
-                    aria-label={`Stock for size ${size}`}
-                  />
-                </label>
+          <Panel title="Sizes and stock">
+            <div className={styles.presets}>
+              <span className={styles.help}>Start from:</span>
+              {SIZE_PRESETS.map((preset) => (
+                <button
+                  key={preset.label}
+                  type="button"
+                  className={styles.preset}
+                  onClick={() => {
+                    setValues((v) => ({
+                      ...v,
+                      sizes: preset.sizes.map((label) => ({ label, stock: v.sizes.find((s) => s.label === label)?.stock ?? "" })),
+                    }));
+                    setErrors((x) => ({ ...x, sizes: undefined }));
+                  }}
+                >
+                  {preset.label}
+                </button>
               ))}
             </div>
+            <ul className={styles.sizeRows}>
+              {values.sizes.map((row, i) => (
+                <li key={i}>
+                  <input
+                    className={styles.sizeLabel}
+                    value={row.label}
+                    maxLength={16}
+                    placeholder="Size"
+                    aria-label={`Size name ${i + 1}`}
+                    onChange={(e) => setValues((v) => ({ ...v, sizes: v.sizes.map((s, j) => (j === i ? { ...s, label: e.target.value } : s)) }))}
+                  />
+                  <input
+                    className={styles.sizeStock}
+                    inputMode="numeric"
+                    value={row.stock}
+                    placeholder="0"
+                    aria-label={`Stock for ${row.label || `size ${i + 1}`}`}
+                    onChange={(e) => {
+                      const stock = e.target.value.replace(/\D/g, "").slice(0, 5);
+                      setValues((v) => ({ ...v, sizes: v.sizes.map((s, j) => (j === i ? { ...s, stock } : s)) }));
+                      if (errors.sizes) setErrors((x) => ({ ...x, sizes: undefined }));
+                    }}
+                  />
+                  <span className={styles.help}>in stock</span>
+                  <button
+                    type="button"
+                    className={styles.iconAction}
+                    onClick={() => setValues((v) => ({ ...v, sizes: v.sizes.filter((_, j) => j !== i) }))}
+                    aria-label={`Remove size ${row.label || i + 1}`}
+                    disabled={values.sizes.length === 1}
+                  >
+                    <X size={16} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+            {values.sizes.length < 12 && (
+              <button type="button" className={styles.addLink} onClick={() => setValues((v) => ({ ...v, sizes: [...v.sizes, { label: "", stock: "" }] }))}>
+                <Plus size={16} aria-hidden /> Add a size
+              </button>
+            )}
             {errors.sizes && (
-              <p role="alert" style={{ marginTop: 8, color: "var(--signal)", fontSize: "var(--text-sm)" }}>
+              <p role="alert" style={{ marginTop: 8, color: "var(--sale)", fontSize: "var(--text-sm)" }}>
                 {errors.sizes}
               </p>
             )}
             <p className={styles.help} style={{ marginTop: 12 }}>
-              Total: {SIZES.reduce((n, s) => n + (Number(values.sizes[s]) || 0), 0)} units
+              Total: {values.sizes.reduce((n, s) => n + (Number(s.stock) || 0), 0)} units. Sizes show to shoppers in this order; 0 shows as sold out.
             </p>
           </Panel>
 
@@ -282,7 +334,7 @@ export default function ProductEdit() {
           <Panel title="Visibility">
             <div style={{ display: "grid", gap: 14 }}>
               <Checkbox label="Live in the store" description="Hidden products can't be viewed or bought." checked={values.isActive} onChange={set("isActive")} />
-              <Checkbox label="Featured" description="Eligible for the home page and kit of the week." checked={values.isFeatured} onChange={set("isFeatured")} />
+              <Checkbox label="Featured" description="Eligible for the home page stage and menu pick." checked={values.isFeatured} onChange={set("isFeatured")} />
             </div>
           </Panel>
 
@@ -297,7 +349,7 @@ export default function ProductEdit() {
                 value={values.compareAtPrice}
                 onChange={set("compareAtPrice")}
                 error={errors.compareAtPrice}
-                hint="Set higher than the price to show the shirt as on sale."
+                hint="Set higher than the price to show the product as on sale."
               />
             </div>
           </Panel>
@@ -309,13 +361,6 @@ export default function ProductEdit() {
                 {categories.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
-                  </option>
-                ))}
-              </Select>
-              <Select label="Kit type" value={values.kitType} onChange={set("kitType")} error={errors.kitType}>
-                {Object.entries(KIT_TYPE_LABEL).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
                   </option>
                 ))}
               </Select>

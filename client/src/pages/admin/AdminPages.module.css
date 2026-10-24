@@ -20,7 +20,7 @@
 .link {
   font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--pitch);
+  color: var(--accent);
 }
 
 .link:hover {
@@ -52,7 +52,7 @@
 .thumb {
   flex: none;
   border-radius: var(--radius-sm);
-  background: var(--chalk-2);
+  background: var(--well);
   object-fit: cover;
 }
 
@@ -116,8 +116,8 @@
 
 .searchInput:focus {
   outline: none;
-  border-color: var(--pitch);
-  box-shadow: 0 0 0 3px var(--pitch-soft);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 .productCell {
@@ -151,8 +151,8 @@
   min-width: 26px;
   padding: 1px 4px;
   border-radius: 4px;
-  background: var(--pitch-soft);
-  color: var(--pitch);
+  background: var(--accent-soft);
+  color: var(--accent);
   font-size: 10px;
   font-weight: 700;
   text-align: center;
@@ -164,8 +164,8 @@
 }
 
 .sizeDots span[data-out] {
-  background: var(--signal-soft);
-  color: var(--signal);
+  background: var(--sale-soft);
+  color: var(--sale);
 }
 
 .actions {
@@ -184,13 +184,13 @@
 }
 
 .iconAction:hover {
-  background: var(--chalk-2);
+  background: var(--well);
   color: var(--ink);
 }
 
 .iconAction[data-danger]:hover {
-  background: var(--signal-soft);
-  color: var(--signal);
+  background: var(--sale-soft);
+  color: var(--sale);
 }
 
 .switch {
@@ -229,7 +229,7 @@
 }
 
 .switch input:checked {
-  background: var(--pitch);
+  background: var(--accent);
 }
 
 .switch input:checked::after {
@@ -301,12 +301,12 @@
 
 .sizeInput input:focus {
   outline: none;
-  border-color: var(--pitch);
-  box-shadow: 0 0 0 3px var(--pitch-soft);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 .sizeInput[data-off] input {
-  background: var(--chalk);
+  background: var(--bg);
   color: var(--ink-3);
 }
 
@@ -326,7 +326,7 @@
   gap: 6px;
   font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--pitch);
+  color: var(--accent);
 }
 
 .stickyBar {
@@ -338,7 +338,7 @@
   gap: var(--space-3);
   margin-top: var(--space-5);
   padding: var(--space-4) 0;
-  background: linear-gradient(to top, var(--chalk) 70%, rgba(244, 243, 239, 0));
+  background: linear-gradient(to top, var(--bg) 70%, rgba(244, 243, 239, 0));
 }
 
 .help {
@@ -376,7 +376,7 @@
   font-weight: 600;
 }
 
-@media (max-width: 1280px) {
+@media (max-width: 1360px) {
   .stats {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -402,4 +402,59 @@
   .sizeGrid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.preset {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line-strong);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.preset:hover {
+  border-color: var(--ink);
+}
+
+.sizeRows {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.sizeRows li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 110px auto 40px;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.sizeLabel,
+.sizeStock {
+  height: 42px;
+  padding: 0 12px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-weight: 500;
+}
+
+.sizeStock {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.sizeLabel:focus,
+.sizeStock:focus {
+  outline: none;
+  border-color: var(--ink);
 }

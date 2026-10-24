@@ -14,13 +14,26 @@
   font-weight: 600;
 }
 
-.hint {
-  color: var(--warn);
+.chosen {
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+.guide {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: var(--ink-2);
+}
+
+.guide:hover {
+  color: var(--ink);
 }
 
 .options {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
   gap: var(--space-2);
 }
 
@@ -41,11 +54,13 @@
   display: grid;
   place-items: center;
   height: 48px;
-  border: 1.5px solid var(--line);
-  border-radius: var(--radius-md);
-  background: #fff;
-  font-weight: 600;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-weight: 500;
   font-size: var(--text-sm);
+  white-space: nowrap;
   transition:
     border-color 120ms ease,
     background-color 120ms ease,
@@ -59,7 +74,7 @@
 .option input:checked + span {
   background: var(--ink);
   border-color: var(--ink);
-  color: var(--chalk);
+  color: var(--bg);
 }
 
 .option input:focus-visible + span {
@@ -72,12 +87,17 @@
 
 .option[data-out] span:not(:global(.visually-hidden)) {
   color: var(--ink-3);
-  background: repeating-linear-gradient(-45deg, transparent 0 6px, var(--chalk-2) 6px 7px), #fff;
-  text-decoration: line-through;
+  background: linear-gradient(to top right, transparent calc(50% - 0.5px), var(--line-strong) 50%, transparent calc(50% + 0.5px)), var(--bg);
+}
+
+.hint {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--warn);
 }
 
 .error {
   margin-top: var(--space-2);
   font-size: var(--text-sm);
-  color: var(--signal);
+  color: var(--sale);
 }

@@ -27,8 +27,40 @@ export function useProduct(slug) {
   });
 }
 
-export function useFacets() {
-  return useQuery({ queryKey: ["facets"], queryFn: () => api.get("/products/facets"), staleTime: 10 * 60 * 1000 });
+export function useFacets(category) {
+  return useQuery({
+    queryKey: ["facets", category ?? "all"],
+    queryFn: () => api.get("/products/facets", { query: { category } }),
+    staleTime: 5 * 60 * 1000,
+    placeholderData: keepPreviousData,
+  });
+}
+
+// Products by slug, in the order given (wishlist, recently viewed).
+export function useProductsBySlugs(slugs) {
+  return useQuery({
+    queryKey: ["products", "slugs", slugs],
+    queryFn: async () => {
+      const { items } = await api.get("/products", { query: { slugs: slugs.join(","), limit: 48 } });
+      const bySlug = new Map(items.map((p) => [p.slug, p]));
+      return slugs.map((s) => bySlug.get(s)).filter(Boolean);
+    },
+    enabled: slugs.length > 0,
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useProductReviews(slug, params) {
+  return useQuery({
+    queryKey: ["reviews", slug, params],
+    queryFn: () => api.get(`/products/${slug}/reviews`, { query: params }),
+    enabled: Boolean(slug),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useReviewHighlights() {
+  return useQuery({ queryKey: ["reviews", "highlights"], queryFn: () => api.get("/reviews/highlights"), staleTime: 10 * 60 * 1000 });
 }
 
 export function useMyOrders(enabled = true) {

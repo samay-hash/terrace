@@ -25,7 +25,7 @@
 }
 
 .stepper button:hover:not(:disabled) {
-  background: var(--chalk-2);
+  background: var(--well);
 }
 
 .stepper button:disabled {
@@ -50,7 +50,7 @@
 }
 
 .now[data-sale] {
-  color: var(--signal);
+  color: var(--sale);
 }
 
 .was {
@@ -71,8 +71,8 @@
   align-self: center;
   padding: 3px 8px;
   border-radius: var(--radius-pill);
-  background: var(--signal-soft);
-  color: var(--signal);
+  background: var(--sale-soft);
+  color: var(--sale);
   font-size: var(--text-xs);
   font-weight: 700;
 }
@@ -81,28 +81,29 @@
   display: inline-flex;
   align-items: center;
   height: 24px;
-  padding: 0 10px;
+  padding: 0 9px;
   border-radius: var(--radius-pill);
   font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.01em;
-  background: var(--chalk-2);
+  background: var(--well);
   color: var(--ink);
 }
 
 .badge[data-tone="sale"] {
-  background: var(--signal);
+  background: var(--sale);
   color: #fff;
 }
 
 .badge[data-tone="new"] {
-  background: var(--brass);
-  color: #fff;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--line);
 }
 
 .badge[data-tone="muted"] {
   background: var(--ink);
-  color: var(--chalk);
+  color: var(--bg);
 }
 
 .badge[data-tone="warn"] {
@@ -111,13 +112,13 @@
 }
 
 .badge[data-tone="ok"] {
-  background: var(--pitch-soft);
-  color: var(--pitch);
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 .badge[data-tone="danger"] {
-  background: var(--signal-soft);
-  color: var(--signal);
+  background: var(--sale-soft);
+  color: var(--sale);
 }
 
 .pagination {
@@ -146,12 +147,12 @@
 }
 
 .pagination button:hover:not(:disabled):not([aria-current]) {
-  background: var(--chalk-2);
+  background: var(--well);
 }
 
 .pagination button[aria-current="page"] {
   background: var(--ink);
-  color: var(--chalk);
+  color: var(--bg);
 }
 
 .pagination button:disabled {
@@ -161,4 +162,50 @@
 .gap {
   color: var(--ink-3);
   padding: 0 var(--space-1);
+}
+
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+}
+
+.stars {
+  position: relative;
+  display: inline-flex;
+}
+
+.starsEmpty,
+.starsFull {
+  display: inline-flex;
+  gap: 1px;
+}
+
+.starsEmpty {
+  color: var(--line-strong);
+}
+
+.starsFull {
+  position: absolute;
+  inset: 0 auto 0 0;
+  overflow: hidden;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.starsFull svg,
+.starsEmpty svg {
+  flex: none;
+}
+
+.ratingText {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ratingText span {
+  font-weight: 400;
+  color: var(--ink-3);
 }

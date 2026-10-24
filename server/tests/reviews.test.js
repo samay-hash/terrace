@@ -83,6 +83,16 @@ describe("catalogue facets", () => {
   });
 });
 
+describe("wishlist lookups", () => {
+  it("returns products by slug and rejects malformed slugs", async () => {
+    const ok = await request().get("/api/products").query({ slugs: `${product.slug},missing-one` });
+    assert.equal(ok.status, 200);
+    assert.deepEqual(ok.body.items.map((p) => p.slug), [product.slug]);
+    const bad = await request().get("/api/products").query({ slugs: "a,{$ne:1}" });
+    assert.equal(bad.status, 400);
+  });
+});
+
 describe("newsletter", () => {
   it("validates the email and answers the same way for repeat sign-ups", async () => {
     const bad = await request().post("/api/newsletter").set(CSRF).send({ email: "nope" });

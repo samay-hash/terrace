@@ -49,8 +49,8 @@ export default function Login() {
 
   return (
     <AuthLayout
-      heading="Welcome back to the stands."
-      subheading="Sign in to check out faster, track deliveries and keep your bag on every device."
+      heading="Welcome back."
+      subheading="Sign in to check out faster, follow your deliveries and keep your bag on every device."
       quote="Oh, you're back. Your bag missed you. I didn't."
     >
       <div className={styles.head}>

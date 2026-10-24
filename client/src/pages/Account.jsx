@@ -40,7 +40,7 @@ export default function Account() {
         ) : error ? (
           <ErrorState error={error} onRetry={refetch} />
         ) : orders.length === 0 ? (
-          <EmptyState icon={<Package size={24} />} title="No orders yet" action={<Button to="/shop" variant="dark">Find your first shirt</Button>}>
+          <EmptyState icon={<Package size={24} />} title="No orders yet" action={<Button to="/shop" variant="dark">Start shopping</Button>}>
             When you place an order it will show up here with its delivery status.
           </EmptyState>
         ) : (

@@ -15,7 +15,6 @@
 
 .title {
   font-size: var(--display-md);
-  font-weight: 900;
 }
 
 .muted {
@@ -56,7 +55,7 @@
 
 .thumbs img {
   border-radius: var(--radius-sm);
-  background: var(--chalk-2);
+  background: var(--well);
   border: 2px solid #fff;
 }
 

@@ -1,0 +1,71 @@
+.rail {
+  position: relative;
+}
+
+.controls {
+  position: absolute;
+  top: -64px;
+  right: 0;
+  display: flex;
+  gap: var(--space-2);
+}
+
+.controls button {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  transition:
+    background-color 140ms ease,
+    color 140ms ease,
+    border-color 140ms ease;
+}
+
+.controls button:hover:not(:disabled) {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+.controls button:disabled {
+  color: var(--line-strong);
+  background: transparent;
+}
+
+.track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 3 * var(--space-4)) / 4.25);
+  gap: var(--space-4);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0;
+  padding-bottom: var(--space-2);
+}
+
+.track > li {
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+@media (max-width: 1080px) {
+  .track {
+    grid-auto-columns: calc((100% - 2 * var(--space-4)) / 3.2);
+  }
+}
+
+@media (max-width: 760px) {
+  .controls {
+    display: none;
+  }
+  .track {
+    grid-auto-columns: 62%;
+    gap: var(--space-3);
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+  }
+}

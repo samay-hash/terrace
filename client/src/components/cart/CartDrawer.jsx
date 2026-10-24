@@ -61,7 +61,7 @@ export function CartDrawer() {
             </Button>
           }
         >
-          Pick a shirt, choose your size and it will wait here for you.
+          Pick something you like and it will wait here for you.
         </EmptyState>
       )}
     </Drawer>
