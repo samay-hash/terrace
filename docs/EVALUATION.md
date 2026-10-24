@@ -10,7 +10,7 @@ This page follows the brief's evaluation criteria (section 12) one by one: what 
 | Backend, APIs and database | 15% | Complete |
 | Authentication and security | 15% | Complete, 60 automated tests passing |
 | Responsiveness and accessibility | 5% | Complete, checked at 1920, 1440, 1200 and 390 px |
-| Deployment, documentation and explanation | 10% | Documentation complete; Cloudinary connected; hosting configured, waiting for a MongoDB Atlas cluster |
+| Deployment, documentation and explanation | 10% | Documentation complete; MongoDB Atlas and Cloudinary connected and seeded; hosting on Render and Vercel is the last step |
 
 ---
 
@@ -150,10 +150,10 @@ The full flows were run in a headless browser:
 
 - The storefront deploys to Vercel and the API to Render. Configuration is in [`client/vercel.json`](../client/vercel.json) and [`render.yaml`](../render.yaml).
 - Vercel forwards `/api` to Render, so the session cookie stays first-party.
-- Cloudinary is connected and the full catalogue's photos are already hosted there. The remaining step is a MongoDB Atlas connection string, then seeding the production database, as described in the README's [Deploy](../README.md#deploy) section.
+- The production MongoDB Atlas database is seeded (catalogue, demo accounts, sample orders), and every product photo is hosted on Cloudinary. The remaining step is creating the Render and Vercel services, as described in the README's [Deploy](../README.md#deploy) section.
 - The live URLs and demo credentials will be shared with reviewers once that is done.
 
 ## Open items
 
-- **Live deployment:** waiting for a MongoDB Atlas connection string (see above).
+- **Live deployment:** the database and image hosting are ready; the Render and Vercel services still need to be created (see above).
 - **Claude-powered assistant replies:** these were not exercised, because no Anthropic API key was available during development. The rule-based assistant answers from the same live catalogue and was used for all testing. The Claude path switches on when `ANTHROPIC_API_KEY` is set and falls back to the rules on any error.

@@ -19,9 +19,12 @@
   transition: transform 220ms var(--ease-out);
 }
 
-/* Just the teddy: no disc behind it, only a soft shadow under the shape. */
+/* Just the bear from the scarf up: no disc behind it, a soft shadow, and
+   the bottom edge eased out so the body doesn't end on a straight cut. */
 .launcher > span {
-  filter: drop-shadow(0 10px 14px rgba(40, 26, 12, 0.32));
+  filter: drop-shadow(0 8px 12px rgba(40, 26, 12, 0.28));
+  -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
 }
 
 .launcher:hover {

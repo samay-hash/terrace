@@ -267,7 +267,7 @@ export function ChatWidget() {
         aria-expanded={open}
         aria-label={open ? "Close chat" : "Chat with the Terrace assistant"}
       >
-        {open ? <X size={24} /> : <Teddy size={96} framing="full" mood={nudge ? "happy" : "idle"} />}
+        {open ? <X size={24} /> : <Teddy size={88} mood={nudge ? "happy" : "idle"} />}
       </button>
     </div>
   );
