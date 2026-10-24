@@ -49,7 +49,7 @@
       "details": [
         "Cushioned footbed for all-day wear",
         "Grippy rubber outsole",
-        "UK sizing; between sizes in trainers, go half a size up",
+        "UK sizing; between sizes, go half a size up",
         "1 year warranty"
       ],
       "price": 12399,
@@ -121,7 +121,7 @@
       "details": [
         "Cushioned footbed for all-day wear",
         "Grippy rubber outsole",
-        "UK sizing; between sizes in trainers, go half a size up",
+        "UK sizing; between sizes, go half a size up",
         "6 months warranty"
       ],
       "price": 6599,
@@ -194,7 +194,7 @@
       "details": [
         "Cushioned footbed for all-day wear",
         "Grippy rubber outsole",
-        "UK sizing; between sizes in trainers, go half a size up",
+        "UK sizing; between sizes, go half a size up",
         "5 year warranty"
       ],
       "price": 7499,
@@ -266,7 +266,7 @@
       "details": [
         "Cushioned footbed for all-day wear",
         "Grippy rubber outsole",
-        "UK sizing; between sizes in trainers, go half a size up",
+        "UK sizing; between sizes, go half a size up",
         "1 week warranty"
       ],
       "price": 9999,
@@ -336,9 +336,9 @@
       "gender": "women",
       "description": "The Black & Brown Slipper is a comfortable and stylish choice for casual wear. Featuring a blend of black and brown colors, it adds a touch of sophistication to your relaxation.",
       "details": [
-        "Cushioned footbed for all-day wear",
-        "Grippy rubber outsole",
-        "UK sizing; between sizes in trainers, go half a size up",
+        "Padded footbed for longer wear",
+        "Non-slip sole",
+        "UK sizing; heels run true to size",
         "Lifetime warranty"
       ],
       "price": 1699,
@@ -408,9 +408,9 @@
       "gender": "women",
       "description": "Calvin Klein Heel Shoes are elegant and sophisticated, designed for formal occasions. With a classic design and high-quality materials, they complement your stylish ensemble.",
       "details": [
-        "Cushioned footbed for all-day wear",
-        "Grippy rubber outsole",
-        "UK sizing; between sizes in trainers, go half a size up",
+        "Padded footbed for longer wear",
+        "Non-slip sole",
+        "UK sizing; heels run true to size",
         "2 year warranty"
       ],
       "price": 6599,
@@ -480,9 +480,9 @@
       "gender": "women",
       "description": "The Golden Shoes for Women are a glamorous choice for special occasions. Featuring a golden hue and stylish design, they add a touch of luxury to your outfit.",
       "details": [
-        "Cushioned footbed for all-day wear",
-        "Grippy rubber outsole",
-        "UK sizing; between sizes in trainers, go half a size up",
+        "Padded footbed for longer wear",
+        "Non-slip sole",
+        "UK sizing; heels run true to size",
         "6 months warranty"
       ],
       "price": 4099,
@@ -553,10 +553,9 @@
       "gender": "women",
       "description": "Pampi Shoes offer a blend of comfort and style for everyday use. With a versatile design, they are suitable for various casual occasions, providing a trendy and relaxed look.",
       "details": [
-        "Cushioned footbed for all-day wear",
-        "Grippy rubber outsole",
-        "UK sizing; between sizes in trainers, go half a size up",
-        "No warranty"
+        "Padded footbed for longer wear",
+        "Non-slip sole",
+        "UK sizing; heels run true to size"
       ],
       "price": 2499,
       "compareAtPrice": 2899,
@@ -626,10 +625,9 @@
       "gender": "women",
       "description": "The Red Shoes make a bold statement with their vibrant red color. Whether for a party or a casual outing, these shoes add a pop of color and style to your wardrobe.",
       "details": [
-        "Cushioned footbed for all-day wear",
-        "Grippy rubber outsole",
-        "UK sizing; between sizes in trainers, go half a size up",
-        "No warranty"
+        "Padded footbed for longer wear",
+        "Non-slip sole",
+        "UK sizing; heels run true to size"
       ],
       "price": 2899,
       "compareAtPrice": 3499,
@@ -1216,8 +1214,7 @@
       "details": [
         "UV400 protection against UVA and UVB",
         "Hard case and cleaning cloth included",
-        "Lightweight frame with spring hinges",
-        "No warranty"
+        "Lightweight frame with spring hinges"
       ],
       "price": 2499,
       "sizes": [

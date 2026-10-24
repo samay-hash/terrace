@@ -110,7 +110,10 @@ const BRAND_MAP = {
 };
 
 const DETAILS = {
-  footwear: (p) => ["Cushioned footbed for all-day wear", "Grippy rubber outsole", "UK sizing; between sizes in trainers, go half a size up", p.warrantyInformation],
+  footwear: (p) =>
+    p.category === "womens-shoes"
+      ? ["Padded footbed for longer wear", "Non-slip sole", "UK sizing; heels run true to size", p.warrantyInformation]
+      : ["Cushioned footbed for all-day wear", "Grippy rubber outsole", "UK sizing; between sizes, go half a size up", p.warrantyInformation],
   watches: (p) => ["Scratch-resistant sapphire-style crystal", "Adjustable strap or bracelet, resized free in store", "Arrives in a presentation box", p.warrantyInformation],
   eyewear: (p) => ["UV400 protection against UVA and UVB", "Hard case and cleaning cloth included", "Lightweight frame with spring hinges", p.warrantyInformation],
   bags: (p) => ["Lined interior with zip pocket", `Approx. ${Math.round(p.dimensions.width)} × ${Math.round(p.dimensions.height)} × ${Math.round(p.dimensions.depth)} cm`, "Reinforced handles and base studs", p.warrantyInformation],
@@ -183,7 +186,7 @@ async function main() {
         category: pick.category,
         gender: pick.gender ?? "unisex",
         description: p.description,
-        details: DETAILS[pick.category](p).filter(Boolean),
+        details: DETAILS[pick.category](p).filter((d) => d && d !== "No warranty"),
         price,
         compareAtPrice: compareAtPrice && compareAtPrice > price ? compareAtPrice : undefined,
         sizes: spreadStock(p.stock, SIZE_RUNS[pick.sizes ?? "oneSize"], rand),
