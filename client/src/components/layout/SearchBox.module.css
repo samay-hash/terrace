@@ -1,0 +1,140 @@
+.wrap {
+  position: relative;
+  width: 100%;
+}
+
+.form {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  position: absolute;
+  left: 14px;
+  color: var(--ink-3);
+  pointer-events: none;
+}
+
+.input {
+  width: 100%;
+  height: 42px;
+  padding: 0 38px 0 42px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: #fff;
+  font-size: var(--text-sm);
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.input:hover {
+  border-color: var(--line-strong);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--pitch);
+  box-shadow: 0 0 0 3px var(--pitch-soft);
+}
+
+.clear {
+  position: absolute;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--ink-3);
+}
+
+.clear:hover {
+  background: var(--chalk-2);
+  color: var(--ink);
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  min-width: 320px;
+  z-index: 60;
+  padding: var(--space-2);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-pop);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.option[aria-selected="true"] {
+  background: var(--chalk);
+}
+
+.option img {
+  flex: none;
+  border-radius: var(--radius-sm);
+  background: var(--chalk-2);
+  object-fit: cover;
+}
+
+.optionText {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+}
+
+.optionName {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.optionMeta {
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+
+.optionPrice {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.none {
+  padding: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+}
+
+.all {
+  width: 100%;
+  margin-top: var(--space-1);
+  padding: var(--space-3);
+  border-top: 1px solid var(--line);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--pitch);
+  text-align: left;
+}
+
+.all:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

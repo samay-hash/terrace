@@ -1,0 +1,110 @@
+.footer {
+  position: relative;
+  overflow: hidden;
+  margin-top: var(--space-9);
+  background: var(--night);
+  color: var(--on-night-2);
+  font-size: var(--text-sm);
+}
+
+.top {
+  display: grid;
+  grid-template-columns: 1.6fr repeat(3, 1fr);
+  gap: var(--space-7);
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-7);
+}
+
+.brand {
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
+  max-width: 36ch;
+}
+
+.contact {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.contact li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.contact a:hover,
+.col a:hover {
+  color: var(--on-night);
+}
+
+.col {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.col h2 {
+  margin-bottom: var(--space-2);
+  color: var(--on-night);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.col a {
+  width: fit-content;
+  transition: color 140ms ease;
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding-top: var(--space-5);
+  padding-bottom: var(--space-5);
+  border-top: 1px solid var(--night-line);
+  font-size: var(--text-xs);
+}
+
+.demo {
+  max-width: 60ch;
+  text-align: right;
+}
+
+/* Oversized wordmark cropped by the bottom edge, like a stand sign. */
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: clamp(5rem, 22vw, 20rem);
+  line-height: 0.74;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(233, 240, 234, 0.16);
+  margin-bottom: -0.12em;
+  user-select: none;
+}
+
+@media (max-width: 900px) {
+  .top {
+    grid-template-columns: 1fr 1fr;
+  }
+  .brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .top {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+  .bottom {
+    flex-direction: column;
+  }
+  .demo {
+    text-align: left;
+  }
+}

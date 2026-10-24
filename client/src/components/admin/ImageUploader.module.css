@@ -1,0 +1,180 @@
+.uploader {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.drop {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-4);
+  border: 1.5px dashed var(--line-strong);
+  border-radius: var(--radius-lg);
+  background: var(--chalk);
+  text-align: center;
+  color: var(--ink-2);
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease;
+}
+
+.drop[data-dragging] {
+  border-color: var(--pitch);
+  background: var(--pitch-soft);
+}
+
+.drop[data-invalid] {
+  border-color: var(--signal);
+}
+
+.drop button {
+  font-weight: 700;
+  color: var(--pitch);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.hint {
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+  max-width: 44ch;
+}
+
+.problems {
+  display: grid;
+  gap: 4px;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--signal-soft);
+  color: #7d2219;
+  font-size: var(--text-sm);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-3);
+}
+
+.tile {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.preview {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--chalk-2);
+  border: 1px solid var(--line);
+}
+
+.preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preview[data-pending] img {
+  opacity: 0.45;
+  filter: grayscale(0.5);
+}
+
+.cover {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--chalk);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.tools {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.94);
+  opacity: 0;
+  transition: opacity 140ms ease;
+}
+
+.preview:hover .tools,
+.tools:focus-within {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .tools {
+    opacity: 1;
+  }
+}
+
+.tools button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--ink);
+}
+
+.tools button:hover:not(:disabled) {
+  background: var(--chalk-2);
+}
+
+.tools button:disabled {
+  color: var(--line-strong);
+}
+
+.tools button[data-danger]:hover {
+  background: var(--signal-soft);
+  color: var(--signal);
+}
+
+.alt {
+  height: 34px;
+  padding: 0 10px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  background: #fff;
+}
+
+.alt:focus {
+  outline: none;
+  border-color: var(--pitch);
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.7);
+  border-top-color: var(--pitch);
+  animation: spin 800ms linear infinite;
+}
+
+.uploading {
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

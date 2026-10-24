@@ -1,0 +1,85 @@
+.chotu {
+  flex: none;
+  overflow: visible;
+}
+
+.eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blink 5.2s infinite;
+}
+
+.brows {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: twitch 7s infinite;
+}
+
+.steam {
+  opacity: 0;
+}
+
+.chotu[data-mood="thinking"] .steam {
+  animation: puff 1.4s ease-out infinite;
+}
+
+.chotu[data-mood="thinking"] .brows {
+  animation: furrow 0.9s ease-in-out infinite;
+}
+
+.talk {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: talk 0.32s ease-in-out infinite alternate;
+}
+
+@keyframes blink {
+  0%,
+  94%,
+  100% {
+    transform: scaleY(1);
+  }
+  96% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes twitch {
+  0%,
+  88%,
+  100% {
+    transform: translateY(0);
+  }
+  91% {
+    transform: translateY(1.5px);
+  }
+  94% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes furrow {
+  50% {
+    transform: translateY(1.5px);
+  }
+}
+
+@keyframes puff {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.6);
+  }
+  30% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scale(1.15);
+  }
+}
+
+@keyframes talk {
+  to {
+    transform: scaleY(0.45);
+  }
+}

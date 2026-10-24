@@ -1,0 +1,32 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+}
+
+.logo[data-tone="light"] {
+  color: var(--on-night);
+}
+
+.mark {
+  color: var(--pitch);
+  transition: transform 220ms var(--ease-out);
+}
+
+.logo[data-tone="light"] .mark {
+  color: var(--on-night);
+}
+
+.logo:hover .mark {
+  transform: translateY(-2px);
+}
+
+.word {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.65rem;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}

@@ -1,0 +1,161 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-7) var(--space-5);
+}
+
+.grid[data-columns="3"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.card {
+  min-width: 0;
+}
+
+.link {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--chalk-2);
+}
+
+.media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    opacity 320ms ease,
+    transform 600ms var(--ease-out);
+}
+
+.back {
+  opacity: 0;
+}
+
+/* Hover shows the back of the shirt: the side fans actually see in the stands. */
+@media (hover: hover) {
+  .link:hover .back {
+    opacity: 1;
+  }
+  .link:hover .front {
+    opacity: 0;
+  }
+  .link:hover .media img {
+    transform: scale(1.025);
+  }
+  .link:hover .sizes {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .link:hover .name {
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+  }
+}
+
+.placeholder {
+  position: absolute;
+  inset: 0;
+  background: var(--chalk-3);
+}
+
+.badges {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  display: flex;
+  gap: var(--space-2);
+}
+
+.sizes {
+  position: absolute;
+  left: var(--space-3);
+  right: var(--space-3);
+  bottom: var(--space-3);
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 200ms ease,
+    transform 240ms var(--ease-out);
+}
+
+.sizes span {
+  min-width: 26px;
+  text-align: center;
+}
+
+.sizes span[data-out] {
+  color: var(--ink-3);
+  text-decoration: line-through;
+}
+
+.body {
+  display: grid;
+  gap: 4px;
+}
+
+.team {
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+
+.name {
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+}
+
+.meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.low {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--warn);
+}
+
+.mediaSkeleton {
+  aspect-ratio: 4 / 5;
+}
+
+@media (max-width: 1080px) {
+  .grid,
+  .grid[data-columns="3"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .grid,
+  .grid[data-columns="3"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6) var(--space-3);
+  }
+  .name {
+    font-size: var(--text-sm);
+  }
+}

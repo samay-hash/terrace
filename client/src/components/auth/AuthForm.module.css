@@ -1,0 +1,92 @@
+.head {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.title {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.sub {
+  color: var(--ink-2);
+}
+
+.fields {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.rules {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  gap: var(--space-1) var(--space-4);
+  margin-top: calc(var(--space-2) * -1);
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+
+.rules li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rules li::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+}
+
+.rules li[data-ok] {
+  color: var(--ok);
+}
+
+.rules li[data-ok]::before {
+  background: currentColor;
+}
+
+.submit {
+  margin-top: var(--space-2);
+}
+
+.legal {
+  margin-top: var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+  text-align: center;
+}
+
+.switch {
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--line);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+}
+
+.switch a,
+.legal a {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.back {
+  display: inline-flex;
+  margin-top: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--ink-3);
+}
+
+.back:hover {
+  color: var(--ink);
+}

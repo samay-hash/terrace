@@ -1,0 +1,247 @@
+.page {
+  padding-top: var(--space-6);
+}
+
+.header {
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--space-6);
+}
+
+.title {
+  font-size: var(--display-md);
+  font-weight: 900;
+}
+
+.description {
+  max-width: 60ch;
+  margin-top: var(--space-3);
+  color: var(--ink-2);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: var(--space-7);
+  align-items: start;
+}
+
+.sidebar {
+  position: sticky;
+  top: calc(var(--header-h) + var(--space-4));
+  max-height: calc(100vh - var(--header-h) - var(--space-6));
+  overflow-y: auto;
+  padding-right: var(--space-2);
+  scrollbar-width: thin;
+}
+
+.filters {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.group {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.group legend {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.list {
+  display: grid;
+  gap: 2px;
+}
+
+.radio {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 7px 10px;
+  margin-inline: -10px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.radio:hover {
+  background: var(--chalk-2);
+  color: var(--ink);
+}
+
+.radio input {
+  appearance: none;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+
+.radio input:checked {
+  border: 5px solid var(--pitch);
+}
+
+.radio input:checked ~ span:first-of-type {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.count {
+  margin-left: auto;
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+
+.reset {
+  justify-self: start;
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--pitch);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chips button {
+  min-width: 44px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: #fff;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  transition:
+    border-color 120ms ease,
+    background-color 120ms ease;
+}
+
+.chips button:hover {
+  border-color: var(--ink);
+}
+
+.chips button[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--chalk);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.resultCount {
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+}
+
+.toolbarRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sort select {
+  height: 40px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.filterButton {
+  display: none;
+}
+
+.active {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+
+.activeChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px 0 12px;
+  border-radius: var(--radius-pill);
+  background: var(--pitch-soft);
+  color: var(--pitch);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.activeChip:hover {
+  background: #d3e2d8;
+}
+
+.clear {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 0 var(--space-2);
+}
+
+.grid {
+  transition: opacity 160ms ease;
+}
+
+.grid[data-fetching] {
+  opacity: 0.55;
+}
+
+.pagination {
+  margin-top: var(--space-8);
+}
+
+.drawerFoot {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: var(--space-3);
+}
+
+@media (max-width: 960px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    display: none;
+  }
+  .filterButton {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 520px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .toolbarRight {
+    justify-content: space-between;
+  }
+}

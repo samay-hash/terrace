@@ -1,0 +1,83 @@
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.legend {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.hint {
+  color: var(--warn);
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.option {
+  position: relative;
+  display: block;
+}
+
+.option input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.option span:not(:global(.visually-hidden)) {
+  display: grid;
+  place-items: center;
+  height: 48px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  background: #fff;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  transition:
+    border-color 120ms ease,
+    background-color 120ms ease,
+    color 120ms ease;
+}
+
+.option:hover input:not(:disabled) + span {
+  border-color: var(--ink);
+}
+
+.option input:checked + span {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--chalk);
+}
+
+.option input:focus-visible + span {
+  box-shadow: var(--focus);
+}
+
+.option[data-out] input {
+  cursor: not-allowed;
+}
+
+.option[data-out] span:not(:global(.visually-hidden)) {
+  color: var(--ink-3);
+  background: repeating-linear-gradient(-45deg, transparent 0 6px, var(--chalk-2) 6px 7px), #fff;
+  text-decoration: line-through;
+}
+
+.error {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--signal);
+}
